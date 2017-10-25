@@ -1,6 +1,6 @@
 ﻿// File Name Normalizer
 // v0.3.15
-// Kati Haapamäki 2016
+// Kati Haapamäki 2016-2017
 
 // ToDo: parse . and .. from path
 // Testaa missä kohtaa .fcpcache feilaa ja koita catchata sen yli.
@@ -27,6 +27,7 @@ namespace FileNameNormalizer
         private static bool _optionPrintErrorsOnly = false;
         private static string _optionSearchPattern = "*";
         private static bool _optionHexDump = false;
+        private static bool _optionDuplicates = false;
 
         private static NormalizationForm _defaultNormalizationForm = NormalizationForm.FormC;
         private static NormalizationForm _optionNormalizationForm = _defaultNormalizationForm;
@@ -41,47 +42,45 @@ namespace FileNameNormalizer
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Console.WriteLine("File Name Normalizer 0.3.15");
+            Console.WriteLine("File Name Normalizer 0.4.0");
 
             // Parse arguments. Sets options and extracts valid paths.
             string[] paths = ParseArguments(args);
 
             // Print help, if no valid path given
-            if (paths.Length == 0)
-            {
+            if (paths.Length == 0) {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurse subdirectories");
-                Console.WriteLine("  /normalize    Normalize and rename incorrect file and directory names.");
-                Console.WriteLine("                Without this option performs dry run and incorrect names are only printed out.");
+                Console.WriteLine("  /rename       Normalize and rename incorrect file and directory names.");
+
                 Console.WriteLine("  /v            Verbose mode. Print out all scanned items");
-                Console.WriteLine("  /formd        Perform Form D normalization instead of default Form C");
+                Console.WriteLine("  /formc        Perform Form C normalization. Default.");
+                Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
+                Console.WriteLine("  /d            Checks files that would be considered the same filename in a case insensitive file system.");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
-                Console.WriteLine("  /e            Show only errors");
+                Console.WriteLine("  /e            Show errors only.");
+                Console.WriteLine("  /hex          Show hex codes.");
+                Console.WriteLine("");
+                Console.WriteLine("Note:           Without /rename option incorrect names are only displayed.");
 
                 return; // No paths -> end program
             }
 
             // Process valid paths
-            foreach (string path in paths)
-            {
-                if (FileOp.DirectoryExists(path))
-                {
+            foreach (string path in paths) {
+                if (FileOp.DirectoryExists(path)) {
                     // Path is a dictory
                     if (_optionRename)
                         Console.WriteLine("*** Processing {0:s}", path);
                     else
                         Console.WriteLine("*** Checking {0:s}", path);
                     HandleDirectory(path);
-                }
-                else if (FileOp.FileExists(path))
-                {
+                } else if (FileOp.FileExists(path)) {
                     // Path is a file
                     NormalizeIfNeeded(path, isDir: false);
-                }
-                else if (path != null)
-                {
+                } else if (path != null) {
                     // Invalid path. Shouldn't occur since argument parser skips invalid paths.
                     Console.WriteLine("*** Error: Invalid Path {0:s}", path);
                 }
@@ -100,26 +99,23 @@ namespace FileNameNormalizer
             string[] subDirectories = FileOp.GetSubDirectories(directoryItem);
 
             // Handle all files in directory
-            foreach (string path in files)
-            {
+            foreach (string path in files) {
                 if (FileOp.FileExists(path))
                     NormalizeIfNeeded(path, isDir: false);
                 else
                     Console.WriteLine("*** Error: Cannot Access File: {0:s}", path);
                 if (_optionHexDump)
-                    printHexFileName(FileOp.ExtractLastComponent(path)); // For debugging
+                    PrintHexFileName(FileOp.ExtractLastComponent(path)); // For debugging
             }
 
             // Free some memory before going into sub directories to leave more space in stack
             files = null;
 
             // Handle all subdirectories and recurse if recurse option is set 
-            foreach (string path in subDirectories)
-            {
+            foreach (string path in subDirectories) {
                 string fileName = FileOp.ExtractLastComponent(path);
 
-                if (FileOp.DirectoryExists(path))
-                {
+                if (FileOp.DirectoryExists(path)) {
                     string pathAfterNormalization = path;
                     pathAfterNormalization = NormalizeIfNeeded(path, isDir: true);
 
@@ -130,24 +126,19 @@ namespace FileNameNormalizer
                     // Recurse if recursion flag set
                     if (_optionRecurse && fileName != ".fcpcache") // .fcpcache SPECIAL CASE for Valve Media Company!!!
                     {
-                        if (FileOp.DirectoryExists(pathAfterNormalization))
-                        {
+                        if (FileOp.DirectoryExists(pathAfterNormalization)) {
                             if (!FileOp.IsSymbolicDir(pathAfterNormalization))
                                 HandleDirectory(pathAfterNormalization); // -> Recurse subdirectories
                             else
                                 Console.WriteLine("*** SymLink - not following: {0:s}", pathAfterNormalization);
-                        }
-                        else
-                        {
+                        } else {
                             Console.WriteLine("*** Error: Cannot Access Directory (After Normalization): {0:s}", pathAfterNormalization);
                         }
                     }
-                }
-                else
-                {
+                } else {
                     Console.WriteLine("*** Error: Cannot Access Directory: {0:s}", path);
                     if (_optionHexDump)
-                        printHexFileName(fileName); // For debugging
+                        PrintHexFileName(fileName); // For debugging
                 }
             }
         }
@@ -180,45 +171,35 @@ namespace FileNameNormalizer
             if (isDir) suffix = @"\";
 
             // Do we need to normalize?
-            if (!fileName.IsNormalized(form))
-            {
+            if (!fileName.IsNormalized(form)) {
                 normalizedFileName = fileName.Normalize(form);
                 normalizedPath = pathWithoutFileName + normalizedFileName;
 
                 // Handle duplicate file/dir names
-                if (FileOp.FileOrDirectoryExists(normalizedPath))
-                {
-                    if (isDir)
-                    {
-                        while (FileOp.DirectoryExists(normalizedPath))
-                        {
+                if (FileOp.FileOrDirectoryExists(normalizedPath)) {
+                    if (isDir) {
+                        while (FileOp.DirectoryExists(normalizedPath)) {
                             normalizedPath += " (Duplicate Name)";
                             normalizedFileName += " (Duplicate Name)";
                         }
                         Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, normalizedFileName, prefix, suffix);
-                    }
-                    else
-                    {
+                    } else {
                         // File already exists with the same name? Add suffix to the new filename
-                        while (FileOp.FileExists(normalizedPath))
-                        {
+                        while (FileOp.FileExists(normalizedPath)) {
                             normalizedPath += " (Duplicate Name)";
                             normalizedFileName += " (Duplicate Name)";
                         }
                         Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, normalizedFileName, prefix, suffix);
                     }
-                }
-                else
-                {
+                } else {
                     // Show the normalization that will/would be made
                     if (!_optionPrintErrorsOnly)
                         Console.WriteLine("{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                 }
                 normalizationNeeded = true;
-            }
-            else
-            // Normalization not needed
-            {
+            } else
+              // Normalization not needed
+              {
                 // In verbose mode, this will show correct files too
                 if (_optionShowEveryFile && !_optionPrintErrorsOnly)
                     Console.WriteLine("{0:s}{2:s} ", path, prefix, suffix);
@@ -236,21 +217,17 @@ namespace FileNameNormalizer
                 Console.WriteLine("*** Warning: Name ends with space: \"{0:s}\" ", fileName);
 
             // Actual Renaming
-            if (normalizationNeeded && _optionRename)
-            {
+            if (normalizationNeeded && _optionRename) {
                 FileOp.Rename(path, normalizedPath);
 
-                if (FileOp.FileOrDirectoryExists(normalizedPath))
-                {
+                if (FileOp.FileOrDirectoryExists(normalizedPath)) {
                     wasRenamed = true;
                     if (!_optionPrintErrorsOnly)
                         if (isDir)
                             Console.WriteLine("Renaming Directory Succeeded");
                         else
                             Console.WriteLine("Renaming Succeeded");
-                }
-                else
-                {
+                } else {
                     if (isDir)
                         Console.WriteLine("*** Error: Renaming Directory Failed");
                     else
@@ -285,54 +262,47 @@ namespace FileNameNormalizer
         {
             List<string> validPaths = new List<string>(5);
 
-            foreach (string arg in args)
-            {
+            foreach (string arg in args) {
                 string lcaseArg = arg.ToLower();
                 // option /r = recurse
-                if (lcaseArg == "/r")
-                {
+                if (lcaseArg == "/r") {
                     _optionRecurse = true;
                 }
                 // option /normalize = normalize
-                if (lcaseArg == "/normalize")
-                {
+                if (lcaseArg == "/rename") {
                     _optionRename = true;
                 }
                 // option /formd = use Form D normalization instead of default Form C
-                if (lcaseArg == "/formd")
-                {
+                if (lcaseArg == "/formd") {
                     _optionNormalizationForm = NormalizationForm.FormD;
                 }
                 // option /formc = use Form C normalization (default)
-                if (lcaseArg == "/formc")
-                {
+                if (lcaseArg == "/formc") {
                     _optionNormalizationForm = NormalizationForm.FormC;
                 }
                 // option /v = verbose, show all processed files and folders
-                if (lcaseArg == "/v")
-                {
+                if (lcaseArg == "/v") {
                     _optionShowEveryFile = true;
                 }
                 // option /e, print errors only
-                if (lcaseArg == "/e")
-                {
+                if (lcaseArg == "/e") {
                     _optionPrintErrorsOnly = true;
                 }
                 // option /p=<pattern>, search pattern for files
-                if (lcaseArg.StartsWith("/p="))
-                {
+                if (lcaseArg.StartsWith("/p=")) {
                     _optionSearchPattern = arg.Substring(3);
                 }
-                if (lcaseArg.StartsWith("/hex"))
-                {
+                if (lcaseArg == "/hex") {
                     _optionHexDump = true;
+                }
+                if (lcaseArg == "/d") {
+                    _optionDuplicates = true;
                 }
                 // Collect all valid paths
                 if (FileOp.FileOrDirectoryExists(arg))
                     validPaths.Add(arg);
 
-                else if (!arg.StartsWith("/"))
-                {
+                else if (!arg.StartsWith("/")) {
                     Console.WriteLine("*** Error: Invalid path {0:s}", arg);
                 }
             }
@@ -343,12 +313,11 @@ namespace FileNameNormalizer
         /// Print Name in Hexadecimal. For Debuging.
         /// </summary>
         /// <param name="fname"></param>
-        internal static void printHexFileName(string fname)
+        internal static void PrintHexFileName(string fname)
         {
             Console.WriteLine(fname.Length);
             char[] chars = fname.ToCharArray();
-            for (int i = 0; i < fname.Length; i++)
-            {
+            for (int i = 0; i < fname.Length; i++) {
                 Console.Write("{0:s}={1:x} ", chars[i], (int)chars[i]);
             }
             Console.WriteLine("");
