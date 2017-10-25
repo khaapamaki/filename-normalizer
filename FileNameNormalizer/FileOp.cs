@@ -39,25 +39,19 @@ namespace FileNameNormalizer
             List<string> fileList = new List<string>(100);
             IEnumerable filesInDirectory;
 
-            try
-            {
-                if (path.Length < MAX_DIR_PATH_LENGTH)
-                {
+            try {
+                if (path.Length < MAX_DIR_PATH_LENGTH) {
                     // Normal Version
                     filesInDirectory = System.IO.Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
                     foreach (string file in filesInDirectory)
                         fileList.Add(file);
-                }
-                else
-                {
+                } else {
                     // Long path version
                     filesInDirectory = Pri.LongPath.Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
                     foreach (string file in filesInDirectory)
                         fileList.Add(file);
                 }
-            }
-            catch
-            {
+            } catch {
                 Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", path);
             }
 
@@ -74,25 +68,19 @@ namespace FileNameNormalizer
             IEnumerable subDirectories;
             List<string> dirList = new List<string>(20);
 
-            try
-            {
-                if (directoryItem.Length < MAX_DIR_PATH_LENGTH)
-                {
+            try {
+                if (directoryItem.Length < MAX_DIR_PATH_LENGTH) {
                     // Normal Version
                     subDirectories = System.IO.Directory.EnumerateDirectories(directoryItem, "*", SearchOption.TopDirectoryOnly);
                     foreach (string dir in subDirectories)
                         dirList.Add(dir);
-                }
-                else
-                {
+                } else {
                     // Long path version
                     subDirectories = Pri.LongPath.Directory.EnumerateDirectories(directoryItem, "*", SearchOption.TopDirectoryOnly);
                     foreach (string dir in subDirectories)
                         dirList.Add(dir);
                 }
-            }
-            catch
-            {
+            } catch {
                 Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", directoryItem);
             }
             return dirList.ToArray();
@@ -105,15 +93,12 @@ namespace FileNameNormalizer
         /// <param name="newPath"></param>
         public static bool Rename(string path, string newPath)
         {
-            try
-            {
+            try {
                 if (path.Length < MAX_FILE_PATH_LENGTH)
                     System.IO.File.Move(path, newPath);
                 else
                     Pri.LongPath.File.Move(path, newPath);
-            }
-            catch
-            {
+            } catch {
                 return false;
             }
             return true;
@@ -176,19 +161,14 @@ namespace FileNameNormalizer
             Pri.LongPath.DirectoryInfo dirInfo = new Pri.LongPath.DirectoryInfo(dir);
             Stack<Pri.LongPath.FileSystemInfo> stack = new Stack<Pri.LongPath.FileSystemInfo>();
             stack.Push(dirInfo);
-            while (dirInfo != null || stack.Count > 0)
-            {
+            while (dirInfo != null || stack.Count > 0) {
                 Pri.LongPath.FileSystemInfo fileSystemInfo = stack.Pop();
-                Pri.LongPath.DirectoryInfo subDirectoryInfo = fileSystemInfo as Pri.LongPath.DirectoryInfo;
-                if (subDirectoryInfo != null)
-                {
+                if (fileSystemInfo is Pri.LongPath.DirectoryInfo subDirectoryInfo) {
                     yield return subDirectoryInfo;
                     foreach (Pri.LongPath.FileSystemInfo fsi in subDirectoryInfo.GetFileSystemInfos())
                         stack.Push(fsi);
                     dirInfo = subDirectoryInfo;
-                }
-                else
-                {
+                } else {
                     yield return fileSystemInfo;
                     dirInfo = null;
                 }
@@ -218,13 +198,10 @@ namespace FileNameNormalizer
         /// <returns></returns>
         public static bool IsSymbolicFile(string path)
         {
-            if (path.Length < MAX_FILE_PATH_LENGTH)
-            {
+            if (path.Length < MAX_FILE_PATH_LENGTH) {
                 System.IO.FileInfo pathInfo = new System.IO.FileInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
-            }
-            else
-            {
+            } else {
                 Pri.LongPath.FileInfo pathInfo = new Pri.LongPath.FileInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
             }
@@ -237,13 +214,10 @@ namespace FileNameNormalizer
         /// <returns></returns>
         public static bool IsSymbolicDir(string path)
         {
-            if (path.Length < MAX_FILE_PATH_LENGTH)
-            {
+            if (path.Length < MAX_FILE_PATH_LENGTH) {
                 System.IO.DirectoryInfo pathInfo = new System.IO.DirectoryInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
-            }
-            else
-            {
+            } else {
                 Pri.LongPath.DirectoryInfo pathInfo = new Pri.LongPath.DirectoryInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
             }

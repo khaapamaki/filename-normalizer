@@ -54,11 +54,10 @@ namespace FileNameNormalizer
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurse subdirectories");
                 Console.WriteLine("  /rename       Normalize and rename incorrect file and directory names.");
-
                 Console.WriteLine("  /v            Verbose mode. Print out all scanned items");
                 Console.WriteLine("  /formc        Perform Form C normalization. Default.");
                 Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
-                Console.WriteLine("  /d            Checks files that would be considered the same filename in a case insensitive file system.");
+                Console.WriteLine("  /d            Looks for file names that would be considered the same in a case-insensitive file systems.");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
                 Console.WriteLine("  /e            Show errors only.");
                 Console.WriteLine("  /hex          Show hex codes.");
