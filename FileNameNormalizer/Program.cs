@@ -95,16 +95,31 @@ namespace FileNameNormalizer
         {
             // Read rirectory contents
             string[] files = FileOp.GetFiles(directoryItem, _optionSearchPattern);
+            List<string> normalizedFiles = new List<string>(files.Count());
+
             string[] subDirectories = FileOp.GetSubDirectories(directoryItem);
 
             // Handle all files in directory
             foreach (string path in files) {
-                if (FileOp.FileExists(path))
-                    NormalizeIfNeeded(path, isDir: false);
-                else
+                if (FileOp.FileExists(path)) {
+                    string resultPath = NormalizeIfNeeded(path, isDir: false);
+                    normalizedFiles.Add(resultPath);
+                } else
                     Console.WriteLine("*** Error: Cannot Access File: {0:s}", path);
                 if (_optionHexDump)
                     PrintHexFileName(FileOp.ExtractLastComponent(path)); // For debugging
+            }
+
+            // INSERT DUPLICATE CHECK HERE <----------------------------------------
+
+            if (_optionDuplicates) {
+                foreach (string path in normalizedFiles) {
+                    string filename = FileOp.ExtractLastComponent(path);
+                    if (HasCaseInsensitiveDuplicate(path, normalizedFiles)) {
+                        string newPath = CreateNewNameForDuplicate(path);
+
+                    }
+                }
             }
 
             // Free some memory before going into sub directories to leave more space in stack
@@ -141,6 +156,24 @@ namespace FileNameNormalizer
                 }
             }
         }
+
+        private static string CreateNewNameForDuplicate(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> paths)
+        {
+            string compareName = FileOp.ExtractLastComponent(comparePath);
+
+            foreach (string path in paths) {
+                string filename = FileOp.ExtractLastComponent(path);
+                if (compareName.ToLower() == filename.ToLower() && compareName != filename)
+                    return true;
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Check if file or directory name needs normalization, and normalize if normalize
