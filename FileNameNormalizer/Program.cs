@@ -69,7 +69,7 @@ namespace FileNameNormalizer
             }
 
             // Process valid paths
-            int old_counter = 0;
+
             OpCounter counter = new OpCounter();
 
             foreach (string path in paths) {
@@ -113,7 +113,7 @@ namespace FileNameNormalizer
 
             string[] subDirectories = FileOp.GetSubDirectories(directoryItem);
 
-            // Ensin tsekattava diricat jotta saadaan normalized listalle
+            /// Ensin tsekattava diricat jotta saadaan normalized listalle
 
             // Handle all files in directory
             foreach (string path in files) {
@@ -126,8 +126,6 @@ namespace FileNameNormalizer
                 if (_optionHexDump)
                     PrintHexFileName(Path.GetFileName(path)); // For debugging
             }
-
-            // INSERT DUPLICATE CHECK HERE <----------------------------------------
 
             if (_optionDuplicates) {
                 string prefix = "File:";
@@ -155,7 +153,7 @@ namespace FileNameNormalizer
                 }
             }
 
-            // Free some memory before going into sub directories to leave more space in stack
+            /// Free some memory before going into sub directories to leave more space in stack
             files = null;
 
             // Handle all subdirectories and recurse if recurse option is set 
