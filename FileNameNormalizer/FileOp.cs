@@ -228,7 +228,8 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static string ExtractLastComponent(string path)
+        [Obsolete]
+        public static string GetLastComponent(string path)
         {
             char[] delimiterChars = { '\\' };
             if (path.EndsWith(@"\"))
