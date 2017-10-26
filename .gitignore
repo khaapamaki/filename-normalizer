@@ -1,0 +1,12 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+bin/Release/*
+bin/Debug/*.exe
+bin/Debug/*.pdb
+bin/Debug/*.config
+bin/Debug/Playlist*.xml
+bin/Debug/Library/*
+bin/Debug/Playlists/*
+bin/Debug/MPC-HC/*
+obj/
+*.DS_Store
+*.zip
