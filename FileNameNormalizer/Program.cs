@@ -69,7 +69,9 @@ namespace FileNameNormalizer
             }
 
             // Process valid paths
-            int counter = 0;
+            int old_counter = 0;
+            OpCounter counter = new OpCounter();
+
             foreach (string path in paths) {
                 if (FileOp.DirectoryExists(path)) {
                     // Path is a dictory
@@ -77,21 +79,23 @@ namespace FileNameNormalizer
                         Console.WriteLine("*** Processing {0:s}", path);
                     else
                         Console.WriteLine("*** Checking {0:s}", path);
-                    counter += HandleDirectory(path);
+                    HandleDirectory(path, ref counter);
                 } else if (FileOp.FileExists(path)) {
                     // Path is a file
                     string normalizedPath = path;
-                    counter += NormalizeIfNeeded(ref normalizedPath, isDir: false) ? 1 : 0;
+                    NormalizeIfNeeded(ref normalizedPath, ref counter, isDir: false);
                 } else if (path != null) {
                     // Invalid path. Shouldn't occur since argument parser skips invalid paths.
                     Console.WriteLine("*** Error: Invalid Path {0:s}", path);
                 }
             }
-            if (_optionRename) {
-                Console.WriteLine($"*** {counter} files normalized and/or renamed.");
-            } else {
-                Console.WriteLine($"*** {counter} files needs normalization or renaming.");
-            }
+            //if (_optionRename) {
+            //    Console.WriteLine($"*** {old_counter} files normalized and/or renamed.");
+            //} else {
+            //    Console.WriteLine($"*** {old_counter} files needs normalization or renaming.");
+            //}
+
+            Console.Write(counter.ToString());
             Console.WriteLine("Done.");
         }
 
@@ -99,21 +103,23 @@ namespace FileNameNormalizer
         /// Read directory contents, process files/directories and optionally recurse subdirectories
         /// </summary>
         /// <param name="directoryItem">Path to the directory to be processed</param>
-        static int HandleDirectory(string directoryItem)
+        static int HandleDirectory(string directoryItem, ref OpCounter counter)
         {
-            int counter = 0;
-            int errCounter = 0;
+            int old_counter = 0;
+
             // Read rirectory contents
             string[] files = FileOp.GetFiles(directoryItem, _optionSearchPattern);
             List<string> normalizedFiles = new List<string>(files.Count());
 
             string[] subDirectories = FileOp.GetSubDirectories(directoryItem);
 
+            // Ensin tsekattava diricat jotta saadaan normalized listalle
+
             // Handle all files in directory
             foreach (string path in files) {
                 if (FileOp.FileExists(path)) {
                     string resultPath = path;
-                    counter += NormalizeIfNeeded(ref resultPath, isDir: false) ? 1 : 0;
+                    NormalizeIfNeeded(ref resultPath, ref counter, false, normalizedFiles);
                     normalizedFiles.Add(resultPath);
                 } else
                     Console.WriteLine("*** Error: Cannot Access File: {0:s}", path);
@@ -131,19 +137,19 @@ namespace FileNameNormalizer
                     string filename = Path.GetFileName(path);
                     if (HasCaseInsensitiveDuplicate(path, normalizedFiles)) {
                         string newPath = CreateUniqueNameForDuplicate(path);
+                        counter.FilesWithDuplicateNames++;
                         if (_optionRename) {
                             if (FileOp.Rename(path, newPath)) {
                                 normalizedFiles[i] = newPath;
                                 Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, Path.GetFileName(newPath), prefix, suffix);
-                                counter++;
+                                counter.FilesWithDuplicateNamesRenamed++;
                             } else {
                                 Console.WriteLine("*** Error: Cannot Rename File: {0:s}", path);
-                                errCounter++;
+                                counter.FilesWithDuplicateNamesFailed++;
                             }
                         } else {
                             normalizedFiles[i] = newPath;
                             Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, Path.GetFileName(newPath), prefix, suffix);
-                            counter++;
                         }
                     }
                 }
@@ -158,7 +164,7 @@ namespace FileNameNormalizer
 
                 if (FileOp.DirectoryExists(path)) {
                     string pathAfterNormalization = path;
-                    counter += NormalizeIfNeeded(ref pathAfterNormalization, isDir: true) ? 1 : 0;
+                    old_counter += NormalizeIfNeeded(ref pathAfterNormalization, ref counter, isDir: true) ? 1 : 0;
 
                     // .fcpcache SPECIAL CASE for nasty Final Cut Pro X symlinks
                     if (fileName == ".fcpcache")
@@ -169,23 +175,22 @@ namespace FileNameNormalizer
                     {
                         if (FileOp.DirectoryExists(pathAfterNormalization)) {
                             if (!FileOp.IsSymbolicDir(pathAfterNormalization))
-                                counter += HandleDirectory(pathAfterNormalization); // -> Recurse subdirectories
+                                HandleDirectory(pathAfterNormalization, ref counter); // -> Recurse subdirectories
                             else
                                 Console.WriteLine("*** SymLink - not following: {0:s}", pathAfterNormalization);
                         } else {
                             Console.WriteLine("*** Error: Cannot Access Directory (After Normalization): {0:s}", pathAfterNormalization);
-                            errCounter++;
                         }
                     }
                 } else {
                     Console.WriteLine("*** Error: Cannot Access Directory: {0:s}", path);
-                    errCounter++;
+
                     //if (_optionHexDump)
                     //    PrintHexFileName(fileName); // For debugging
                 }
             }
 
-            return counter;
+            return old_counter;
         }
 
         private static string CreateUniqueNameForDuplicate(string path, bool isDir = false)
@@ -239,7 +244,7 @@ namespace FileNameNormalizer
         /// <returns>
         /// Return true if normalization is needed
         /// </returns>
-        static bool NormalizeIfNeeded(ref string path, bool isDir, NormalizationForm form)
+        static bool NormalizeIfNeeded(ref string path, NormalizationForm form, ref OpCounter counter, bool isDir, List<string> dirContents = null)
         {
             //testing
 
@@ -266,17 +271,29 @@ namespace FileNameNormalizer
                 normalizedPath = pathWithoutFileName + normalizedFileName;
 
                 // Handle duplicate file/dir names
+
+                // KORJAA. TARKISTA dirContentsista !!!!!!!!!!!!!!!!
+
                 if (FileOp.FileOrDirectoryExists(normalizedPath)) {
                     normalizedPath = CreateUniqueNameForDuplicate(normalizedPath, isDir);
                     normalizedFileName = Path.GetFileName(normalizedPath);
                     Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, normalizedFileName, prefix, suffix);
-
+                    if (isDir) {
+                        counter.DirsWithDuplicateNamesCreated++;
+                    } else {
+                        counter.FilesWithDuplicateNamesCreated++;
+                    }
                 } else {
                     // Show the normalization that will/would be made
                     if (!_optionPrintErrorsOnly)
                         Console.WriteLine("{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                 }
                 normalizationNeeded = true;
+                if (isDir) {
+                    counter.DirsNeedNormalize++;
+                } else {
+                    counter.FilesNeedNormalize++;
+                }
             } else {
                 // Normalization not needed
                 // In verbose mode, this will show correct files too
@@ -294,6 +311,11 @@ namespace FileNameNormalizer
 
             if (fileName.EndsWith(" ")) {
                 Console.WriteLine("*** Warning: Name ends with space: \"{0:s}\" ", fileName);
+                if (isDir) {
+                    counter.DirsWithSpaces++;
+                } else {
+                    counter.FilesWithSpaces++;
+                }
             }
 
             // Actual Renaming
@@ -302,17 +324,25 @@ namespace FileNameNormalizer
 
                 if (FileOp.FileOrDirectoryExists(normalizedPath)) {
                     wasRenamed = true;
-                    if (!_optionPrintErrorsOnly) {
-                        //if (isDir)
-                        //    Console.WriteLine("Renaming Directory Succeeded");
-                        //else
-                        //    Console.WriteLine("Renaming Succeeded");
+                    if (isDir) {
+                        counter.DirsNeedNormalizeRenamed++;
+                    } else {
+                        counter.FilesNeedNormalizeRenamed++;
                     }
+                    //if (!_optionPrintErrorsOnly) {
+                    //    if (isDir)
+                    //        Console.WriteLine("Renaming Directory Succeeded");
+                    //    else
+                    //        Console.WriteLine("Renaming Succeeded");
+                    //}
                 } else {
-                    if (isDir)
+                    if (isDir) {
                         Console.WriteLine("*** Error: Renaming Directory Failed");
-                    else
+                        counter.DirsNeedNormalizeFailed++;
+                    } else {
                         Console.WriteLine("*** Error: Renaming Failed");
+                        counter.FilesNeedNormalizeFailed++;
+                    }
                 }
 
             }
@@ -329,9 +359,9 @@ namespace FileNameNormalizer
         /// <param name="path">Path to be examined</param>
         /// <param name="isDir">Boolean flag that tells us wheter the path is a directory or a file</param>
         /// <returns>Return true if normalization is needed</returns>
-        static bool NormalizeIfNeeded(ref string path, bool isDir)
+        static bool NormalizeIfNeeded(ref string path, ref OpCounter counter, bool isDir, List<string> dirContents = null)
         {
-            return NormalizeIfNeeded(ref path, isDir, _optionNormalizationForm);
+            return NormalizeIfNeeded(ref path, _optionNormalizationForm, ref counter, isDir, dirContents);
         }
 
         /// <summary>
