@@ -155,12 +155,14 @@ namespace FileNameNormalizer
                 filesFirstDirContents.Add(directoryContents[i]);
             }
 
+            /// Handle case insensitive duplicates
+            /// 
             if (_optionDuplicates) {
                 string prefix;
                 string suffix = "";
                 for (int j = 0; j < filesFirstDirContents.Count(); j++) {
                     bool isDir = j >= numberOfFiles;
-                    prefix = isDir ? "Dir: " : "File:";
+                    prefix = isDir ? "DIR:  " : "File: ";
 
                     string path = filesFirstDirContents[j];
                     if (HasCaseInsensitiveDuplicate(path, filesFirstDirContents)) {
@@ -173,15 +175,19 @@ namespace FileNameNormalizer
                         if (_optionRename) {
                             if (FileOp.Rename(path, newPath)) {
                                 directoryContents[j] = newPath;
-                                Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, Path.GetFileName(newPath), prefix, suffix);
+                                Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, Path.GetFileName(newPath), prefix, suffix);
                                 if (isDir) {
                                     counter.DirsWithDuplicateNamesRenamed++;
                                 } else {
                                     counter.FilesWithDuplicateNamesRenamed++;
                                 }
-
                             } else {
-                                Console.WriteLine("*** Error: Cannot Rename {1:s}: {0:s}", path, isDir ? "Directory" : "File");
+                                if (isDir) {
+                                    Console.WriteLine("*** Error: Cannot rename directory: {0:s}", path);
+                                } else {
+                                    Console.WriteLine("*** Error: Cannot rename file: {0:s}", path);
+                                }
+
                                 if (isDir) {
                                     counter.DirsWithDuplicateNamesFailed++;
                                 } else {
@@ -305,7 +311,7 @@ namespace FileNameNormalizer
             string normalizedFileName = fileName;
 
             string prefix;
-            if (isDir) prefix = "Dir: "; else prefix = "File:";
+            if (isDir) prefix = "DIR:  "; else prefix = "File: ";
             string suffix = "";
             if (isDir) suffix = @"\";
 
@@ -317,7 +323,7 @@ namespace FileNameNormalizer
                 if (FileOp.NameExists(normalizedPath, dirContents)) {
                     normalizedPath = CreateUniqueNameForDuplicate(normalizedPath, dirContents, isDir);
                     normalizedFileName = Path.GetFileName(normalizedPath);
-                    Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, normalizedFileName, prefix, suffix);
+                    Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                     if (isDir) {
                         counter.DirsNeedNormalizeProducedDuplicate++;
                     } else {
@@ -326,7 +332,7 @@ namespace FileNameNormalizer
                 } else {
                     // Show the normalization that will/would be made
                     if (!_optionPrintErrorsOnly)
-                        Console.WriteLine("{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
+                        Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                 }
                 normalizationNeeded = true;
                 if (isDir) {
@@ -338,7 +344,7 @@ namespace FileNameNormalizer
                 // Normalization not needed
                 // In verbose mode, this will show correct files too
                 if (_optionShowEveryFile && !_optionPrintErrorsOnly)
-                    Console.WriteLine("{0:s}{2:s} ", path, prefix, suffix);
+                    Console.WriteLine("{1:s}{0:s}{2:s} ", path, prefix, suffix);
                 normalizationNeeded = false;
             }
 
@@ -476,12 +482,11 @@ namespace FileNameNormalizer
         /// <param name="fname"></param>
         internal static void PrintHexFileName(string fname)
         {
-            Console.WriteLine(fname.Length);
             char[] chars = fname.ToCharArray();
             for (int i = 0; i < fname.Length; i++) {
-                Console.Write("{0:s}={1:x} ", chars[i], (int)chars[i]);
+                Console.Write($"{(int)chars[i]:X}({chars[i]:s}) ");
             }
-            Console.WriteLine("");
+            Console.WriteLine($" [{fname.Length}]");
         }
     }
 }
