@@ -86,7 +86,11 @@ namespace FileNameNormalizer
 
             OpCounter counter = new OpCounter();
 
-            foreach (string path in paths) {
+            foreach (string sourcePath in paths) {
+                string path = sourcePath;
+                if (sourcePath.EndsWith(@"\")) {
+                    path = sourcePath.Substring(0, sourcePath.Length - 1);
+                }
                 if (FileOp.DirectoryExists(path)) {
                     // Path is a dictory
                     if (_optionRename)
@@ -94,7 +98,8 @@ namespace FileNameNormalizer
                     else
                         Console.WriteLine("*** Checking {0:s}", path);
                     HandleDirectory(path, ref counter);
-                } else if (FileOp.FileExists(path)) {
+                }
+                if (FileOp.FileExists(path)) {
                     Console.WriteLine("Processing a single file is not supported in the current version.");
                     continue;
                     //// Path is a file
@@ -475,12 +480,36 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/c") {
                     _optionDuplicates = true;
                 }
-                // Collect all valid paths
-                if (FileOp.FileOrDirectoryExists(arg))
-                    validPaths.Add(arg);
+                // option directories only
+                if (lcaseArg == "/d") {
+                    _optionProcessFiles = false;
+                }
+                // option files only
+                if (lcaseArg == "/f") {
+                    if (_optionProcessFiles == false) {
+                        // user has set both files and directories options at the same time
+                        _optionProcessDirs = true;
+                        _optionProcessFiles = true;
+                    } else {
+                        // normal behabior
+                        _optionProcessDirs = false;
+                    }
+                }
 
-                else if (!arg.StartsWith("/")) {
-                    Console.WriteLine("*** Error: Invalid path {0:s}", arg);
+                if (!arg.StartsWith("/")) {
+                    string path = arg;
+                    if (arg.EndsWith(@"\")) {
+                        path = path.Substring(0, path.Length - 1);
+                        if (FileOp.DirectoryExists(path))
+                            validPaths.Add(path);
+                        else
+                            Console.WriteLine("*** Error: Invalid path {0:s}", arg);
+                    } else {
+                        if (FileOp.FileOrDirectoryExists(arg))
+                            validPaths.Add(arg);
+                        else
+                            Console.WriteLine("*** Error: Invalid path {0:s}", arg);
+                    }
                 }
             }
             return validPaths.ToArray();
