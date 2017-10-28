@@ -130,7 +130,7 @@ namespace FileNameNormalizer
         static void HandleDirectory(string sourcePath, ref OpCounter counter)
         {
 
-            // Read rirectory contents
+            // Read directory contents
             List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
             List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
             List<string> directoryContents = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern);
@@ -170,29 +170,39 @@ namespace FileNameNormalizer
 
             /// Handle case insensitive duplicates
             /// 
-            if (_optionDuplicates) {
+            if (_optionDuplicates || _optionFixSpaces) {
                 string prefix;
                 string suffix = "";
+
                 for (int j = 0; j < filesFirstDirContents.Count(); j++) {
                     bool isDir = j >= numberOfFiles;
+                    bool needsRename = false;
+                    bool hasDuplicate = false;
+                    bool hasSpaces = false;
                     prefix = isDir ? "DIR:  " : "File: ";
-
                     string path = filesFirstDirContents[j];
+                    string newPath = path;
                     if (HasCaseInsensitiveDuplicate(path, filesFirstDirContents)) {
-                        string newPath = CreateUniqueNameForDuplicate(path, filesFirstDirContents, isDir: isDir);
+                        newPath = CreateUniqueNameForDuplicate(path, filesFirstDirContents, isDir: isDir);
                         if (isDir) {
                             counter.DirsWithDuplicateNames++;
                         } else {
                             counter.FilesWithDuplicateNames++;
                         }
+                        hasDuplicate = true;
+                        needsRename = true;
+                    }
+                    if (needsRename) {
                         if (_optionRename) {
                             if (FileOp.Rename(path, newPath, isDir)) {
                                 directoryContents[j] = newPath;
                                 Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, FileOp.GetFileName(newPath), prefix, suffix);
-                                if (isDir) {
-                                    counter.DirsWithDuplicateNamesRenamed++;
-                                } else {
-                                    counter.FilesWithDuplicateNamesRenamed++;
+                                if (hasDuplicate) {
+                                    if (isDir) {
+                                        counter.DirsWithDuplicateNamesRenamed++;
+                                    } else {
+                                        counter.FilesWithDuplicateNamesRenamed++;
+                                    }
                                 }
                             } else {
                                 if (isDir) {
@@ -200,16 +210,17 @@ namespace FileNameNormalizer
                                 } else {
                                     Console.WriteLine("*** Error: Cannot rename file: {0:s}", path);
                                 }
-
-                                if (isDir) {
-                                    counter.DirsWithDuplicateNamesFailed++;
-                                } else {
-                                    counter.FilesWithDuplicateNamesFailed++;
+                                if (hasDuplicate) {
+                                    if (isDir) {
+                                        counter.DirsWithDuplicateNamesFailed++;
+                                    } else {
+                                        counter.FilesWithDuplicateNamesFailed++;
+                                    }
                                 }
                             }
                         } else {
                             directoryContents[j] = newPath;
-                            Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, FileOp.GetFileName(newPath), prefix, suffix);
+                            Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, FileOp.GetFileName(newPath), prefix, suffix);
                         }
                     }
                 }

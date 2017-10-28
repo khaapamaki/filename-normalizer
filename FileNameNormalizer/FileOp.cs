@@ -261,7 +261,7 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        [Obsolete]
+        //[Obsolete]
         //public static string GetLastComponent(string path)
         //{
         //    string root = GetPathRoot(path);
