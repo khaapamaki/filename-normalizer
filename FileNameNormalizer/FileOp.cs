@@ -24,8 +24,8 @@ namespace FileNameNormalizer
     /// </remarks>
     public static class FileOp
     {
-        private const int MAX_DIR_PATH_LENGTH = 248;
-        private const int MAX_FILE_PATH_LENGTH = 260;
+        public const int MAX_DIR_PATH_LENGTH = 248;
+        public const int MAX_FILE_PATH_LENGTH = 260;
 
         /// <summary>
         /// Get Files Array (path strings)

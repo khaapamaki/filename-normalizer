@@ -35,6 +35,8 @@ namespace FileNameNormalizer
         public int FilesWithDuplicateNamesCreated { get; set; } = 0;
         public int DirsWithDuplicateNamesCreated { get; set; } = 0;
 
+        public int TooLongPaths { get; set; } = 0;
+
         public override string ToString()
         {
             StringBuilder s = new StringBuilder(1000);
@@ -44,17 +46,17 @@ namespace FileNameNormalizer
 
                 if (FilesNeedNormalizeRenamed > 0 || FilesNeedNormalizeFailed > 0) {
                     if (FilesNeedNormalizeRenamed > 0) {
-                        s.AppendLine($"   of which {FilesNeedNormalizeRenamed} were normalized");
+                        s.AppendLine($"   of which {FilesNeedNormalizeRenamed} files were normalized");
                     }
                     if (FilesNeedNormalizeFailed > 0) {
-                        s.AppendLine($"   with {FilesNeedNormalizeFailed} failed to be normalized");
+                        s.AppendLine($"   with {FilesNeedNormalizeFailed} files failed to be normalized");
                     }
                     if (FilesNeedNormalizeProducedDuplicate > 0) {
                         s.AppendLine($"   {FilesNeedNormalizeProducedDuplicate} files were renamed with 'Duplicate' tag");
                     }
                 } else {
                     if (FilesNeedNormalizeProducedDuplicate > 0) {
-                        s.AppendLine($"   of which {FilesNeedNormalizeProducedDuplicate} will produce an existing name");
+                        s.AppendLine($"   of which {FilesNeedNormalizeProducedDuplicate} files have duplicate names and need to be renamed");
                     }
                 }
             }
@@ -64,75 +66,45 @@ namespace FileNameNormalizer
 
                 if (DirsNeedNormalizeRenamed > 0 || DirsNeedNormalizeFailed > 0) {
                     if (DirsNeedNormalizeRenamed > 0) {
-                        s.AppendLine($"   of which {DirsNeedNormalizeRenamed} were normalized");
+                        s.AppendLine($"   of which {DirsNeedNormalizeRenamed} folders were normalized");
                     }
                     if (DirsNeedNormalizeFailed > 0) {
-                        s.AppendLine($"   with {DirsNeedNormalizeFailed} failed to be normalized");
+                        s.AppendLine($"   with {DirsNeedNormalizeFailed} folders failed to be normalized");
                     }
                     if (DirsNeedNormalizeProducedDuplicate > 0) {
                         s.AppendLine($"   {DirsNeedNormalizeProducedDuplicate} folders were renamed with 'Duplicate' tag");
                     }
                 } else {
                     if (DirsNeedNormalizeProducedDuplicate > 0) {
-                        s.AppendLine($"   of which {DirsNeedNormalizeProducedDuplicate} will produce an existing name");
+                        s.AppendLine($"   of which {DirsNeedNormalizeProducedDuplicate} folders have duplicate names and need to be renamed");
                     }
                 }
             }
 
-            //if (DirsNeedNormalize > 0) {
-            //    s.Append($"{DirsNeedNormalize} folders need normalization");
-            //    if (DirsNeedNormalizeProducedDuplicate > 0) {
-            //        s.AppendLine();
-            //        s.AppendLine($" of which {DirsNeedNormalizeProducedDuplicate} will produce an existing name");
-            //    } else {
-            //        s.AppendLine();
-            //    }
-            //}
-
-            //if (FilesNeedNormalizeRenamed > 0 || FilesNeedNormalizeFailed > 0) {
-            //    s.Append($"{FilesNeedNormalize} files need normalization");
-            //    if (FilesNeedNormalizeRenamed > 0) {
-            //        s.AppendLine();
-            //        s.Append($"   of which {FilesNeedNormalizeRenamed} were normalized");
-            //    }
-            //    if (FilesNeedNormalizeFailed > 0) {
-            //        s.AppendLine();
-            //        s.Append($"   with {FilesNeedNormalizeFailed} failed to be normalized");
-            //    }
-            //    s.AppendLine();
-
-            //    if (FilesNeedNormalizeProducedDuplicate > 0) {
-            //        s.AppendLine($"    {FilesNeedNormalizeProducedDuplicate} files were renamed with 'Duplicate' tag");
-            //    }
-            //}
-
-            //if (DirsNeedNormalizeRenamed > 0 || DirsNeedNormalizeFailed > 0) {
-            //    s.AppendLine($"{DirsNeedNormalize} folders need normalization");
-            //    if (DirsNeedNormalizeRenamed > 0) {
-            //        s.AppendLine($"   of which {DirsNeedNormalizeRenamed} were renamed");
-            //    }
-            //    if (DirsNeedNormalizeFailed > 0) {
-            //        s.AppendLine($"   with {DirsNeedNormalizeFailed} failed to be renamed");
-            //    }
-
-            //    if (DirsNeedNormalizeProducedDuplicate > 0) {
-            //        s.AppendLine($"    {DirsNeedNormalizeProducedDuplicate} folders were renamed with 'Duplicate' tag");
-            //    }
-            //}
-
             if (FilesWithDuplicateNames > 0) {
                 s.AppendLine($"{FilesWithDuplicateNames} files have a duplicate name in case sensitive domain");
                 if (FilesWithDuplicateNamesRenamed > 0)
-                    s.AppendLine($"   of which {FilesWithDuplicateNamesRenamed} were renamed with 'Duplicate' tag");
+                    s.AppendLine($"   of which {FilesWithDuplicateNamesRenamed} files were renamed with 'Duplicate' tag");
                 if (FilesWithDuplicateNamesFailed > 0)
                     s.AppendLine($"   with {FilesWithDuplicateNamesFailed} failed to be renamed");
             }
             if (DirsWithDuplicateNames > 0) {
                 s.AppendLine($"{DirsWithDuplicateNames} folders have a duplicate name in case sensitive domain");
                 if (DirsWithDuplicateNamesRenamed > 0)
-                    s.AppendLine($"   of which {DirsWithDuplicateNamesRenamed} were renamed with 'Duplicate' tag");
+                    s.AppendLine($"   of which {DirsWithDuplicateNamesRenamed} folders were renamed with 'Duplicate' tag");
                 if (DirsWithDuplicateNamesFailed > 0)
                     s.AppendLine($"   with {DirsWithDuplicateNamesFailed} failed to be renamed");
+            }
+
+            if (FilesWithSpaces > 0) {
+                s.AppendLine($"{FilesWithSpaces} files that has leading or trailing spaces. Not fixed");
+            }
+            if (DirsWithSpaces > 0) {
+                s.AppendLine($"{DirsWithSpaces} files that has leading or trailing spaces. Not fixed");
+            }
+
+            if (TooLongPaths > 0) {
+                s.AppendLine($"{TooLongPaths} files or folders that has too long path. Not fixed");
             }
 
             if (s.ToString() == "") {
