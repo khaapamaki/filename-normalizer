@@ -90,7 +90,7 @@ namespace FileNameNormalizer
                     HandleDirectory(path, ref counter);
                 } else if (FileOp.FileExists(path)) {
                     Console.WriteLine("Processing a single file is not supported in the current version.");
-                    return;
+                    continue;
                     //// Path is a file
                     //string normalizedPath = path;
                     //NormalizeIfNeeded(ref normalizedPath, ref counter, isDir: false);
@@ -118,17 +118,18 @@ namespace FileNameNormalizer
         {
 
             // Read rirectory contents
+            List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
             List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
-            //List<string> subDirectories = FileOp.GetSubDirectories(directoryItem);
-            List<string> directoryContents = FileOp.GetFilesAndFolders(sourcePath, _optionSearchPattern);
-            int numberOfFiles = files.Count();
-            files = null;
+            List<string> directoryContents = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern);
+            int numberOfSubDirs = subDirs.Count();
+            int numberOfFiles = subDirs.Count();
+            subDirs = null;
 
             // Handle all files in directory
 
             for (int i = 0; i < directoryContents.Count(); i++) {
                 string path = directoryContents[i];
-                bool isDir = i >= numberOfFiles;
+                bool isDir = i < numberOfSubDirs;
                 if (isDir && Path.GetDirectoryName(path) == ".fcpcache") {
                     // skip
                 } else {
@@ -143,16 +144,26 @@ namespace FileNameNormalizer
                 }
             }
 
+            // create a list of directory contents in files first order
+            // 
+            List<string> filesFirstDirContents = new List<string>(directoryContents);
+            for (int i = numberOfSubDirs; i < directoryContents.Count(); i++) {
+                filesFirstDirContents.Add(directoryContents[i]);
+            }
+            for (int i = 0; i < numberOfSubDirs; i++) {
+                filesFirstDirContents.Add(directoryContents[i]);
+            }
+
             if (_optionDuplicates) {
                 string prefix;
                 string suffix = "";
-                for (int j = 0; j < directoryContents.Count(); j++) {
+                for (int j = 0; j < filesFirstDirContents.Count(); j++) {
                     bool isDir = j >= numberOfFiles;
                     prefix = isDir ? "Dir: " : "File:";
 
-                    string path = directoryContents[j];
-                    if (HasCaseInsensitiveDuplicate(path, directoryContents)) {
-                        string newPath = CreateUniqueNameForDuplicate(path, directoryContents, isDir: isDir);
+                    string path = filesFirstDirContents[j];
+                    if (HasCaseInsensitiveDuplicate(path, filesFirstDirContents)) {
+                        string newPath = CreateUniqueNameForDuplicate(path, filesFirstDirContents, isDir: isDir);
                         if (isDir) {
                             counter.DirsWithDuplicateNames++;
                         } else {
@@ -186,8 +197,10 @@ namespace FileNameNormalizer
 
 
             // Free memory before a recursion takes place
+            subDirs = null;
             files = null;
             directoryContents = null;
+            filesFirstDirContents = null;
 
             if (_optionRecurse) {
                 // reread subdirectories because some may have changed

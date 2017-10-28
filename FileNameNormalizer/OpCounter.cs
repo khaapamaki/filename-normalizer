@@ -114,16 +114,6 @@ namespace FileNameNormalizer
             return s.ToString();
         }
 
-
-        private int numberOfMessages()
-        {
-            int msgCount = 0;
-
-
-
-
-            return msgCount;
-        }
     }
 
 

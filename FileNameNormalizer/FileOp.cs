@@ -86,7 +86,7 @@ namespace FileNameNormalizer
             return new List<string>(dirList); //.ToArray();
         }
 
-        public static List<string> GetFilesAndFolders(string path, string pattern)
+        public static List<string> GetFilesAndDirectories(string path, string pattern)
         {
             List<string> files = GetFiles(path, pattern);
             List<string> dirs = GetSubDirectories(path);
@@ -162,43 +162,43 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="dir"></param>
         /// <returns></returns>
-        public static IEnumerable<Pri.LongPath.FileSystemInfo> GetAllFilesAndDirectories(string dir)
-        {
-            if (string.IsNullOrWhiteSpace(dir))
-                throw new ArgumentException(nameof(dir));
+        //public static IEnumerable<Pri.LongPath.FileSystemInfo> GetAllFilesAndDirectories(string dir)
+        //{
+        //    if (string.IsNullOrWhiteSpace(dir))
+        //        throw new ArgumentException(nameof(dir));
 
-            Pri.LongPath.DirectoryInfo dirInfo = new Pri.LongPath.DirectoryInfo(dir);
-            Stack<Pri.LongPath.FileSystemInfo> stack = new Stack<Pri.LongPath.FileSystemInfo>();
-            stack.Push(dirInfo);
-            while (dirInfo != null || stack.Count > 0) {
-                Pri.LongPath.FileSystemInfo fileSystemInfo = stack.Pop();
-                if (fileSystemInfo is Pri.LongPath.DirectoryInfo subDirectoryInfo) {
-                    yield return subDirectoryInfo;
-                    foreach (Pri.LongPath.FileSystemInfo fsi in subDirectoryInfo.GetFileSystemInfos())
-                        stack.Push(fsi);
-                    dirInfo = subDirectoryInfo;
-                } else {
-                    yield return fileSystemInfo;
-                    dirInfo = null;
-                }
-            }
-        }
+        //    Pri.LongPath.DirectoryInfo dirInfo = new Pri.LongPath.DirectoryInfo(dir);
+        //    Stack<Pri.LongPath.FileSystemInfo> stack = new Stack<Pri.LongPath.FileSystemInfo>();
+        //    stack.Push(dirInfo);
+        //    while (dirInfo != null || stack.Count > 0) {
+        //        Pri.LongPath.FileSystemInfo fileSystemInfo = stack.Pop();
+        //        if (fileSystemInfo is Pri.LongPath.DirectoryInfo subDirectoryInfo) {
+        //            yield return subDirectoryInfo;
+        //            foreach (Pri.LongPath.FileSystemInfo fsi in subDirectoryInfo.GetFileSystemInfos())
+        //                stack.Push(fsi);
+        //            dirInfo = subDirectoryInfo;
+        //        } else {
+        //            yield return fileSystemInfo;
+        //            dirInfo = null;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Testing. Just displays all file items
         /// </summary>
         /// <param name="dir"></param>
-        public static void DisplayAllFilesAndDirectories(string dir)
-        {
-            if (string.IsNullOrWhiteSpace(dir))
-                throw new ArgumentException(nameof(dir));
+        //public static void DisplayAllFilesAndDirectories(string dir)
+        //{
+        //    if (string.IsNullOrWhiteSpace(dir))
+        //        throw new ArgumentException(nameof(dir));
 
-            var strings = (from fileSystemInfo in GetAllFilesAndDirectories(dir)
-                           select fileSystemInfo.ToString()).ToArray();
+        //    var strings = (from fileSystemInfo in GetAllFilesAndDirectories(dir)
+        //                   select fileSystemInfo.ToString()).ToArray();
 
-            Array.ForEach(strings, s => { Console.WriteLine(s); });
+        //    Array.ForEach(strings, s => { Console.WriteLine(s); });
 
-        }
+        //}
 
         /// <summary>
         /// Test if path is a symbolic link
