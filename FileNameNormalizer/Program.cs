@@ -78,7 +78,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
 
-                Console.ReadLine();
+                //Console.ReadLine();
                 return; // No paths -> end program
             }
 
@@ -98,8 +98,7 @@ namespace FileNameNormalizer
                     else
                         Console.WriteLine("*** Checking {0:s}", path);
                     HandleDirectory(path, ref counter);
-                }
-                if (FileOp.FileExists(path)) {
+                } else if (FileOp.FileExists(path)) {
                     Console.WriteLine("Processing a single file is not supported in the current version.");
                     continue;
                     //// Path is a file
@@ -117,7 +116,7 @@ namespace FileNameNormalizer
             //}
 
             Console.Write(counter.ToString());
-            Console.ReadLine();
+            //Console.ReadLine();
         }
 
         /// <summary>
@@ -141,7 +140,7 @@ namespace FileNameNormalizer
                 string path = directoryContents[i];
                 bool isDir = i < numberOfSubDirs;
                 bool didNormalize = false;
-                if (isDir && Path.GetDirectoryName(path) == ".fcpcache") {
+                if (isDir && FileOp.GetDirectoryName(path) == ".fcpcache") {
                     // skip
                 } else {
                     if (FileOp.FileOrDirectoryExists(path)) {
@@ -151,7 +150,7 @@ namespace FileNameNormalizer
                     } else
                         Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
                     if (didNormalize && _optionHexDump)
-                        PrintHexFileName(Path.GetFileName(path)); // For debugging
+                        PrintHexFileName(FileOp.GetFileName(path)); // For debugging
                 }
             }
 
@@ -185,7 +184,7 @@ namespace FileNameNormalizer
                         if (_optionRename) {
                             if (FileOp.Rename(path, newPath, isDir)) {
                                 directoryContents[j] = newPath;
-                                Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, Path.GetFileName(newPath), prefix, suffix);
+                                Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, FileOp.GetFileName(newPath), prefix, suffix);
                                 if (isDir) {
                                     counter.DirsWithDuplicateNamesRenamed++;
                                 } else {
@@ -206,7 +205,7 @@ namespace FileNameNormalizer
                             }
                         } else {
                             directoryContents[j] = newPath;
-                            Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, Path.GetFileName(newPath), prefix, suffix);
+                            Console.WriteLine("{0:s}{3:s} => {1:s} *** Duplicate", path, FileOp.GetFileName(newPath), prefix, suffix);
                         }
                     }
                 }
@@ -225,7 +224,7 @@ namespace FileNameNormalizer
 
                 // recurse
                 foreach (string subDirectory in subDirectories) {
-                    string dirName = Path.GetDirectoryName(subDirectory);
+                    string dirName = FileOp.GetDirectoryName(subDirectory);
 
                     // Recurse if recursion flag set
                     if (dirName != ".fcpcache") // .fcpcache SPECIAL CASE for Valve Media Company!!!
@@ -243,17 +242,15 @@ namespace FileNameNormalizer
                     }
                 }
             }
-
-
             return;
         }
 
         private static string CreateUniqueNameForDuplicate(string path, List<string> dirContents, bool isDir = false)
         {
-            string originalPath = path.Substring(0, path.Count() - Path.GetFileName(path).Count());
-            string originalFilename = Path.GetFileName(path);
-            string extension = Path.GetExtension(path);
-            string baseName = Path.GetFileNameWithoutExtension(path);
+            string originalPath = path.Substring(0, path.Count() - FileOp.GetFileName(path).Count());
+            string originalFilename = FileOp.GetFileName(path);
+            string extension = FileOp.GetExtension(path);
+            string baseName = FileOp.GetFileNameWithoutExtension(path);
             string testPath = path;
             int i = 1;
             while (FileOp.NameExists(testPath, dirContents)) {
@@ -287,10 +284,10 @@ namespace FileNameNormalizer
 
         static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents)
         {
-            string compareName = Path.GetFileName(comparePath);
+            string compareName = FileOp.GetFileName(comparePath);
 
             foreach (string path in dirContents) {
-                string filename = Path.GetFileName(path);
+                string filename = FileOp.GetFileName(path);
                 if (compareName.ToLower() == filename.ToLower() && compareName != filename)
                     return true;
             }
@@ -312,7 +309,7 @@ namespace FileNameNormalizer
         static bool NormalizeIfNeeded(ref string path, NormalizationForm form, ref OpCounter counter, List<string> dirContents, bool isDir = false)
         {
 
-            string fileName = Path.GetFileName(path);
+            string fileName = FileOp.GetFileName(path);
             string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
             bool normalizationNeeded = false;
             bool wasRenamed = false;
@@ -332,7 +329,7 @@ namespace FileNameNormalizer
                 if (FileOp.NameExists(normalizedPath, dirContents)) {
                     // WILL CREATE DUPLICATE
                     normalizedPath = CreateUniqueNameForDuplicate(normalizedPath, dirContents, isDir);
-                    normalizedFileName = Path.GetFileName(normalizedPath);
+                    normalizedFileName = FileOp.GetFileName(normalizedPath);
                     Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                     if (isDir) {
                         counter.DirsNeedNormalizeProducedDuplicate++;
@@ -367,8 +364,8 @@ namespace FileNameNormalizer
                 counter.TooLongPaths++;
             }
             if (!isDir) {
-                string basename = Path.GetFileNameWithoutExtension(path);
-                string extension = Path.GetExtension(path);
+                string basename = FileOp.GetFileNameWithoutExtension(path);
+                string extension = FileOp.GetExtension(path);
                 if (basename.Trim() != basename || extension.Trim() != extension) {
                     Console.WriteLine("*** Warning: File name with leading or trailing spaces: \"{0:s}\" ", fileName);
                     if (isDir) {

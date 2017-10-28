@@ -264,11 +264,56 @@ namespace FileNameNormalizer
         [Obsolete]
         public static string GetLastComponent(string path)
         {
+            string root = GetPathRoot(path);
+            if (root == path)
+                return "";
+
             char[] delimiterChars = { '\\' };
             if (path.EndsWith(@"\"))
                 path = path.Substring(0, path.Length - 1);
             string[] pathComponents = path.Split(delimiterChars);
             return pathComponents.Last();
+        }
+
+        public static string GetDirectoryName(string path)
+        {
+            if (path.Length < MAX_DIR_PATH_LENGTH)
+                return System.IO.Path.GetDirectoryName(path);
+            else
+                return Pri.LongPath.Path.GetDirectoryName(path);
+        }
+
+        public static string GetFileName(string path)
+        {
+            if (path.Length < MAX_FILE_PATH_LENGTH)
+                return System.IO.Path.GetFileName(path);
+            else
+                return Pri.LongPath.Path.GetFileName(path);
+        }
+
+        public static string GetFileNameWithoutExtension(string path)
+        {
+            if (path.Length < MAX_FILE_PATH_LENGTH)
+                return System.IO.Path.GetFileNameWithoutExtension(path);
+            else
+                return Pri.LongPath.Path.GetFileNameWithoutExtension(path);
+        }
+
+
+        public static string GetExtension(string path)
+        {
+            if (path.Length < MAX_FILE_PATH_LENGTH)
+                return System.IO.Path.GetExtension(path);
+            else
+                return Pri.LongPath.Path.GetExtension(path);
+        }
+
+        public static string GetPathRoot(string path)
+        {
+            if (path.Length < MAX_DIR_PATH_LENGTH)
+                return System.IO.Path.GetPathRoot(path);
+            else
+                return Pri.LongPath.Path.GetPathRoot(path);
         }
     }
 }
