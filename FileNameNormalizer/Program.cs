@@ -7,6 +7,8 @@
 // Testaa missä kohtaa .fcpcache feilaa ja koita catchata sen yli ??
 // WHITE SPACE HEAD OR TRAIL, rename with option
 // -"- näytä palku errorissa
+// älä varoita pitkästä polusta kuin kerran (ei rekursiossa)
+
 
 
 using System;
@@ -378,6 +380,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("*** Warning: Path too long ({0:g}): {1:s} ", path.Length, path);
                 counter.TooLongPaths++;
             }
+
             if (!isDir) {
                 string basename = FileOp.GetFileNameWithoutExtension(path);
                 string extension = FileOp.GetExtension(path);
