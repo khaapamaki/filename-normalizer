@@ -104,7 +104,7 @@ namespace FileNameNormalizer
         {
             if (isDir) {
                 try {
-                    if (path.Length < MAX_DIR_PATH_LENGTH)
+                    if (path.Length < MAX_DIR_PATH_LENGTH && newPath.Length < MAX_DIR_PATH_LENGTH)
                         System.IO.Directory.Move(path, newPath);
                     else
                         Pri.LongPath.Directory.Move(path, newPath);
@@ -114,7 +114,7 @@ namespace FileNameNormalizer
                 return true;
             } else {
                 try {
-                    if (path.Length < MAX_FILE_PATH_LENGTH)
+                    if (path.Length < MAX_FILE_PATH_LENGTH && newPath.Length < MAX_FILE_PATH_LENGTH)
                         System.IO.File.Move(path, newPath);
                     else
                         Pri.LongPath.File.Move(path, newPath);
@@ -262,18 +262,18 @@ namespace FileNameNormalizer
         /// <param name="path"></param>
         /// <returns></returns>
         [Obsolete]
-        public static string GetLastComponent(string path)
-        {
-            string root = GetPathRoot(path);
-            if (root == path)
-                return "";
+        //public static string GetLastComponent(string path)
+        //{
+        //    string root = GetPathRoot(path);
+        //    if (root == path)
+        //        return "";
 
-            char[] delimiterChars = { '\\' };
-            if (path.EndsWith(@"\"))
-                path = path.Substring(0, path.Length - 1);
-            string[] pathComponents = path.Split(delimiterChars);
-            return pathComponents.Last();
-        }
+        //    char[] delimiterChars = { '\\' };
+        //    if (path.EndsWith(@"\"))
+        //        path = path.Substring(0, path.Length - 1);
+        //    string[] pathComponents = path.Split(delimiterChars);
+        //    return pathComponents.Last();
+        //}
 
         public static string GetDirectoryName(string path)
         {

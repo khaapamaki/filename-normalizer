@@ -3,8 +3,11 @@
 // Kati Haapamäki 2016-2017
 
 // ToDo: parse . and .. from path
-// Testaa missä kohtaa .fcpcache feilaa ja koita catchata sen yli.
-// WHITE SPACE HEAD OR TRAIL!
+// Varoitut jos renamettu nimi aiheuttaa long pathin
+// Testaa missä kohtaa .fcpcache feilaa ja koita catchata sen yli ??
+// WHITE SPACE HEAD OR TRAIL, rename with option
+// -"- näytä palku errorissa
+
 
 using System;
 using System.Text;
@@ -40,6 +43,7 @@ namespace FileNameNormalizer
         private static NormalizationForm _optionNormalizationForm = _defaultNormalizationForm;
 
         // not currently in use
+        // useful stuff keep along with this project for future use
         const string acceptableCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜŸabcdefghijklmnopqrstuvwxyzáàâäãåçéèêëíìîïñóòôöõúùûüÿ_ !@#£$€%&()[]{}'+-.,;§½";
         const string replacementCharacter = "_";
 
@@ -89,7 +93,7 @@ namespace FileNameNormalizer
             foreach (string sourcePath in paths) {
                 string path = sourcePath;
                 if (sourcePath.EndsWith(@"\")) {
-                    path = sourcePath.Substring(0, sourcePath.Length - 1);
+                    //path = sourcePath.Substring(0, sourcePath.Length - 1);
                 }
                 if (FileOp.DirectoryExists(path)) {
                     // Path is a dictory
@@ -496,7 +500,7 @@ namespace FileNameNormalizer
                 if (!arg.StartsWith("/")) {
                     string path = arg;
                     if (arg.EndsWith(@"\")) {
-                        path = path.Substring(0, path.Length - 1);
+                        //path = path.Substring(0, path.Length - 1);
                         if (FileOp.DirectoryExists(path))
                             validPaths.Add(path);
                         else
