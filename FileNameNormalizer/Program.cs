@@ -58,7 +58,7 @@ namespace FileNameNormalizer
             string fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
             //string productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
 
-            Console.WriteLine("File and Folder Name Normalizer " + assemblyVersion);
+            Console.WriteLine("File and Folder Name Normalizer " + assemblyVersion + " beta");
 
             // Parse arguments. Sets options and extracts valid paths.
             string[] paths = ParseArguments(args);
