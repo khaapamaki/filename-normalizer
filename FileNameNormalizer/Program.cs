@@ -130,16 +130,17 @@ namespace FileNameNormalizer
             for (int i = 0; i < directoryContents.Count(); i++) {
                 string path = directoryContents[i];
                 bool isDir = i < numberOfSubDirs;
+                bool didNormalize = false;
                 if (isDir && Path.GetDirectoryName(path) == ".fcpcache") {
                     // skip
                 } else {
                     if (FileOp.FileOrDirectoryExists(path)) {
                         string resultPath = path;
-                        NormalizeIfNeeded(ref resultPath, ref counter, directoryContents, isDir: isDir);
+                        didNormalize = NormalizeIfNeeded(ref resultPath, ref counter, directoryContents, isDir: isDir);
                         directoryContents[i] = resultPath;
                     } else
                         Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
-                    if (_optionHexDump)
+                    if (didNormalize && _optionHexDump)
                         PrintHexFileName(Path.GetFileName(path)); // For debugging
                 }
             }
