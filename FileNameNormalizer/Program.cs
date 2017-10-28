@@ -107,7 +107,6 @@ namespace FileNameNormalizer
 
             Console.Write(counter.ToString());
             Console.ReadLine();
-            //Console.WriteLine("Done.");
         }
 
         /// <summary>
@@ -173,7 +172,7 @@ namespace FileNameNormalizer
                             counter.FilesWithDuplicateNames++;
                         }
                         if (_optionRename) {
-                            if (FileOp.Rename(path, newPath)) {
+                            if (FileOp.Rename(path, newPath, isDir)) {
                                 directoryContents[j] = newPath;
                                 Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, Path.GetFileName(newPath), prefix, suffix);
                                 if (isDir) {
@@ -249,15 +248,14 @@ namespace FileNameNormalizer
             while (FileOp.NameExists(testPath, dirContents)) {
                 string suffix;
                 if (isDir) {
-                    suffix = " [Duplicate Directoryname]";
+                    suffix = " [Duplicate Foldername]";
                 } else {
                     suffix = " [Duplicate Filename]";
                 }
 
                 if (i != 1) {
-                    suffix = $" [Duplicate Filename ({i})]";
                     if (isDir) {
-                        suffix = $" [Duplicate Directoryname ({i})]";
+                        suffix = $" [Duplicate Foldername ({i})]";
                     } else {
                         suffix = $" [Duplicate Filename ({i})";
                     }
@@ -321,6 +319,7 @@ namespace FileNameNormalizer
                 normalizedPath = pathWithoutFileName + normalizedFileName;
 
                 if (FileOp.NameExists(normalizedPath, dirContents)) {
+                    // WILL CREATE DUPLICATE
                     normalizedPath = CreateUniqueNameForDuplicate(normalizedPath, dirContents, isDir);
                     normalizedFileName = Path.GetFileName(normalizedPath);
                     Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
@@ -352,8 +351,7 @@ namespace FileNameNormalizer
             /// Print length warnings, not logical place for them here -> refactor
             /// 
             if ((isDir && path.Length >= FileOp.MAX_DIR_PATH_LENGTH) ||
-                (!isDir && path.Length >= FileOp.MAX_FILE_PATH_LENGTH)
-                ) {
+                (!isDir && path.Length >= FileOp.MAX_FILE_PATH_LENGTH)) {
                 Console.WriteLine("*** Warning: Path too long ({0:g}): {1:s} ", path.Length, path);
                 counter.TooLongPaths++;
             }
@@ -378,11 +376,17 @@ namespace FileNameNormalizer
                     }
                 }
             }
-            // Actual Renaming
+
+            /// Actual Renaming
+            /// 
             if (normalizationNeeded && _optionRename) {
-                bool succeded = FileOp.Rename(path, normalizedPath);
+                bool succeded = FileOp.Rename(path, normalizedPath, isDir);
                 if (succeded) {
-                    succeded = FileOp.FileOrDirectoryExists(normalizedPath);
+                    if (isDir)
+                        succeded = FileOp.DirectoryExists(normalizedPath);
+                    else
+                        succeded = FileOp.FileExists(normalizedPath);
+
                 }
                 wasRenamed = succeded;
                 if (succeded) {

@@ -100,17 +100,29 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="path"></param>
         /// <param name="newPath"></param>
-        public static bool Rename(string path, string newPath)
+        public static bool Rename(string path, string newPath, bool isDir = false)
         {
-            try {
-                if (path.Length < MAX_FILE_PATH_LENGTH)
-                    System.IO.File.Move(path, newPath);
-                else
-                    Pri.LongPath.File.Move(path, newPath);
-            } catch {
-                return false;
+            if (isDir) {
+                try {
+                    if (path.Length < MAX_DIR_PATH_LENGTH)
+                        System.IO.Directory.Move(path, newPath);
+                    else
+                        Pri.LongPath.Directory.Move(path, newPath);
+                } catch {
+                    return false;
+                }
+                return true;
+            } else {
+                try {
+                    if (path.Length < MAX_FILE_PATH_LENGTH)
+                        System.IO.File.Move(path, newPath);
+                    else
+                        Pri.LongPath.File.Move(path, newPath);
+                } catch {
+                    return false;
+                }
+                return true;
             }
-            return true;
         }
 
         /// <summary>
