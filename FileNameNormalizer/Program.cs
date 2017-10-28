@@ -50,7 +50,7 @@ namespace FileNameNormalizer
             string fileVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion;
             //string productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
 
-            Console.WriteLine("File Name Normalizer " + assemblyVersion);
+            Console.WriteLine("File and Folder Name Normalizer " + assemblyVersion);
 
             // Parse arguments. Sets options and extracts valid paths.
             string[] paths = ParseArguments(args);
@@ -61,16 +61,18 @@ namespace FileNameNormalizer
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurse subdirectories");
-                Console.WriteLine("  /rename       Normalize and rename incorrect file and directory names.");
-                Console.WriteLine("  /v            Verbose mode. Print out all scanned items");
+                Console.WriteLine("  /rename       Normalize and rename file and directory names when needed.");
+                Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /formc        Perform Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
-                Console.WriteLine("  /d            Looks for file names that would be considered the same in a case-insensitive file systems.");
+                Console.WriteLine("  /c            Looks for file and folder names that would be considered the same in a case-insensitive file systems.");
+                //Console.WriteLine("  /d            Processes folder names only");
+                //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
                 Console.WriteLine("  /e            Show errors only.");
-                Console.WriteLine("  /hex          Show hex codes. Experimental. Ugly.");
+                Console.WriteLine("  /hex          Show hex codes for files needing normalization");
                 Console.WriteLine("");
-                Console.WriteLine("Note:           Without /rename option incorrect names are only displayed.");
+                Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
 
                 Console.ReadLine();
                 return; // No paths -> end program
@@ -466,7 +468,7 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/hex") {
                     _optionHexDump = true;
                 }
-                if (lcaseArg == "/d") {
+                if (lcaseArg == "/c") {
                     _optionDuplicates = true;
                 }
                 // Collect all valid paths
