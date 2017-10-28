@@ -34,7 +34,7 @@ namespace FileNameNormalizer
         /// <param name="pattern"></param>
         /// <returns></returns>
         /// 
-        public static string[] GetFiles(string path, string pattern)
+        public static List<string> GetFiles(string path, string pattern)
         {
             List<string> fileList = new List<string>(100);
             IEnumerable filesInDirectory;
@@ -55,7 +55,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", path);
             }
 
-            return fileList.ToArray();
+            return new List<string>(fileList); //.ToArray();
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="directoryItem"></param>
         /// <returns></returns>
-        public static string[] GetSubDirectories(string directoryItem)
+        public static List<string> GetSubDirectories(string directoryItem)
         {
             IEnumerable subDirectories;
             List<string> dirList = new List<string>(20);
@@ -83,9 +83,18 @@ namespace FileNameNormalizer
             } catch {
                 Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", directoryItem);
             }
-            return dirList.ToArray();
+            return new List<string>(dirList); //.ToArray();
         }
 
+        public static List<string> GetFilesAndFolders(string path, string pattern)
+        {
+            List<string> files = GetFiles(path, pattern);
+            List<string> dirs = GetSubDirectories(path);
+            List<string> contents = new List<string>(files.Count() + dirs.Count());
+            files.ForEach(x => contents.Add(x));
+            dirs.ForEach(x => contents.Add(x));
+            return contents;
+        }
         /// <summary>
         /// Rename File or Directory
         /// </summary>
@@ -221,6 +230,18 @@ namespace FileNameNormalizer
                 Pri.LongPath.DirectoryInfo pathInfo = new Pri.LongPath.DirectoryInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
             }
+        }
+
+        public static bool NameExists(string name, List<string> dirContents)
+        {
+            if (dirContents == null)
+                return false;
+
+            foreach (string item in dirContents) {
+                if (name == item)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

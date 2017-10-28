@@ -135,7 +135,22 @@ namespace FileNameNormalizer
                     s.AppendLine($"   with {DirsWithDuplicateNamesFailed} failed to be renamed");
             }
 
+            if (s.ToString() == "") {
+                s.AppendLine("Found Nothing.");
+            }
+
             return s.ToString();
+        }
+
+
+        private int numberOfMessages()
+        {
+            int msgCount = 0;
+
+
+
+
+            return msgCount;
         }
     }
 
