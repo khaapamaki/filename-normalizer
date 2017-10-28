@@ -31,6 +31,10 @@ namespace FileNameNormalizer
         private static string _optionSearchPattern = "*";
         private static bool _optionHexDump = false;
         private static bool _optionDuplicates = false;
+        private static bool _optionProcessFiles = true;
+        private static bool _optionProcessDirs = true;
+        private static bool _optionFixSpaces = true;
+
 
         private static NormalizationForm _defaultNormalizationForm = NormalizationForm.FormC;
         private static NormalizationForm _optionNormalizationForm = _defaultNormalizationForm;

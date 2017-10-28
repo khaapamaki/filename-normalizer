@@ -68,9 +68,9 @@ namespace FileNameNormalizer
                 } else {
                     if (FilesNeedNormalizeProducedDuplicate > 0) {
                         if (IsPlural(FilesNeedNormalizeProducedDuplicate))
-                            s.AppendLine($"   of which {FilesNeedNormalizeProducedDuplicate} files have duplicate names and need to be renamed");
+                            s.AppendLine($"   of which {FilesNeedNormalizeProducedDuplicate} files would get duplicate names and need to be renamed with 'Duplicate' tags");
                         else
-                            s.AppendLine($"   of which 1 file has a duplicate name and needs to be renamed");
+                            s.AppendLine($"   of which 1 file would get a duplicate name and need to be renamed a 'Duplicate' tag");
                     }
                 }
             }
@@ -103,9 +103,9 @@ namespace FileNameNormalizer
                 } else {
                     if (DirsNeedNormalizeProducedDuplicate > 0) {
                         if (IsPlural(DirsNeedNormalizeProducedDuplicate))
-                            s.AppendLine($"   of which {DirsNeedNormalizeProducedDuplicate} folders have duplicate names and need to be renamed");
+                            s.AppendLine($"   of which {DirsNeedNormalizeProducedDuplicate} folders would get duplicate names and need to be renamed with 'Duplicate' tags");
                         else
-                            s.AppendLine($"   of which 1 folder has a duplicate name and needs to be renamed");
+                            s.AppendLine($"   of which 1 folder would get a duplicate name and needs to be renamed with a 'Duplicate' tag");
                     }
                 }
             }
@@ -165,9 +165,9 @@ namespace FileNameNormalizer
 
             if (TooLongPaths > 0) {
                 if (IsPlural(TooLongPaths))
-                    s.AppendLine($"{TooLongPaths} files or folders have too long path. Not fixed");
+                    s.AppendLine($"{TooLongPaths} files or folders have too long path. Must be fixed manually!");
                 else
-                    s.AppendLine($"{TooLongPaths} file or folder has too long path. Not fixed");
+                    s.AppendLine($"1 file or folder has too long path. Must be fixed manually!");
             }
 
             if (s.ToString() == "") {
