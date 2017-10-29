@@ -167,6 +167,7 @@ namespace FileNameNormalizer
 
                 bool isDir = pos >= numberOfFiles;
                 string path = directoryContentsFilesFirst[pos];
+                bool isPackage = false;
 
                 //if (!FileOp.FileOrDirectoryExists(path)) {
                 //    Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
@@ -178,6 +179,12 @@ namespace FileNameNormalizer
                         longPathFound = true;
                         //Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
                         //counter.TooLongFilePaths++;
+                    }
+                }
+
+                if (isDir) {
+                    if (IsSkippableDirectory(FileOp.GetFileName(path, true))) {
+                        isPackage = true;
                     }
                 }
 
@@ -226,7 +233,7 @@ namespace FileNameNormalizer
                         newPath = Normalize(newPath, _optionNormalizationForm, isDir);
                     }
 
-                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces, startIndex: pos + 1);
+                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, isPackage, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces, startIndex: pos + 1);
 
                     if (normalize) {
                         if (isDir) {
@@ -376,7 +383,7 @@ namespace FileNameNormalizer
         /// <param name="dirContents"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool caseInsensitive, bool removeSpaces, int startIndex = 0)
+        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, bool caseInsensitive, bool removeSpaces, int startIndex = 0)
         {
             string originalFilename = FileOp.GetFileName(path, isDir);
             string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
@@ -415,7 +422,7 @@ namespace FileNameNormalizer
                 }
 
                 if (baseName != "") {
-                    if (!isDir) {
+                    if (!isDir || isPackage) {
                         testPath = pathWihtoutLastComponent + baseName + suffix + extension;
                     } else {
                         testPath = pathWihtoutLastComponent + baseName + extension + suffix;
@@ -531,7 +538,7 @@ namespace FileNameNormalizer
 
                 if (FileOp.NameExists(normalizedPath, dirContents, caseInsensitive: _optionCaseInsensitive)) {
                     // WILL CREATE DUPLICATE
-                    normalizedPath = GetUniqueName(normalizedPath, dirContents, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: false);
+                    normalizedPath = GetUniqueName(normalizedPath, dirContents, isDir, false, caseInsensitive: _optionCaseInsensitive, removeSpaces: false);
                     normalizedFileName = FileOp.GetFileName(normalizedPath, isDir);
                     Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                     if (isDir) {
