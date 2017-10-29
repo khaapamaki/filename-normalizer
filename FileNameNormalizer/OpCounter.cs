@@ -34,7 +34,8 @@ namespace FileNameNormalizer
         public int FilesWithDuplicateNamesCreated { get; set; } = 0;
         public int DirsWithDuplicateNamesCreated { get; set; } = 0;
 
-        public int TooLongPaths { get; set; } = 0;
+        public int TooLongFilePaths { get; set; } = 0;
+        public int TooLongDirPaths { get; set; } = 0;
 
         public override string ToString()
         {
@@ -187,10 +188,10 @@ namespace FileNameNormalizer
                         s.AppendLine($"   with 1 foldername failed to be fixed");
                 }
             }
-
-            if (TooLongPaths > 0) {
-                if (IsPlural(TooLongPaths))
-                    s.AppendLine($"{TooLongPaths} files or folders have too long path. Must be fixed manually!");
+            int tooLongs = TooLongDirPaths + TooLongFilePaths;
+            if (tooLongs > 0) {
+                if (IsPlural(tooLongs))
+                    s.AppendLine($"{tooLongs} files or folders have too long path. Must be fixed manually!");
                 else
                     s.AppendLine($"1 file or folder has too long path. Must be fixed manually!");
             }

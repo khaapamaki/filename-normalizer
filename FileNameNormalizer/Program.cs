@@ -134,9 +134,8 @@ namespace FileNameNormalizer
         /// Reads directory contents, processes files/directories and optionally recurses subdirectories
         /// </summary>
         /// <param name="sourcePath">Path to the directory to be processed</param>
-        static void HandleDirectory(string sourcePath, ref OpCounter counter)
+        static void HandleDirectory(string sourcePath, ref OpCounter counter, bool noLongPathWarnings = false)
         {
-
             // Read directory contents
             //List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
             //List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
@@ -164,8 +163,7 @@ namespace FileNameNormalizer
                 }
             }
 
-
-            /// Handle case insensitive duplicates
+            /// Handle case insensitive duplicates and leading and trailing spaces
             /// 
             if (_optionCaseInsensitive || _optionFixSpaces) {
                 string prefix;
@@ -262,6 +260,19 @@ namespace FileNameNormalizer
                 }
             }
 
+
+            /// Print length warnings, not logical place for them here -> refactor
+            /// 
+            if (noLongPathWarnings == false) {
+                for (int i = 0; i < numberOfFiles; i++) {
+                    string path = directoryContentsFilesFirst[i];
+                    bool isDir = i >= numberOfFiles;
+                    if (path.Length >= FileOp.MAX_DIR_PATH_LENGTH) {
+                        Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
+                        counter.TooLongFilePaths++;
+                    }
+                }
+            }
             // Free memory before a recursion takes place
 
             directoryContentsFilesFirst = null;
@@ -276,13 +287,19 @@ namespace FileNameNormalizer
                 // recurse
                 foreach (string subDirectory in subDirectories) {
                     string dirName = FileOp.GetDirectoryName(subDirectory);
+                    bool tooLongPath = subDirectory.Length >= FileOp.MAX_FILE_PATH_LENGTH;
+                    if (tooLongPath) {
+                        Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
+                        Console.WriteLine("*** Subsequent warnings in this path are supressed.");
+                        counter.TooLongDirPaths++;
+                    }
 
                     // Recurse if recursion flag set
                     if (dirName != ".fcpcache") // .fcpcache SPECIAL CASE for Valve Media Company!!!
                     {
                         if (FileOp.DirectoryExists(subDirectory)) {
                             if (!FileOp.IsSymbolicDir(subDirectory))
-                                HandleDirectory(subDirectory, ref counter); // -> Recurse subdirectories
+                                HandleDirectory(subDirectory, ref counter, noLongPathWarnings: tooLongPath || noLongPathWarnings); // -> Recurse subdirectories
                             else
                                 Console.WriteLine("*** SymLink - not following: {0:s}", subDirectory);
                         } else {
@@ -459,27 +476,6 @@ namespace FileNameNormalizer
                 normalizationNeeded = false;
             }
 
-
-            /// Print length warnings, not logical place for them here -> refactor
-            /// 
-            if ((isDir && path.Length >= FileOp.MAX_DIR_PATH_LENGTH) ||
-                (!isDir && path.Length >= FileOp.MAX_FILE_PATH_LENGTH)) {
-                Console.WriteLine("*** Warning: Path too long ({0:g}): {1:s} ", path.Length, path);
-                counter.TooLongPaths++;
-            }
-
-            //if (!isDir) {
-            //    string basename = FileOp.GetFileNameWithoutExtension(path);
-            //    string extension = FileOp.GetExtension(path);
-            //    if (basename.Trim() != basename || extension.Trim() != extension) {
-            //        Console.WriteLine("*** Warning: File name with leading or trailing spaces: \"{0:s}\" ", fileName);
-
-            //    }
-            //} else {
-            //    if (fileName.Trim() != fileName) {
-            //        Console.WriteLine("*** Warning: Directory name with leading or trailing spaces: \"{0:s}\" ", fileName);
-            //    }
-            //}
 
             /// Actual Renaming
             /// 
