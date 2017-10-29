@@ -86,15 +86,24 @@ namespace FileNameNormalizer
             return new List<string>(dirList); //.ToArray();
         }
 
-        public static List<string> GetFilesAndDirectories(string path, string pattern)
+        public static List<string> GetFilesAndDirectories(string path, string pattern, out int dividePoint, bool directoriesFirst)
         {
             List<string> files = GetFiles(path, pattern);
             List<string> dirs = GetSubDirectories(path);
             List<string> contents = new List<string>(files.Count() + dirs.Count());
-            files.ForEach(x => contents.Add(x));
-            dirs.ForEach(x => contents.Add(x));
+            if (directoriesFirst) {
+                dirs.ForEach(x => contents.Add(x));
+                files.ForEach(x => contents.Add(x));
+                dividePoint = dirs.Count();
+            } else {
+                files.ForEach(x => contents.Add(x));
+                dirs.ForEach(x => contents.Add(x));
+                dividePoint = files.Count();
+            }
             return contents;
         }
+
+
         /// <summary>
         /// Rename File or Directory
         /// </summary>
@@ -244,13 +253,13 @@ namespace FileNameNormalizer
             }
         }
 
-        public static bool NameExists(string name, List<string> dirContents)
+        public static bool NameExists(string name, List<string> dirContents, bool caseInsensitive)
         {
             if (dirContents == null)
                 return false;
 
             foreach (string item in dirContents) {
-                if (name == item)
+                if ((caseInsensitive == false && name == item) && (caseInsensitive == true && name.ToLower() == item.ToLower()))
                     return true;
             }
             return false;

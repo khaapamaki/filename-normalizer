@@ -35,10 +35,10 @@ namespace FileNameNormalizer
         private static bool _optionPrintErrorsOnly = false;
         private static string _optionSearchPattern = "*";
         private static bool _optionHexDump = false;
-        private static bool _optionDuplicates = false;
+        private static bool _optionCaseInsensitive = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
-        private static bool _optionFixSpaces = true;
+        private static bool _optionFixSpaces = false;
 
 
         private static NormalizationForm _defaultNormalizationForm = NormalizationForm.FormC;
@@ -76,6 +76,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /formc        Perform Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
                 Console.WriteLine("  /c            Looks for file and folder names that would be considered the same in a case-insensitive file systems.");
+                Console.WriteLine("  /s            Looks for file and folder names that have leading or trailing spaces.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
@@ -84,7 +85,11 @@ namespace FileNameNormalizer
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
 
-                //Console.ReadLine();
+#if DEBUG
+                Console.ReadLine();
+#else
+
+#endif
                 return; // No paths -> end program
             }
 
@@ -115,44 +120,43 @@ namespace FileNameNormalizer
                     Console.WriteLine("*** Error: Invalid path {0:s}", path);
                 }
             }
-            //if (_optionRename) {
-            //    Console.WriteLine($"*** {old_counter} files normalized and/or renamed.");
-            //} else {
-            //    Console.WriteLine($"*** {old_counter} files needs normalization or renaming.");
-            //}
 
             Console.Write(counter.ToString());
-            //Console.ReadLine();
+
+#if DEBUG
+            Console.ReadLine();
+#else
+
+#endif
         }
 
         /// <summary>
-        /// Read directory contents, process files/directories and optionally recurse subdirectories
+        /// Reads directory contents, processes files/directories and optionally recurses subdirectories
         /// </summary>
         /// <param name="sourcePath">Path to the directory to be processed</param>
         static void HandleDirectory(string sourcePath, ref OpCounter counter)
         {
 
             // Read directory contents
-            List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
-            List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
-            List<string> directoryContents = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern);
-            int numberOfSubDirs = subDirs.Count();
-            int numberOfFiles = subDirs.Count();
-            subDirs = null;
+            //List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
+            //List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
+            int numberOf0Dirs;
+            int numberOfFiles;
+            List<string> directoryContentsFilesFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out numberOfFiles, directoriesFirst: false);
+            List<string> directoryContentsDirsFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out numberOf0Dirs, directoriesFirst: true);
 
-            // Handle all files in directory
 
-            for (int i = 0; i < directoryContents.Count(); i++) {
-                string path = directoryContents[i];
-                bool isDir = i < numberOfSubDirs;
+            for (int i = 0; i < directoryContentsFilesFirst.Count(); i++) {
+                string path = directoryContentsFilesFirst[i];
+                bool isDir = i >= numberOfFiles;
                 bool didNormalize = false;
                 if (isDir && FileOp.GetDirectoryName(path) == ".fcpcache") {
                     // skip
                 } else {
                     if (FileOp.FileOrDirectoryExists(path)) {
                         string resultPath = path;
-                        didNormalize = NormalizeIfNeeded(ref resultPath, ref counter, directoryContents, isDir: isDir);
-                        directoryContents[i] = resultPath;
+                        didNormalize = NormalizeIfNeeded(ref resultPath, ref counter, directoryContentsFilesFirst, isDir: isDir);
+                        directoryContentsFilesFirst[i] = resultPath;
                     } else
                         Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
                     if (didNormalize && _optionHexDump)
@@ -160,81 +164,107 @@ namespace FileNameNormalizer
                 }
             }
 
-            // create a list of directory contents in files first order
-            // 
-            List<string> filesFirstDirContents = new List<string>(directoryContents);
-            for (int i = numberOfSubDirs; i < directoryContents.Count(); i++) {
-                filesFirstDirContents.Add(directoryContents[i]);
-            }
-            for (int i = 0; i < numberOfSubDirs; i++) {
-                filesFirstDirContents.Add(directoryContents[i]);
-            }
 
             /// Handle case insensitive duplicates
             /// 
-            if (_optionDuplicates || _optionFixSpaces) {
+            if (_optionCaseInsensitive || _optionFixSpaces) {
                 string prefix;
                 string suffix = "";
 
-                for (int j = 0; j < filesFirstDirContents.Count(); j++) {
+                for (int j = 0; j < directoryContentsFilesFirst.Count(); j++) {
                     bool isDir = j >= numberOfFiles;
+                    string path = directoryContentsFilesFirst[j];
                     bool needsRename = false;
-                    bool hasDuplicate = false;
-                    bool hasSpaces = false;
-                    prefix = isDir ? "DIR:  " : "File: ";
-                    string path = filesFirstDirContents[j];
-                    string newPath = path;
-                    if (HasCaseInsensitiveDuplicate(path, filesFirstDirContents)) {
-                        newPath = CreateUniqueNameForDuplicate(path, filesFirstDirContents, isDir: isDir);
-                        if (isDir) {
-                            counter.DirsWithDuplicateNames++;
-                        } else {
-                            counter.FilesWithDuplicateNames++;
-                        }
-                        hasDuplicate = true;
-                        needsRename = true;
+                    bool fixDuplicates = false;
+                    if (_optionCaseInsensitive) {
+                        fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst);
                     }
+
+                    bool fixSpaces = false;
+                    if (_optionFixSpaces) {
+                        fixSpaces = HasLeadingOrTrailingSpaces(path, isDir);
+                    }
+
+                    prefix = isDir ? "DIR:  " : "File: ";
+
+                    string newPath = path;
+
+                    if (fixDuplicates || fixSpaces) {
+                        newPath = GetUniqueName(path, directoryContentsFilesFirst, isDir, caseInsensitive: fixDuplicates, removeSpaces: fixSpaces);
+                        if (fixDuplicates) {
+                            if (isDir) {
+                                counter.DirsWithDuplicateNames++;
+                            } else {
+                                counter.FilesWithDuplicateNames++;
+                            }
+                            needsRename = true;
+                        }
+                        if (fixSpaces) {
+                            if (isDir) {
+                                counter.DirsWithSpaces++;
+                            } else {
+                                counter.FilesWithSpaces++;
+                            }
+                            needsRename = true;
+                        }
+                    }
+
+
+
                     if (needsRename) {
+                        directoryContentsFilesFirst[j] = newPath;
+                        Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, FileOp.GetFileName(newPath), prefix, suffix);
+
+                        /// Rename part for filename fixing (not normalization)
+                        /// 
                         if (_optionRename) {
                             if (FileOp.Rename(path, newPath, isDir)) {
-                                directoryContents[j] = newPath;
-                                Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, FileOp.GetFileName(newPath), prefix, suffix);
-                                if (hasDuplicate) {
-                                    if (isDir) {
+
+
+                                if (fixDuplicates) {
+                                    if (isDir)
                                         counter.DirsWithDuplicateNamesRenamed++;
-                                    } else {
+                                    else
                                         counter.FilesWithDuplicateNamesRenamed++;
-                                    }
                                 }
+                                if (fixSpaces) {
+                                    if (isDir)
+                                        counter.DirsWithSpacesRenamed++;
+                                    else
+                                        counter.FilesWithSpacesRenamed++;
+                                }
+
                             } else {
                                 if (isDir) {
                                     Console.WriteLine("*** Error: Cannot rename directory: {0:s}", path);
                                 } else {
                                     Console.WriteLine("*** Error: Cannot rename file: {0:s}", path);
                                 }
-                                if (hasDuplicate) {
-                                    if (isDir) {
+                                if (fixDuplicates) {
+                                    if (isDir)
                                         counter.DirsWithDuplicateNamesFailed++;
-                                    } else {
+                                    else
                                         counter.FilesWithDuplicateNamesFailed++;
-                                    }
+                                }
+                                if (fixSpaces) {
+                                    if (isDir)
+                                        counter.DirsWithSpacesFailed++;
+                                    else
+                                        counter.FilesWithSpacesFailed++;
                                 }
                             }
-                        } else {
-                            directoryContents[j] = newPath;
-                            Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, FileOp.GetFileName(newPath), prefix, suffix);
                         }
                     }
                 }
             }
 
-
             // Free memory before a recursion takes place
-            subDirs = null;
-            files = null;
-            directoryContents = null;
-            filesFirstDirContents = null;
 
+            directoryContentsFilesFirst = null;
+            directoryContentsDirsFirst = null;
+
+            /// Recursion part
+            /// 
             if (_optionRecurse) {
                 // reread subdirectories because some may have changed
                 List<string> subDirectories = FileOp.GetSubDirectories(sourcePath);
@@ -259,18 +289,40 @@ namespace FileNameNormalizer
                     }
                 }
             }
+
             return;
         }
 
-        private static string CreateUniqueNameForDuplicate(string path, List<string> dirContents, bool isDir = false)
+        /// <summary>
+        /// Adds 'Duplicate' suffix to the filename if needed and remove unwanted spaces (if asked)
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="dirContents"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
+        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool caseInsensitive, bool removeSpaces)
         {
-            string originalPath = path.Substring(0, path.Count() - FileOp.GetFileName(path).Count());
+            string pathWihtoutLastComponent = path.Substring(0, path.Count() - FileOp.GetFileName(path).Count());
             string originalFilename = FileOp.GetFileName(path);
             string extension = FileOp.GetExtension(path);
             string baseName = FileOp.GetFileNameWithoutExtension(path);
             string testPath = path;
+
+            if (removeSpaces) {
+                if (testPath.EndsWith(@"\"))
+                    testPath = testPath.Substring(0, testPath.Length - 1);
+                if (!isDir) {
+                    string newBase = FileOp.GetFileNameWithoutExtension(path).Trim();
+                    string newExt = FileOp.GetExtension(path).Trim();
+                    testPath = pathWihtoutLastComponent + @"\\" + newBase + newExt;
+                } else {
+                    string newFolderName = FileOp.GetDirectoryName(path).Trim();
+                    testPath = pathWihtoutLastComponent + @"\\" + newFolderName;
+                }
+            }
+
             int i = 1;
-            while (FileOp.NameExists(testPath, dirContents)) {
+            while (FileOp.NameExists(testPath, dirContents, caseInsensitive)) {
                 string suffix;
                 if (isDir) {
                     suffix = " [Duplicate Foldername]";
@@ -287,18 +339,24 @@ namespace FileNameNormalizer
                 }
                 if (baseName != "") {
                     if (!isDir) {
-                        testPath = originalPath + baseName + suffix + extension;
+                        testPath = pathWihtoutLastComponent + baseName + suffix + extension;
                     } else {
-                        testPath = originalPath + baseName + extension + suffix;
+                        testPath = pathWihtoutLastComponent + baseName + extension + suffix;
                     }
                 } else {
-                    testPath = originalPath + baseName + extension + suffix;
+                    testPath = pathWihtoutLastComponent + baseName + extension + suffix;
                 }
                 i++;
             }
             return testPath;
         }
 
+        /// <summary>
+        /// Checks is file/folder has a duplicate name when compared case insensitively
+        /// </summary>
+        /// <param name="comparePath"></param>
+        /// <param name="dirContents"></param>
+        /// <returns></returns>
         static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents)
         {
             string compareName = FileOp.GetFileName(comparePath);
@@ -311,6 +369,29 @@ namespace FileNameNormalizer
             return false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
+        static bool HasLeadingOrTrailingSpaces(string path, bool isDir)
+        {
+            if (!isDir) {
+                string basename = FileOp.GetFileNameWithoutExtension(path);
+                string extension = FileOp.GetExtension(path);
+                if (basename.Trim() != basename || extension.Trim() != extension)
+                    return true;
+                else
+                    return false;
+            } else {
+                string folderName = FileOp.GetDirectoryName(path);
+                if (folderName.Trim() != folderName)
+                    return true;
+                else
+                    return false;
+            }
+        }
 
         /// <summary>
         /// Check if file or directory name needs normalization, and normalize if normalize
@@ -343,9 +424,9 @@ namespace FileNameNormalizer
                 normalizedFileName = fileName.Normalize(form);
                 normalizedPath = pathWithoutFileName + normalizedFileName;
 
-                if (FileOp.NameExists(normalizedPath, dirContents)) {
+                if (FileOp.NameExists(normalizedPath, dirContents, caseInsensitive: _optionCaseInsensitive)) {
                     // WILL CREATE DUPLICATE
-                    normalizedPath = CreateUniqueNameForDuplicate(normalizedPath, dirContents, isDir);
+                    normalizedPath = GetUniqueName(normalizedPath, dirContents, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: false);
                     normalizedFileName = FileOp.GetFileName(normalizedPath);
                     Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                     if (isDir) {
@@ -386,20 +467,11 @@ namespace FileNameNormalizer
                 string extension = FileOp.GetExtension(path);
                 if (basename.Trim() != basename || extension.Trim() != extension) {
                     Console.WriteLine("*** Warning: File name with leading or trailing spaces: \"{0:s}\" ", fileName);
-                    if (isDir) {
-                        counter.DirsWithSpaces++;
-                    } else {
-                        counter.FilesWithSpaces++;
-                    }
+
                 }
             } else {
                 if (fileName.Trim() != fileName) {
                     Console.WriteLine("*** Warning: Directory name with leading or trailing spaces: \"{0:s}\" ", fileName);
-                    if (isDir) {
-                        counter.DirsWithSpaces++;
-                    } else {
-                        counter.FilesWithSpaces++;
-                    }
                 }
             }
 
@@ -465,7 +537,7 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/r") {
                     _optionRecurse = true;
                 }
-                // option /normalize = normalize
+                // option /rename causes actual renaming
                 if (lcaseArg == "/rename") {
                     _optionRename = true;
                 }
@@ -492,8 +564,13 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/hex") {
                     _optionHexDump = true;
                 }
+                // option /c handle case insensitive duplicates
                 if (lcaseArg == "/c") {
-                    _optionDuplicates = true;
+                    _optionCaseInsensitive = true;
+                }
+                // option check trailing and leading spaces
+                if (lcaseArg == "/s") {
+                    _optionFixSpaces = true;
                 }
                 // option directories only
                 if (lcaseArg == "/d") {
