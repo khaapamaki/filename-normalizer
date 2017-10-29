@@ -34,11 +34,11 @@ namespace FileNameNormalizer
         /// <param name="pattern"></param>
         /// <returns></returns>
         /// 
-        public static List<string> GetFiles(string path, string pattern)
+        public static bool GetFiles(string path, string pattern, out List<string> result)
         {
             List<string> fileList = new List<string>(100);
             IEnumerable filesInDirectory;
-
+            result = fileList;
             try {
                 if (path.Length < MAX_DIR_PATH_LENGTH) {
                     // Normal Version
@@ -52,10 +52,12 @@ namespace FileNameNormalizer
                         fileList.Add(file);
                 }
             } catch {
-                Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", path);
+                //Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", path);
+                return false;
             }
 
-            return new List<string>(fileList); //.ToArray();
+            result = new List<string>(fileList); //.ToArray();
+            return true;
         }
 
         /// <summary>
@@ -63,11 +65,11 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="directoryItem"></param>
         /// <returns></returns>
-        public static List<string> GetSubDirectories(string directoryItem)
+        public static bool GetSubDirectories(string directoryItem, out List<string> result)
         {
             IEnumerable subDirectories;
             List<string> dirList = new List<string>(20);
-
+            result = dirList;
             try {
                 if (directoryItem.Length < MAX_DIR_PATH_LENGTH) {
                     // Normal Version
@@ -81,9 +83,12 @@ namespace FileNameNormalizer
                         dirList.Add(dir);
                 }
             } catch {
-                Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", directoryItem);
+                //Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", directoryItem);
+                return false;
             }
-            return new List<string>(dirList); //.ToArray();
+
+            result = new List<string>(dirList); //.ToArray();
+            return true;
         }
 
         /// <summary>
@@ -94,10 +99,15 @@ namespace FileNameNormalizer
         /// <param name="dividePoint"></param>
         /// <param name="directoriesFirst"></param>
         /// <returns></returns>
-        public static List<string> GetFilesAndDirectories(string path, string pattern, out int dividePoint, bool directoriesFirst)
+        public static bool GetFilesAndDirectories(string path, string pattern, out int dividePoint, bool directoriesFirst, out List<string> result)
         {
-            List<string> files = GetFiles(path, pattern);
-            List<string> dirs = GetSubDirectories(path);
+            bool succeeded1 = GetFiles(path, pattern, out List<string> files);
+            bool succeeded2 = GetSubDirectories(path, out List<string> dirs);
+            if (succeeded1 == false || succeeded2 == false) {
+                dividePoint = 0;
+                result = new List<string>(0);
+                return false;
+            }
             List<string> contents = new List<string>(files.Count() + dirs.Count());
             if (directoriesFirst) {
                 dirs.ForEach(x => contents.Add(x));
@@ -108,7 +118,8 @@ namespace FileNameNormalizer
                 dirs.ForEach(x => contents.Add(x));
                 dividePoint = files.Count();
             }
-            return contents;
+            result = contents;
+            return true;
         }
 
         /// <summary>

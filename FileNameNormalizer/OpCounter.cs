@@ -38,6 +38,7 @@ namespace FileNameNormalizer
         public int TooLongDirPaths { get; set; } = 0;
         public int SkippedDirectories { get; set; } = 0;
         public int IOErrors { get; set; } = 0;
+        public int UnaccesableDirs { get; set; } = 0;
 
         public override string ToString()
         {
@@ -199,9 +200,9 @@ namespace FileNameNormalizer
 
             if (TooLongDirPaths > 0) {
                 if (IsPlural(TooLongDirPaths))
-                    s.AppendLine($"{TooLongDirPaths} folders or files they contain have long paths, as well as all enclosed subfolders");
+                    s.AppendLine($"{TooLongDirPaths} long path branches found. ");
                 else
-                    s.AppendLine($"1 folder or files it contains have long paths, as well as all enclosed subfolders");
+                    s.AppendLine($"1 long path branch found");
             }
 
             if (s.ToString() == "") {
@@ -213,6 +214,13 @@ namespace FileNameNormalizer
                     s.AppendLine($"{SkippedDirectories} macOS packages or symlinks skipped");
                 else
                     s.AppendLine($"1 macOS package or symlink skipped");
+            }
+
+            if (UnaccesableDirs > 0) {
+                if (IsPlural(UnaccesableDirs))
+                    s.AppendLine($"{UnaccesableDirs} unaccessible folders");
+                else
+                    s.AppendLine($"1 unaccessible folder");
             }
 
             if (IOErrors > 0) {

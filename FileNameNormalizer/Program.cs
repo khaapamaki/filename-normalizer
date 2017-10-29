@@ -102,6 +102,7 @@ namespace FileNameNormalizer
             // Process valid paths
 
             OpCounter counter = new OpCounter();
+            _tooLongPaths = new List<string>(500);
 
             foreach (string sourcePath in paths) {
                 string path = sourcePath;
@@ -109,14 +110,16 @@ namespace FileNameNormalizer
                     //path = sourcePath.Substring(0, sourcePath.Length - 1);
                 }
                 if (FileOp.DirectoryExists(path)) {
-                    // Path is a dictory
-                    if (_optionRename)
-                        Console.WriteLine("*** Processing {0:s}", path);
-                    else
-                        Console.WriteLine("*** Checking {0:s}", path);
-                    _tooLongPaths = new List<string>(500);
-
-                    HandleDirectory(path, ref counter);
+                    if (!IsSkippableDirectory(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
+                        // Path is a dictory
+                        if (_optionRename)
+                            Console.WriteLine("*** Processing {0:s}", path);
+                        else
+                            Console.WriteLine("*** Checking {0:s}", path);
+                        HandleDirectory(path, ref counter);
+                    } else {
+                        counter.SkippedDirectories++;
+                    }
                 } else if (FileOp.FileExists(path)) {
                     Console.WriteLine("Processing a single file is not supported in the current version.");
                     continue;
@@ -148,8 +151,14 @@ namespace FileNameNormalizer
             // Read directory contents
             //List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
             //List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
-            List<string> directoryContentsFilesFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfFiles, directoriesFirst: false);
+            bool canAccess = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfFiles, false, out List<string> directoryContentsFilesFirst);
             //List<string> directoryContentsDirsFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfDirs, directoriesFirst: true);
+
+            if (!canAccess) {
+                counter.UnaccesableDirs++;
+                Console.WriteLine("*** Cannot access directory: {0:s}", sourcePath);
+                return;
+            }
 
             bool pathShown = false;
             bool longPathFound = false;
@@ -324,7 +333,8 @@ namespace FileNameNormalizer
             /// 
             if (_optionRecurse) {
                 // reread subdirectories because some may have changed
-                List<string> subDirectories = FileOp.GetSubDirectories(sourcePath);
+                if (!FileOp.GetSubDirectories(sourcePath, out List<string> subDirectories))
+                    counter.IOErrors++;
 
                 foreach (string subDirectory in subDirectories) {
                     string dirName = FileOp.GetFileName(subDirectory, isDir: true);
