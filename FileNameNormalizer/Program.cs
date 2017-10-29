@@ -263,7 +263,7 @@ namespace FileNameNormalizer
 
                 if (needsRename) {
                     if (!pathShown) {
-                        Console.WriteLine("*** " + sourcePath);
+                        Console.WriteLine("* " + sourcePath);
                         pathShown = true;
                     }
                     directoryContentsFilesFirst[j] = newPath;
