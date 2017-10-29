@@ -189,7 +189,7 @@ namespace FileNameNormalizer
 
                 }
 
-                string fileName = FileOp.GetFileName(path);
+                string fileName = FileOp.GetFileName(path, isDir);
                 string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
                 bool needsRename = false;
                 bool normalize = false;
@@ -200,7 +200,7 @@ namespace FileNameNormalizer
                 }
 
                 if (_optionCaseInsensitive) {
-                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst);
+                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir);
                 }
 
                 bool fixSpaces = false;
@@ -231,7 +231,7 @@ namespace FileNameNormalizer
 
                 if (fixDuplicates || fixSpaces || normalize) {
                     if (normalize) {
-                        newPath = Normalize(newPath, _optionNormalizationForm);
+                        newPath = Normalize(newPath, _optionNormalizationForm, isDir);
                     }
 
                     newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces);
@@ -242,8 +242,9 @@ namespace FileNameNormalizer
                         } else {
                             counter.FilesNeedNormalize++;
                         }
-                        if (_optionHexDump)
-                            PrintHexFileName(FileOp.GetFileName(path)); // For debugging
+                        if (_optionHexDump) {
+                            PrintHexFileName(FileOp.GetFileName(path, isDir));
+                        }
                     }
                     if (fixDuplicates) {
                         if (isDir) {
@@ -269,8 +270,8 @@ namespace FileNameNormalizer
                         pathShown = true;
                     }
                     directoryContentsFilesFirst[j] = newPath;
-                    string fName = isDir ? FileOp.GetDirectoryName(path) : FileOp.GetFileName(path);
-                    string newFName = isDir ? FileOp.GetDirectoryName(newPath) : FileOp.GetFileName(newPath);
+                    string fName = FileOp.GetFileName(path, isDir);
+                    string newFName = FileOp.GetFileName(newPath, isDir);
                     Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
 
                     /// Rename part for filename fixing (not normalization)
@@ -390,18 +391,19 @@ namespace FileNameNormalizer
         /// <returns></returns>
         private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool caseInsensitive, bool removeSpaces)
         {
-            string pathWihtoutLastComponent = path.Substring(0, path.Count() - FileOp.GetFileName(path).Count());
-            string originalFilename = FileOp.GetFileName(path);
-            string extension = FileOp.GetExtension(path);
-            string baseName = FileOp.GetFileNameWithoutExtension(path);
+
+            string originalFilename = FileOp.GetFileName(path, isDir);
+            string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
+            string extension = FileOp.GetExtension(path, isDir);
+            string baseName = FileOp.GetFileNameWithoutExtension(path, isDir);
             string testPath = path;
 
             if (removeSpaces) {
                 if (testPath.EndsWith(@"\"))
                     testPath = testPath.Substring(0, testPath.Length - 1);
                 if (!isDir) {
-                    string newBase = FileOp.GetFileNameWithoutExtension(path).Trim();
-                    string newExt = FileOp.GetExtension(path).Trim();
+                    string newBase = FileOp.GetFileNameWithoutExtension(path, isDir).Trim();
+                    string newExt = FileOp.GetExtension(path, isDir).Trim();
                     testPath = pathWihtoutLastComponent + @"\\" + newBase + newExt;
                 } else {
                     string newFolderName = FileOp.GetDirectoryName(path).Trim();
@@ -445,12 +447,12 @@ namespace FileNameNormalizer
         /// <param name="comparePath"></param>
         /// <param name="dirContents"></param>
         /// <returns></returns>
-        static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents)
+        static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents, bool isDir)
         {
-            string compareName = FileOp.GetFileName(comparePath);
+            string compareName = FileOp.GetFileName(comparePath, isDir);
 
             foreach (string path in dirContents) {
-                string filename = FileOp.GetFileName(path);
+                string filename = FileOp.GetFileName(path, isDir);
                 if (compareName.ToLower() == filename.ToLower() && compareName != filename)
                     return true;
             }
@@ -466,8 +468,8 @@ namespace FileNameNormalizer
         static bool HasLeadingOrTrailingSpaces(string path, bool isDir)
         {
             if (!isDir) {
-                string basename = FileOp.GetFileNameWithoutExtension(path);
-                string extension = FileOp.GetExtension(path);
+                string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
+                string extension = FileOp.GetExtension(path, isDir);
                 if (basename.Trim() != basename || extension.Trim() != extension)
                     return true;
                 else
@@ -492,11 +494,10 @@ namespace FileNameNormalizer
         /// <returns>
         /// Return true if normalization is needed
         /// </returns>
-        static string Normalize(string path, NormalizationForm form)
+        static string Normalize(string path, NormalizationForm form, bool isDir)
         {
-            string fileName = FileOp.GetFileName(path);
+            string fileName = FileOp.GetFileName(path, isDir);
             string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
-            bool normalizationNeeded = false;
             string normalizedPath = path;
             string normalizedFileName = fileName;
             if (pathWithoutFileName.EndsWith(@"\"))
@@ -522,7 +523,7 @@ namespace FileNameNormalizer
         /// </returns>
         static bool NormalizeIfNeeded(ref string path, NormalizationForm form, ref OpCounter counter, List<string> dirContents, bool isDir = false)
         {
-            string fileName = FileOp.GetFileName(path);
+            string fileName = FileOp.GetFileName(path, isDir);
             string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
             bool normalizationNeeded = false;
             bool wasRenamed = false;
@@ -544,7 +545,7 @@ namespace FileNameNormalizer
                 if (FileOp.NameExists(normalizedPath, dirContents, caseInsensitive: _optionCaseInsensitive)) {
                     // WILL CREATE DUPLICATE
                     normalizedPath = GetUniqueName(normalizedPath, dirContents, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: false);
-                    normalizedFileName = FileOp.GetFileName(normalizedPath);
+                    normalizedFileName = FileOp.GetFileName(normalizedPath, isDir);
                     Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                     if (isDir) {
                         counter.DirsNeedNormalizeProducedDuplicate++;

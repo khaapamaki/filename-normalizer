@@ -292,31 +292,50 @@ namespace FileNameNormalizer
                 return Pri.LongPath.Path.GetDirectoryName(path);
         }
 
-        public static string GetFileName(string path)
+        public static string GetFileName(string path, bool isDir)
         {
-            if (path.Length < MAX_FILE_PATH_LENGTH)
-                return System.IO.Path.GetFileName(path);
-            else
-                return Pri.LongPath.Path.GetFileName(path);
-        }
-
-        public static string GetFileNameWithoutExtension(string path)
-        {
-            if (path.Length < MAX_FILE_PATH_LENGTH)
-                return System.IO.Path.GetFileNameWithoutExtension(path);
-            else
-                return Pri.LongPath.Path.GetFileNameWithoutExtension(path);
+            if (isDir) {
+                return GetDirectoryName(path);
+            } else {
+                if (path.Length < MAX_FILE_PATH_LENGTH)
+                    return System.IO.Path.GetFileName(path);
+                else
+                    return Pri.LongPath.Path.GetFileName(path);
+            }
         }
 
 
-        public static string GetExtension(string path)
+        public static string GetFileNameWithoutExtension(string path, bool isDir)
         {
-            if (path.Length < MAX_FILE_PATH_LENGTH)
-                return System.IO.Path.GetExtension(path);
-            else
-                return Pri.LongPath.Path.GetExtension(path);
+            if (isDir) {
+                if (path.Length < MAX_DIR_PATH_LENGTH)
+                    return System.IO.Path.GetFileNameWithoutExtension(path);
+                else
+                    return Pri.LongPath.Path.GetFileNameWithoutExtension(path);
+            } else {
+                if (path.Length < MAX_FILE_PATH_LENGTH)
+                    return System.IO.Path.GetFileNameWithoutExtension(path);
+                else
+                    return Pri.LongPath.Path.GetFileNameWithoutExtension(path);
+            }
+
         }
 
+        public static string GetExtension(string path, bool isDir)
+        {
+            if (isDir) {
+                if (path.Length < MAX_DIR_PATH_LENGTH)
+                    return System.IO.Path.GetExtension(path);
+                else
+                    return Pri.LongPath.Path.GetExtension(path);
+
+            } else {
+                if (path.Length < MAX_FILE_PATH_LENGTH)
+                    return System.IO.Path.GetExtension(path);
+                else
+                    return Pri.LongPath.Path.GetExtension(path);
+            }
+        }
         public static string GetPathRoot(string path)
         {
             if (path.Length < MAX_DIR_PATH_LENGTH)
