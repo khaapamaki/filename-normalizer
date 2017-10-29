@@ -186,6 +186,12 @@ namespace FileNameNormalizer
                     }
 
                     prefix = isDir ? "DIR:  " : "File: ";
+                    if (fixSpaces && fixDuplicates)
+                        prefix += "Spcs+Dupl ";
+                    else if (fixSpaces)
+                        prefix += "Spaces    ";
+                    else if (fixDuplicates)
+                        prefix += "Duplicate ";
 
                     string newPath = path;
 
@@ -208,8 +214,6 @@ namespace FileNameNormalizer
                             needsRename = true;
                         }
                     }
-
-
 
                     if (needsRename) {
                         directoryContentsFilesFirst[j] = newPath;
@@ -416,6 +420,8 @@ namespace FileNameNormalizer
 
             string prefix;
             if (isDir) prefix = "DIR:  "; else prefix = "File: ";
+            prefix += "Normalize ";
+
             string suffix = "";
             if (isDir) suffix = @"\";
 
@@ -462,18 +468,18 @@ namespace FileNameNormalizer
                 counter.TooLongPaths++;
             }
 
-            if (!isDir) {
-                string basename = FileOp.GetFileNameWithoutExtension(path);
-                string extension = FileOp.GetExtension(path);
-                if (basename.Trim() != basename || extension.Trim() != extension) {
-                    Console.WriteLine("*** Warning: File name with leading or trailing spaces: \"{0:s}\" ", fileName);
+            //if (!isDir) {
+            //    string basename = FileOp.GetFileNameWithoutExtension(path);
+            //    string extension = FileOp.GetExtension(path);
+            //    if (basename.Trim() != basename || extension.Trim() != extension) {
+            //        Console.WriteLine("*** Warning: File name with leading or trailing spaces: \"{0:s}\" ", fileName);
 
-                }
-            } else {
-                if (fileName.Trim() != fileName) {
-                    Console.WriteLine("*** Warning: Directory name with leading or trailing spaces: \"{0:s}\" ", fileName);
-                }
-            }
+            //    }
+            //} else {
+            //    if (fileName.Trim() != fileName) {
+            //        Console.WriteLine("*** Warning: Directory name with leading or trailing spaces: \"{0:s}\" ", fileName);
+            //    }
+            //}
 
             /// Actual Renaming
             /// 
