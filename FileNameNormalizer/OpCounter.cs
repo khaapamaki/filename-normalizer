@@ -158,17 +158,32 @@ namespace FileNameNormalizer
                     s.AppendLine($"{FilesWithSpaces} filenames that have leading or trailing spaces");
                 else
                     s.AppendLine($"1 filename that has leading or trailing spaces");
-                if (FilesWithSpacesRenamed > 0) {
-                    if (IsPlural(FilesWithSpacesRenamed))
-                        s.AppendLine($"   of which {FilesWithSpacesRenamed} filernames were fixed");
-                    else
-                        s.AppendLine($"   of which 1 filesname were fixed");
-                }
-                if (FilesWithSpacesFailed > 0) {
-                    if (IsPlural(FilesWithSpacesFailed))
-                        s.AppendLine($"   with {FilesWithSpacesFailed} filenames failed to be fixed");
-                    else
-                        s.AppendLine($"   with 1 filename failed to be fixed");
+                if (FilesWithSpacesRenamed > 0 || FilesWithSpacesFailed > 0) {
+                    if (FilesWithSpacesRenamed > 0) {
+                        if (IsPlural(FilesWithSpacesRenamed))
+                            s.AppendLine($"   of which {FilesWithSpacesRenamed} filernames were fixed");
+                        else
+                            s.AppendLine($"   of which 1 filesname were fixed");
+                    }
+                    if (FilesWithSpacesFailed > 0) {
+                        if (IsPlural(FilesWithSpacesFailed))
+                            s.AppendLine($"   with {FilesWithSpacesFailed} filenames failed to be fixed");
+                        else
+                            s.AppendLine($"   with 1 filename failed to be fixed");
+                    }
+                    if (FilesWithSpacesProducedDuplicate > 0) {
+                        if (IsPlural(FilesWithSpacesProducedDuplicate))
+                            s.AppendLine($"   {FilesWithSpacesProducedDuplicate} files were renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   1 file was renamed with a 'Duplicate' suffix");
+                    }
+                } else {
+                    if (FilesWithSpacesProducedDuplicate > 0) {
+                        if (IsPlural(FilesWithSpacesProducedDuplicate))
+                            s.AppendLine($"   of which {FilesWithSpacesProducedDuplicate} files would get duplicate names and need to be renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   of which 1 files would get a duplicate name and needs to be renamed with a 'Duplicate' suffix");
+                    }
                 }
             }
 
@@ -177,17 +192,32 @@ namespace FileNameNormalizer
                     s.AppendLine($"{DirsWithSpaces} foldernames that have leading or trailing spaces");
                 else
                     s.AppendLine($"1 foldername that has leading or trailing spaces");
-                if (DirsWithSpacesRenamed > 0) {
-                    if (IsPlural(DirsWithSpacesRenamed))
-                        s.AppendLine($"   of which {DirsWithSpacesRenamed} foldernames were fixed");
-                    else
-                        s.AppendLine($"   of which 1 foldername were fixed");
-                }
-                if (DirsWithSpacesFailed > 0) {
-                    if (IsPlural(DirsWithSpacesFailed))
-                        s.AppendLine($"   with {DirsWithSpacesFailed} foldernames failed to be fixed");
-                    else
-                        s.AppendLine($"   with 1 foldername failed to be fixed");
+                if (DirsWithSpacesRenamed > 0 || DirsWithSpacesFailed > 0) {
+                    if (DirsWithSpacesRenamed > 0) {
+                        if (IsPlural(DirsWithSpacesRenamed))
+                            s.AppendLine($"   of which {DirsWithSpacesRenamed} foldernames were fixed");
+                        else
+                            s.AppendLine($"   of which 1 foldername were fixed");
+                    }
+                    if (DirsWithSpacesFailed > 0) {
+                        if (IsPlural(DirsWithSpacesFailed))
+                            s.AppendLine($"   with {DirsWithSpacesFailed} foldernames failed to be fixed");
+                        else
+                            s.AppendLine($"   with 1 foldername failed to be fixed");
+                    }
+                    if (DirsWithSpacesProducedDuplicate > 0) {
+                        if (IsPlural(DirsWithSpacesProducedDuplicate))
+                            s.AppendLine($"   {DirsWithSpacesProducedDuplicate} folders were renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   1 folders was renamed with a 'Duplicate' suffix");
+                    }
+                } else {
+                    if (DirsWithSpacesProducedDuplicate > 0) {
+                        if (IsPlural(DirsWithSpacesProducedDuplicate))
+                            s.AppendLine($"   of which {DirsWithSpacesProducedDuplicate} folders would get duplicate names and need to be renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   of which 1 folder would get a duplicate name and needs to be renamed with a 'Duplicate' suffix");
+                    }
                 }
             }
 
