@@ -76,19 +76,20 @@ namespace FileNameNormalizer
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
-                Console.WriteLine("  /r            Recurse subdirectories");
-                Console.WriteLine("  /rename       Normalize and rename file and directory names when needed.");
+                Console.WriteLine("  /r            Recurses subdirectories");
+                Console.WriteLine("  /rename       Normalizes and renames file and directory names when needed.");
                 //Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
-                Console.WriteLine("  /formc        Perform Form C normalization. Default operation.");
-                Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
-                Console.WriteLine("  /c            Looks for file and folder names that would be considered the same in a case-insensitive file systems.");
-                Console.WriteLine("  /s            Looks for file and folder names that have leading or trailing spaces.");
+                Console.WriteLine("  /formc        Performs Form C normalization. Default operation.");
+                Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
+                Console.WriteLine("  /c            Remames file and folder names that would be considered the same in a case-insensitive file systems.");
+                Console.WriteLine("  /s            Fixes illegal folder names with trailing spaces.");
+                Console.WriteLine("  /spaces       Fixes all file and folder names with trailing spaces.");
                 Console.WriteLine("  /nonorm       Bypass normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
-                Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
+                Console.WriteLine("  /p=<pattern>  Search pattern for files, eg. *.txt");
                 //Console.WriteLine("  /e            Show errors only.");
-                Console.WriteLine("  /hex          Show hex codes for files needing normalization");
+                Console.WriteLine("  /hex          Shows hex codes for files needing normalization");
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
 
@@ -392,27 +393,43 @@ namespace FileNameNormalizer
         /// <returns></returns>
         private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, bool caseInsensitive, bool removeSpaces, bool removeSpacesFull, int skipIndex = -1)
         {
-            string originalFilename = FileOp.GetFileName(path, isDir);
-            string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
+            string fileName = FileOp.GetFileName(path, isDir);
+            string pathWihtoutLastComponent = path.Substring(0, path.Count() - fileName.Count());
             string extension = FileOp.GetExtension(path, isDir);
             string baseName = FileOp.GetFileNameWithoutExtension(path, isDir);
             string testPath = path;
             string newBase = baseName;
+            string dot = "";
+            if (extension.StartsWith(".")) {
+                extension = extension.Substring(1);
+                dot = ".";
+            }
+
             string newExt = extension;
-            string newFolderName = originalFilename;
+            string newFolderName = fileName;
 
             pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
 
             if (removeSpaces) {
-                if (!isDir && removeSpacesFull) {
+                if (!isDir) {
                     if (removeSpacesFull) {
-                        newBase = FileOp.GetFileNameWithoutExtension(path, isDir).Trim();
-                        newExt = FileOp.GetExtension(path, isDir).Trim();
-                        testPath = pathWihtoutLastComponent + @"\" + newBase + newExt;
+                        newBase = baseName.Trim();
+                        newExt = extension.Trim();
+                        testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
                     }
+                    //else {
+                    //    newBase = baseName.TrimStart();
+                    //    newExt = extension.Trim();
+                    //    testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+                    //}
                 } else {
-                    newFolderName = FileOp.GetFileName(path, isDir).Trim();
-                    testPath = pathWihtoutLastComponent + @"\" + newFolderName;
+                    if (removeSpacesFull) {
+                        newFolderName = fileName.Trim();
+                        testPath = pathWihtoutLastComponent + @"\" + newFolderName;
+                    } else {
+                        newFolderName = fileName.TrimEnd();
+                        testPath = pathWihtoutLastComponent + @"\" + newFolderName;
+                    }
                 }
             }
 
@@ -429,18 +446,18 @@ namespace FileNameNormalizer
                     if (isDir) {
                         suffix = $" [Duplicate Foldername ({i})]";
                     } else {
-                        suffix = $" [Duplicate Filename ({i})";
+                        suffix = $" [Duplicate Filename ({i})]";
                     }
                 }
 
                 if (baseName != "") {
                     if (!isDir || isPackage) {
-                        testPath = pathWihtoutLastComponent + @"\" + newBase + suffix + newExt;
+                        testPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + newExt;
                     } else {
-                        testPath = pathWihtoutLastComponent + @"\" + newBase + newExt + suffix;
+                        testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt + suffix;
                     }
                 } else {
-                    testPath = pathWihtoutLastComponent + @"\" + newBase + newExt + suffix;
+                    testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt + suffix;
                 }
                 i++;
             }
@@ -476,18 +493,37 @@ namespace FileNameNormalizer
         {
             string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
             string extension = FileOp.GetExtension(path, isDir);
+            string dot = "";
+            if (extension.StartsWith(".")) {
+                extension = extension.Substring(1);
+                dot = ".";
+            }
             string fName = FileOp.GetFileName(path, isDir);
-            if (!isDir && full) {
-                if (basename.Trim() != basename || extension.Trim() != extension)
-                    return true;
-                else
+            if (!isDir) {
+                if (full) {
+                    if (basename.Trim() != basename || extension.Trim() != extension)
+                        return true;
+                    else
+                        return false;
+                } else {
                     return false;
-
+                    //if (basename.TrimStart() != basename || extension.Trim() != extension)
+                    //    return true;
+                    //else
+                    //    return false;
+                }
             } else {
-                if (fName.Trim() != fName)
-                    return true;
-                else
-                    return false;
+                if (full) {
+                    if (fName.Trim() != fName)
+                        return true;
+                    else
+                        return false;
+                } else {
+                    if (fName.TrimEnd() != fName)
+                        return true;
+                    else
+                        return false;
+                }
             }
         }
 
@@ -550,8 +586,12 @@ namespace FileNameNormalizer
                 normalizedPath = pathWithoutFileName + normalizedFileName;
 
                 if (FileOp.NameExists(normalizedPath, dirContents, caseInsensitive: _optionCaseInsensitive)) {
-                    // WILL CREATE DUPLICATE
-                    normalizedPath = GetUniqueName(normalizedPath, dirContents, isDir, false, caseInsensitive: _optionCaseInsensitive, removeSpaces: false);
+                    normalizedPath = GetUniqueName(normalizedPath,
+                        dirContents,
+                        isDir, false,
+                        caseInsensitive: _optionCaseInsensitive,
+                        removeSpaces: false,
+                        removeSpacesFull: _optionFixSpacesAll);
                     normalizedFileName = FileOp.GetFileName(normalizedPath, isDir);
                     Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
                     if (isDir) {
@@ -689,7 +729,7 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/s") {
                     _optionFixSpacesMandatory = true;
                 }
-                if (lcaseArg == "/S") {
+                if (lcaseArg == "/spaces") {
                     _optionFixSpacesAll = true;
                 }
                 // option directories only
