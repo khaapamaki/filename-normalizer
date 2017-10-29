@@ -37,7 +37,8 @@ namespace FileNameNormalizer
         private static bool _optionCaseInsensitive = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
-        private static bool _optionFixSpaces = false;
+        private static bool _optionFixSpacesAll = false;
+        private static bool _optionFixSpacesMandatory = false;
         private static bool _optionNormalize = true;
         private static bool _optionMacAware = true;
         private static List<string> _tooLongPaths;
@@ -203,7 +204,7 @@ namespace FileNameNormalizer
                 }
 
                 bool fixSpaces = false;
-                if (_optionFixSpaces) {
+                if (_optionFixSpacesMandatory) {
                     fixSpaces = HasLeadingOrTrailingSpaces(path, isDir);
                 }
 
@@ -233,7 +234,7 @@ namespace FileNameNormalizer
                         newPath = Normalize(newPath, _optionNormalizationForm, isDir);
                     }
 
-                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, isPackage, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces, startIndex: pos + 1);
+                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, isPackage, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces, skipIndex: pos);
 
                     if (normalize) {
                         if (isDir) {
@@ -367,7 +368,7 @@ namespace FileNameNormalizer
                             counter.IOErrors++;
                         }
                     } else {
-                        Console.WriteLine($"*** skipped {subDirectory:s}");
+                        //Console.WriteLine($"*** skipped {subDirectory:s}");
                         counter.SkippedDirectories++;
                     }
                 }
@@ -383,29 +384,32 @@ namespace FileNameNormalizer
         /// <param name="dirContents"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, bool caseInsensitive, bool removeSpaces, int startIndex = 0)
+        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, bool caseInsensitive, bool removeSpaces, int skipIndex = -1)
         {
             string originalFilename = FileOp.GetFileName(path, isDir);
             string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
             string extension = FileOp.GetExtension(path, isDir);
             string baseName = FileOp.GetFileNameWithoutExtension(path, isDir);
             string testPath = path;
+            string newBase = baseName;
+            string newExt = extension;
+            string newFolderName = originalFilename;
+
+            pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
 
             if (removeSpaces) {
-                if (testPath.EndsWith(@"\"))
-                    testPath = testPath.Substring(0, testPath.Length - 1);
                 if (!isDir) {
-                    string newBase = FileOp.GetFileNameWithoutExtension(path, isDir).Trim();
-                    string newExt = FileOp.GetExtension(path, isDir).Trim();
-                    testPath = pathWihtoutLastComponent + @"\\" + newBase + newExt;
+                    newBase = FileOp.GetFileNameWithoutExtension(path, isDir).Trim();
+                    newExt = FileOp.GetExtension(path, isDir).Trim();
+                    testPath = pathWihtoutLastComponent + @"\" + newBase + newExt;
                 } else {
-                    string newFolderName = FileOp.GetFileName(path, isDir).Trim();
-                    testPath = pathWihtoutLastComponent + @"\\" + newFolderName;
+                    newFolderName = FileOp.GetFileName(path, isDir).Trim();
+                    testPath = pathWihtoutLastComponent + @"\" + newFolderName;
                 }
             }
 
             int i = 1;
-            while (FileOp.NameExists(testPath, dirContents, caseInsensitive, startIndex)) {
+            while (FileOp.NameExists(testPath, dirContents, caseInsensitive, skipIndex)) {
                 string suffix;
                 if (isDir) {
                     suffix = " [Duplicate Foldername]";
@@ -423,12 +427,12 @@ namespace FileNameNormalizer
 
                 if (baseName != "") {
                     if (!isDir || isPackage) {
-                        testPath = pathWihtoutLastComponent + baseName + suffix + extension;
+                        testPath = pathWihtoutLastComponent + @"\" + newBase + suffix + newExt;
                     } else {
-                        testPath = pathWihtoutLastComponent + baseName + extension + suffix;
+                        testPath = pathWihtoutLastComponent + @"\" + newBase + newExt + suffix;
                     }
                 } else {
-                    testPath = pathWihtoutLastComponent + baseName + extension + suffix;
+                    testPath = pathWihtoutLastComponent + @"\" + newBase + newExt + suffix;
                 }
                 i++;
             }
@@ -674,7 +678,10 @@ namespace FileNameNormalizer
                 }
                 // option check trailing and leading spaces
                 if (lcaseArg == "/s") {
-                    _optionFixSpaces = true;
+                    _optionFixSpacesMandatory = true;
+                }
+                if (lcaseArg == "/S") {
+                    _optionFixSpacesAll = true;
                 }
                 // option directories only
                 if (lcaseArg == "/d") {

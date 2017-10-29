@@ -271,13 +271,14 @@ namespace FileNameNormalizer
             }
         }
 
-        public static bool NameExists(string name, List<string> dirContents, bool caseInsensitive, int startIndex = 0)
+        public static bool NameExists(string name, List<string> dirContents, bool caseInsensitive, int skipIndex = -1)
         {
             if (dirContents == null)
                 return false;
-            for (int i = startIndex; i < dirContents.Count(); i++) {
-
-                if ((caseInsensitive == false && name == dirContents[i]) && (caseInsensitive == true && name.ToLower() == dirContents[i].ToLower()))
+            for (int i = 0; i < dirContents.Count(); i++) {
+                if (i == skipIndex)
+                    continue;
+                if ((caseInsensitive == false && name == dirContents[i]) || (caseInsensitive == true && name.ToLower() == dirContents[i].ToLower()))
                     return true;
             }
             return false;
@@ -381,6 +382,13 @@ namespace FileNameNormalizer
                 return System.IO.Path.GetPathRoot(path);
             else
                 return Pri.LongPath.Path.GetPathRoot(path);
+        }
+
+        public static string PathWithoutPathSeparator(string path)
+        {
+            if (path.EndsWith(@"\"))
+                path = path.Substring(0, path.Length - 1);
+            return path;
         }
     }
 }
