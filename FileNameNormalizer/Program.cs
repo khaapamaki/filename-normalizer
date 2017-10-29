@@ -81,7 +81,7 @@ namespace FileNameNormalizer
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
-                Console.WriteLine("  /e            Show errors only.");
+                //Console.WriteLine("  /e            Show errors only.");
                 Console.WriteLine("  /hex          Show hex codes for files needing normalization");
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
@@ -140,10 +140,8 @@ namespace FileNameNormalizer
             // Read directory contents
             //List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
             //List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
-            int numberOf0Dirs;
-            int numberOfFiles;
-            List<string> directoryContentsFilesFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out numberOfFiles, directoriesFirst: false);
-            List<string> directoryContentsDirsFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out numberOf0Dirs, directoriesFirst: true);
+            List<string> directoryContentsFilesFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfFiles, directoriesFirst: false);
+            //List<string> directoryContentsDirsFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfDirs, directoriesFirst: true);
 
 
             //for (int i = 0; i < directoryContentsFilesFirst.Count(); i++) {
@@ -340,18 +338,18 @@ namespace FileNameNormalizer
             //        }
             //    }
             //}
-            // Free memory before a recursion takes place
+
+            /// Free memory before a recursion takes place
 
             directoryContentsFilesFirst = null;
-            directoryContentsDirsFirst = null;
+            //directoryContentsDirsFirst = null;
 
             /// Recursion part
-            /// 
+
             if (_optionRecurse) {
                 // reread subdirectories because some may have changed
                 List<string> subDirectories = FileOp.GetSubDirectories(sourcePath);
 
-                // recurse
                 foreach (string subDirectory in subDirectories) {
                     string dirName = FileOp.GetFileName(subDirectory, isDir: true);
                     bool tooLongPath = subDirectory.Length >= FileOp.MAX_FILE_PATH_LENGTH;
@@ -390,7 +388,6 @@ namespace FileNameNormalizer
         /// <returns></returns>
         private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool caseInsensitive, bool removeSpaces)
         {
-
             string originalFilename = FileOp.GetFileName(path, isDir);
             string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
             string extension = FileOp.GetExtension(path, isDir);
@@ -426,6 +423,7 @@ namespace FileNameNormalizer
                         suffix = $" [Duplicate Filename ({i})";
                     }
                 }
+
                 if (baseName != "") {
                     if (!isDir) {
                         testPath = pathWihtoutLastComponent + baseName + suffix + extension;
@@ -506,7 +504,6 @@ namespace FileNameNormalizer
             normalizedPath = pathWithoutFileName + @"\" + normalizedFileName;
             return normalizedPath;
         }
-
 
         [Obsolete]
         /// <summary>

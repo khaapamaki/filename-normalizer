@@ -188,12 +188,19 @@ namespace FileNameNormalizer
                         s.AppendLine($"   with 1 foldername failed to be fixed");
                 }
             }
-            int tooLongs = TooLongDirPaths + TooLongFilePaths;
-            if (tooLongs > 0) {
-                if (IsPlural(tooLongs))
-                    s.AppendLine($"{tooLongs} files or folders have too long path. Must be fixed manually!");
+
+            if (TooLongFilePaths > 0) {
+                if (IsPlural(TooLongFilePaths))
+                    s.AppendLine($"{TooLongFilePaths} files have too long path (Paths without files are legal). Must be fixed manually!");
                 else
-                    s.AppendLine($"1 file or folder has too long path. Must be fixed manually!");
+                    s.AppendLine($"1 file has too long path (Path without file is legal). Must be fixed manually!");
+            }
+
+            if (TooLongDirPaths > 0) {
+                if (IsPlural(TooLongDirPaths))
+                    s.AppendLine($"{TooLongDirPaths}  folders have too long path along ALL their content. Must be fixed manually!");
+                else
+                    s.AppendLine($"1 folder hastoo long path along ALL it's content. Must be fixed manually!");
             }
 
             if (s.ToString() == "") {

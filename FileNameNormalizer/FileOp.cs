@@ -86,6 +86,14 @@ namespace FileNameNormalizer
             return new List<string>(dirList); //.ToArray();
         }
 
+        /// <summary>
+        /// Get direcotry contents with files or folder first
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="pattern"></param>
+        /// <param name="dividePoint"></param>
+        /// <param name="directoriesFirst"></param>
+        /// <returns></returns>
         public static List<string> GetFilesAndDirectories(string path, string pattern, out int dividePoint, bool directoriesFirst)
         {
             List<string> files = GetFiles(path, pattern);
@@ -102,7 +110,6 @@ namespace FileNameNormalizer
             }
             return contents;
         }
-
 
         /// <summary>
         /// Rename File or Directory
@@ -299,6 +306,12 @@ namespace FileNameNormalizer
             }
         }
 
+        /// <summary>
+        /// Get file or folder name
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
         public static string GetFileName(string path, bool isDir)
         {
             if (isDir) {
@@ -313,7 +326,6 @@ namespace FileNameNormalizer
                     return Pri.LongPath.Path.GetFileName(path);
             }
         }
-
 
         public static string GetFileNameWithoutExtension(string path, bool isDir)
         {
