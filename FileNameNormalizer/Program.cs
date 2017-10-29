@@ -204,8 +204,8 @@ namespace FileNameNormalizer
                 }
 
                 bool fixSpaces = false;
-                if (_optionFixSpacesMandatory) {
-                    fixSpaces = HasLeadingOrTrailingSpaces(path, isDir);
+                if (_optionFixSpacesMandatory || _optionFixSpacesAll) {
+                    fixSpaces = HasLeadingOrTrailingSpaces(path, isDir, _optionFixSpacesAll);
                 }
 
                 prefix = isDir ? "DIR:   " : "File:  ";
@@ -234,7 +234,13 @@ namespace FileNameNormalizer
                         newPath = Normalize(newPath, _optionNormalizationForm, isDir);
                     }
 
-                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, isPackage, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces, skipIndex: pos);
+                    newPath = GetUniqueName(newPath,
+                        directoryContentsFilesFirst,
+                        isDir, isPackage,
+                        caseInsensitive: _optionCaseInsensitive,
+                        removeSpaces: fixSpaces,
+                        removeSpacesFull: _optionFixSpacesAll,
+                        skipIndex: pos);
 
                     if (normalize) {
                         if (isDir) {
@@ -384,7 +390,7 @@ namespace FileNameNormalizer
         /// <param name="dirContents"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, bool caseInsensitive, bool removeSpaces, int skipIndex = -1)
+        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, bool caseInsensitive, bool removeSpaces, bool removeSpacesFull, int skipIndex = -1)
         {
             string originalFilename = FileOp.GetFileName(path, isDir);
             string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
@@ -398,10 +404,12 @@ namespace FileNameNormalizer
             pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
 
             if (removeSpaces) {
-                if (!isDir) {
-                    newBase = FileOp.GetFileNameWithoutExtension(path, isDir).Trim();
-                    newExt = FileOp.GetExtension(path, isDir).Trim();
-                    testPath = pathWihtoutLastComponent + @"\" + newBase + newExt;
+                if (!isDir && removeSpacesFull) {
+                    if (removeSpacesFull) {
+                        newBase = FileOp.GetFileNameWithoutExtension(path, isDir).Trim();
+                        newExt = FileOp.GetExtension(path, isDir).Trim();
+                        testPath = pathWihtoutLastComponent + @"\" + newBase + newExt;
+                    }
                 } else {
                     newFolderName = FileOp.GetFileName(path, isDir).Trim();
                     testPath = pathWihtoutLastComponent + @"\" + newFolderName;
@@ -464,18 +472,19 @@ namespace FileNameNormalizer
         /// <param name="path"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        static bool HasLeadingOrTrailingSpaces(string path, bool isDir)
+        static bool HasLeadingOrTrailingSpaces(string path, bool isDir, bool full = false)
         {
-            if (!isDir) {
-                string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
-                string extension = FileOp.GetExtension(path, isDir);
+            string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
+            string extension = FileOp.GetExtension(path, isDir);
+            string fName = FileOp.GetFileName(path, isDir);
+            if (!isDir && full) {
                 if (basename.Trim() != basename || extension.Trim() != extension)
                     return true;
                 else
                     return false;
+
             } else {
-                string folderName = FileOp.GetFileName(path, isDir);
-                if (folderName.Trim() != folderName)
+                if (fName.Trim() != fName)
                     return true;
                 else
                     return false;
