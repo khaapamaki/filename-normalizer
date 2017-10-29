@@ -150,7 +150,7 @@ namespace FileNameNormalizer
             //    string path = directoryContentsFilesFirst[i];
             //    bool isDir = i >= numberOfFiles;
             //    bool didNormalize = false;
-            //    if (isDir && FileOp.GetDirectoryName(path) == ".fcpcache") {
+            //    if (isDir && FileOp.GetFileName(path) == ".fcpcache") {
             //        // skip
             //    } else {
             //        if (FileOp.FileOrDirectoryExists(path)) {
@@ -186,7 +186,6 @@ namespace FileNameNormalizer
                         Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
                         counter.TooLongFilePaths++;
                     }
-
                 }
 
                 string fileName = FileOp.GetFileName(path, isDir);
@@ -354,7 +353,7 @@ namespace FileNameNormalizer
 
                 // recurse
                 foreach (string subDirectory in subDirectories) {
-                    string dirName = FileOp.GetDirectoryName(subDirectory);
+                    string dirName = FileOp.GetFileName(subDirectory, isDir: true);
                     bool tooLongPath = subDirectory.Length >= FileOp.MAX_FILE_PATH_LENGTH;
                     if (tooLongPath) {
                         Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
@@ -406,7 +405,7 @@ namespace FileNameNormalizer
                     string newExt = FileOp.GetExtension(path, isDir).Trim();
                     testPath = pathWihtoutLastComponent + @"\\" + newBase + newExt;
                 } else {
-                    string newFolderName = FileOp.GetDirectoryName(path).Trim();
+                    string newFolderName = FileOp.GetFileName(path, isDir).Trim();
                     testPath = pathWihtoutLastComponent + @"\\" + newFolderName;
                 }
             }
@@ -475,7 +474,7 @@ namespace FileNameNormalizer
                 else
                     return false;
             } else {
-                string folderName = FileOp.GetDirectoryName(path);
+                string folderName = FileOp.GetFileName(path, isDir);
                 if (folderName.Trim() != folderName)
                     return true;
                 else

@@ -284,18 +284,28 @@ namespace FileNameNormalizer
         //    return pathComponents.Last();
         //}
 
-        public static string GetDirectoryName(string path)
+        public static string GetDirectoryPart(string path, bool isDir)
         {
-            if (path.Length < MAX_DIR_PATH_LENGTH)
-                return System.IO.Path.GetDirectoryName(path);
-            else
-                return Pri.LongPath.Path.GetDirectoryName(path);
+            if (isDir) {
+                if (path.Length < MAX_DIR_PATH_LENGTH)
+                    return System.IO.Path.GetDirectoryName(path);
+                else
+                    return Pri.LongPath.Path.GetDirectoryName(path);
+            } else {
+                if (path.Length < MAX_FILE_PATH_LENGTH)
+                    return System.IO.Path.GetDirectoryName(path);
+                else
+                    return Pri.LongPath.Path.GetDirectoryName(path);
+            }
         }
 
         public static string GetFileName(string path, bool isDir)
         {
             if (isDir) {
-                return GetDirectoryName(path);
+                if (path.Length < MAX_DIR_PATH_LENGTH)
+                    return System.IO.Path.GetFileName(path);
+                else
+                    return Pri.LongPath.Path.GetFileName(path);
             } else {
                 if (path.Length < MAX_FILE_PATH_LENGTH)
                     return System.IO.Path.GetFileName(path);
