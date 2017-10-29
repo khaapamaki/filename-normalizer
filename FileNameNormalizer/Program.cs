@@ -83,7 +83,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
                 Console.WriteLine("  /c            Remames file and folder names that would be considered the same in a case-insensitive file systems.");
                 Console.WriteLine("  /s            Fixes illegal folder names with trailing spaces.");
-                Console.WriteLine("  /spaces       Fixes all file and folder names with trailing spaces.");
+                Console.WriteLine("  /spaces       Fixes all file and folder names with leading and trailing spaces.");
                 Console.WriteLine("  /nonorm       Bypass normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
