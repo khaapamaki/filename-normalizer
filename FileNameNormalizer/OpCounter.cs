@@ -36,6 +36,8 @@ namespace FileNameNormalizer
 
         public int TooLongFilePaths { get; set; } = 0;
         public int TooLongDirPaths { get; set; } = 0;
+        public int SkippedDirectories { get; set; } = 0;
+        public int IOErrors { get; set; } = 0;
 
         public override string ToString()
         {
@@ -129,8 +131,8 @@ namespace FileNameNormalizer
                     else
                         s.AppendLine($"   with 1 file failed to be renamed");
                 }
-
             }
+
             if (DirsWithDuplicateNames > 0) {
                 if (IsPlural(DirsWithDuplicateNames))
                     s.AppendLine($"{DirsWithDuplicateNames} folders have duplicate names in case sensitive domain");
@@ -148,7 +150,6 @@ namespace FileNameNormalizer
                     else
                         s.AppendLine($"   with 1 folder failed to be renamed");
                 }
-
             }
 
             if (FilesWithSpaces > 0) {
@@ -189,22 +190,36 @@ namespace FileNameNormalizer
                 }
             }
 
-            if (TooLongFilePaths > 0) {
-                if (IsPlural(TooLongFilePaths))
-                    s.AppendLine($"{TooLongFilePaths} files have too long path (Paths without files are legal). Must be fixed manually!");
-                else
-                    s.AppendLine($"1 file has too long path (Path without file is legal). Must be fixed manually!");
-            }
+            //if (TooLongFilePaths > 0) {
+            //    if (IsPlural(TooLongFilePaths))
+            //        s.AppendLine($"{TooLongFilePaths} files have long path");
+            //    else
+            //        s.AppendLine($"1 file has long path");
+            //}
 
             if (TooLongDirPaths > 0) {
                 if (IsPlural(TooLongDirPaths))
-                    s.AppendLine($"{TooLongDirPaths}  folders have too long path along ALL their content. Must be fixed manually!");
+                    s.AppendLine($"{TooLongDirPaths} folders or files they contain have long paths, as well as all enclosed subfolders");
                 else
-                    s.AppendLine($"1 folder hastoo long path along ALL it's content. Must be fixed manually!");
+                    s.AppendLine($"1 folder or files it contains have long paths, as well as all enclosed subfolders");
             }
 
             if (s.ToString() == "") {
                 s.AppendLine("Found nothing. Going home.");
+            }
+
+            if (SkippedDirectories > 0) {
+                if (IsPlural(SkippedDirectories))
+                    s.AppendLine($"{SkippedDirectories} macOS packages or symlinks skipped");
+                else
+                    s.AppendLine($"1 macOS package or symlink skipped");
+            }
+
+            if (IOErrors > 0) {
+                if (IsPlural(IOErrors))
+                    s.AppendLine($"{IOErrors} I/O Errors");
+                else
+                    s.AppendLine($"1 I/O Error");
             }
 
             return s.ToString();

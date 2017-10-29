@@ -260,13 +260,13 @@ namespace FileNameNormalizer
             }
         }
 
-        public static bool NameExists(string name, List<string> dirContents, bool caseInsensitive)
+        public static bool NameExists(string name, List<string> dirContents, bool caseInsensitive, int startIndex = 0)
         {
             if (dirContents == null)
                 return false;
+            for (int i = startIndex; i < dirContents.Count(); i++) {
 
-            foreach (string item in dirContents) {
-                if ((caseInsensitive == false && name == item) && (caseInsensitive == true && name.ToLower() == item.ToLower()))
+                if ((caseInsensitive == false && name == dirContents[i]) && (caseInsensitive == true && name.ToLower() == dirContents[i].ToLower()))
                     return true;
             }
             return false;

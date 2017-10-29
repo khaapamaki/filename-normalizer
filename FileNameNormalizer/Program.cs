@@ -39,10 +39,15 @@ namespace FileNameNormalizer
         private static bool _optionProcessDirs = true;
         private static bool _optionFixSpaces = false;
         private static bool _optionNormalize = true;
-
+        private static bool _optionMacAware = true;
+        private static List<string> _tooLongPaths;
 
         private static NormalizationForm _defaultNormalizationForm = NormalizationForm.FormC;
         private static NormalizationForm _optionNormalizationForm = _defaultNormalizationForm;
+
+        private static List<string> _macPackages = new List<string> { ".fcpcache", ".app", ".framework", ".kext", ".plugin", ".docset", ".xpc", ".qlgenerator", ".component",
+            ".mdimporter", ".bundle", ".lproj", ".nib", ".xib", ".download", ".rtfd", ".fcarch", ".pkg", ".dmg"
+        };
 
         // not currently in use
         // useful stuff keep along with this project for future use
@@ -77,7 +82,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
                 Console.WriteLine("  /c            Looks for file and folder names that would be considered the same in a case-insensitive file systems.");
                 Console.WriteLine("  /s            Looks for file and folder names that have leading or trailing spaces.");
-                Console.WriteLine("  /x            Bypass normalization.");
+                Console.WriteLine("  /nonorm       Bypass normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
@@ -109,6 +114,8 @@ namespace FileNameNormalizer
                         Console.WriteLine("*** Processing {0:s}", path);
                     else
                         Console.WriteLine("*** Checking {0:s}", path);
+                    _tooLongPaths = new List<string>(500);
+
                     HandleDirectory(path, ref counter);
                 } else if (FileOp.FileExists(path)) {
                     Console.WriteLine("Processing a single file is not supported in the current version.");
@@ -122,6 +129,7 @@ namespace FileNameNormalizer
                 }
             }
 
+            _tooLongPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
             Console.Write(counter.ToString());
 
 #if DEBUG
@@ -143,36 +151,13 @@ namespace FileNameNormalizer
             List<string> directoryContentsFilesFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfFiles, directoriesFirst: false);
             //List<string> directoryContentsDirsFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfDirs, directoriesFirst: true);
 
-
-            //for (int i = 0; i < directoryContentsFilesFirst.Count(); i++) {
-            //    string path = directoryContentsFilesFirst[i];
-            //    bool isDir = i >= numberOfFiles;
-            //    bool didNormalize = false;
-            //    if (isDir && FileOp.GetFileName(path) == ".fcpcache") {
-            //        // skip
-            //    } else {
-            //        if (FileOp.FileOrDirectoryExists(path)) {
-            //            string resultPath = path;
-            //            didNormalize = NormalizeIfNeeded(ref resultPath, ref counter, directoryContentsFilesFirst, isDir: isDir);
-            //            directoryContentsFilesFirst[i] = resultPath;
-            //        } else
-            //            Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
-            //        if (didNormalize && _optionHexDump)
-            //            PrintHexFileName(FileOp.GetFileName(path)); // For debugging
-            //    }
-            //}
-
-            /// Handle case insensitive duplicates and leading and trailing spaces
-            /// 
-            //if (_optionCaseInsensitive || _optionFixSpaces) {
-
-
             bool pathShown = false;
+            bool longPathFound = false;
 
-            for (int j = 0; j < directoryContentsFilesFirst.Count(); j++) {
+            for (int pos = 0; pos < directoryContentsFilesFirst.Count(); pos++) {
 
-                bool isDir = j >= numberOfFiles;
-                string path = directoryContentsFilesFirst[j];
+                bool isDir = pos >= numberOfFiles;
+                string path = directoryContentsFilesFirst[pos];
 
                 //if (!FileOp.FileOrDirectoryExists(path)) {
                 //    Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
@@ -181,8 +166,9 @@ namespace FileNameNormalizer
 
                 if (noLongPathWarnings == false && !isDir) {
                     if (path.Length >= FileOp.MAX_DIR_PATH_LENGTH) {
-                        Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
-                        counter.TooLongFilePaths++;
+                        longPathFound = true;
+                        //Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
+                        //counter.TooLongFilePaths++;
                     }
                 }
 
@@ -197,7 +183,7 @@ namespace FileNameNormalizer
                 }
 
                 if (_optionCaseInsensitive) {
-                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir);
+                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir, startIndex: pos + 1);
                 }
 
                 bool fixSpaces = false;
@@ -231,7 +217,7 @@ namespace FileNameNormalizer
                         newPath = Normalize(newPath, _optionNormalizationForm, isDir);
                     }
 
-                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces);
+                    newPath = GetUniqueName(newPath, directoryContentsFilesFirst, isDir, caseInsensitive: _optionCaseInsensitive, removeSpaces: fixSpaces, startIndex: pos + 1);
 
                     if (normalize) {
                         if (isDir) {
@@ -266,7 +252,7 @@ namespace FileNameNormalizer
                         Console.WriteLine("* " + sourcePath);
                         pathShown = true;
                     }
-                    directoryContentsFilesFirst[j] = newPath;
+                    directoryContentsFilesFirst[pos] = newPath;
                     string fName = FileOp.GetFileName(path, isDir);
                     string newFName = FileOp.GetFileName(newPath, isDir);
                     Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
@@ -323,29 +309,19 @@ namespace FileNameNormalizer
                     }
                 }
             }
-            //}
-
-
-            ///// Print length warnings, not logical place for them here -> refactor
-            ///// 
-            //if (noLongPathWarnings == false) {
-            //    for (int i = 0; i < numberOfFiles; i++) {
-            //        string path = directoryContentsFilesFirst[i];
-            //        bool isDir = i >= numberOfFiles;
-            //        if (path.Length >= FileOp.MAX_DIR_PATH_LENGTH) {
-            //            Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
-            //            counter.TooLongFilePaths++;
-            //        }
-            //    }
-            //}
 
             /// Free memory before a recursion takes place
 
             directoryContentsFilesFirst = null;
             //directoryContentsDirsFirst = null;
 
-            /// Recursion part
+            if (longPathFound) {
+                counter.TooLongDirPaths++;
+                _tooLongPaths.Add(sourcePath);
+            }
 
+            /// Recursion part
+            /// 
             if (_optionRecurse) {
                 // reread subdirectories because some may have changed
                 List<string> subDirectories = FileOp.GetSubDirectories(sourcePath);
@@ -354,24 +330,28 @@ namespace FileNameNormalizer
                     string dirName = FileOp.GetFileName(subDirectory, isDir: true);
                     bool tooLongPath = subDirectory.Length >= FileOp.MAX_FILE_PATH_LENGTH;
                     if (tooLongPath) {
-                        Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
-                        Console.WriteLine("*** Subsequent warnings in this path are supressed.");
+                        //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
+                        //Console.WriteLine("*** Subsequent warnings in this path are supressed.");
                         counter.TooLongDirPaths++;
+                        _tooLongPaths.Add(subDirectory);
                     }
 
                     // Recurse if recursion flag set
-                    if (!dirName.StartsWith(".fcpcache")) // .fcpcache SPECIAL CASE for Valve Media Company!!!
-                    {
+                    if (!IsSkippableDirectory(dirName)) {
                         if (FileOp.DirectoryExists(subDirectory)) {
                             if (!FileOp.IsSymbolicDir(subDirectory))
                                 HandleDirectory(subDirectory, ref counter, noLongPathWarnings: tooLongPath || noLongPathWarnings); // -> Recurse subdirectories
-                            else
+                            else {
                                 Console.WriteLine("*** SymLink - not following: {0:s}", subDirectory);
+                                counter.SkippedDirectories++;
+                            }
                         } else {
                             Console.WriteLine("*** Error: Cannot Access Directory (After renaming): {0:s}", subDirectory);
+                            counter.IOErrors++;
                         }
                     } else {
-                        Console.WriteLine("*** .fcpcache - skipped");
+                        Console.WriteLine($"*** skipped {subDirectory:s}");
+                        counter.SkippedDirectories++;
                     }
                 }
             }
@@ -386,7 +366,7 @@ namespace FileNameNormalizer
         /// <param name="dirContents"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool caseInsensitive, bool removeSpaces)
+        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool caseInsensitive, bool removeSpaces, int startIndex = 0)
         {
             string originalFilename = FileOp.GetFileName(path, isDir);
             string pathWihtoutLastComponent = path.Substring(0, path.Count() - originalFilename.Count());
@@ -408,7 +388,7 @@ namespace FileNameNormalizer
             }
 
             int i = 1;
-            while (FileOp.NameExists(testPath, dirContents, caseInsensitive)) {
+            while (FileOp.NameExists(testPath, dirContents, caseInsensitive, startIndex)) {
                 string suffix;
                 if (isDir) {
                     suffix = " [Duplicate Foldername]";
@@ -444,12 +424,13 @@ namespace FileNameNormalizer
         /// <param name="comparePath"></param>
         /// <param name="dirContents"></param>
         /// <returns></returns>
-        static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents, bool isDir)
+        static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents, bool isDir, int startIndex = 0)
         {
             string compareName = FileOp.GetFileName(comparePath, isDir);
 
-            foreach (string path in dirContents) {
-                string filename = FileOp.GetFileName(path, isDir);
+            for (int i = startIndex; i < dirContents.Count(); i++) {
+                //foreach (string path in dirContents) {
+                string filename = FileOp.GetFileName(dirContents[i], isDir);
                 if (compareName.ToLower() == filename.ToLower() && compareName != filename)
                     return true;
             }
@@ -615,6 +596,16 @@ namespace FileNameNormalizer
             return NormalizeIfNeeded(ref path, _optionNormalizationForm, ref counter, dirContents, isDir);
         }
 
+        static bool IsSkippableDirectory(string dirName)
+        {
+            if (_optionMacAware) {
+                foreach (string suffix in _macPackages) {
+                    if (dirName.EndsWith(suffix))
+                        return true;
+                }
+            }
+            return false;
+        }
         /// <summary>
         /// Parses command line arguments
         /// Sets options and reads accessible paths from argument array.
@@ -672,7 +663,7 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
                 }
-                if (lcaseArg == "/x") {
+                if (lcaseArg == "/nonorm") {
                     _optionNormalize = false;
                 }
                 // option files only
