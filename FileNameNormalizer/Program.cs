@@ -1,5 +1,4 @@
 ﻿// File Name Normalizer
-// v0.3.15
 // Kati Haapamäki 2016-2017
 
 // ToDo: parse . and .. from path
@@ -73,11 +72,12 @@ namespace FileNameNormalizer
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurse subdirectories");
                 Console.WriteLine("  /rename       Normalize and rename file and directory names when needed.");
-                Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
+                //Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /formc        Perform Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Perform Form D normalization. Reverse for Form C.");
                 Console.WriteLine("  /c            Looks for file and folder names that would be considered the same in a case-insensitive file systems.");
                 Console.WriteLine("  /s            Looks for file and folder names that have leading or trailing spaces.");
+                Console.WriteLine("  /x            Bypass normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Set search pattern for files, eg. *.txt");
@@ -674,6 +674,9 @@ namespace FileNameNormalizer
                 // option directories only
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
+                }
+                if (lcaseArg == "/x") {
+                    _optionNormalize = false;
                 }
                 // option files only
                 if (lcaseArg == "/f") {

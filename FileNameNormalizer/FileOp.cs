@@ -346,6 +346,12 @@ namespace FileNameNormalizer
                     return Pri.LongPath.Path.GetExtension(path);
             }
         }
+
+        /// <summary>
+        /// Get Drive letter
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string GetPathRoot(string path)
         {
             if (path.Length < MAX_DIR_PATH_LENGTH)
