@@ -112,7 +112,7 @@ namespace FileNameNormalizer
                     //path = sourcePath.Substring(0, sourcePath.Length - 1);
                 }
                 if (FileOp.DirectoryExists(path)) {
-                    if (!IsSkippableDirectory(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
+                    if (!IsMacPackage(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
                         // Path is a dictory
                         if (_optionRename)
                             Console.WriteLine("*** Processing {0:s}", path);
@@ -151,10 +151,10 @@ namespace FileNameNormalizer
         static void HandleDirectory(string sourcePath, ref OpCounter counter, bool noLongPathWarnings = false)
         {
             // Read directory contents
-            //List<string> subDirs = FileOp.GetSubDirectories(sourcePath);
-            //List<string> files = FileOp.GetFiles(sourcePath, _optionSearchPattern);
-            bool canAccess = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfFiles, false, out List<string> directoryContentsFilesFirst);
-            //List<string> directoryContentsDirsFirst = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern, out int numberOfDirs, directoriesFirst: true);
+            bool canAccess = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern,
+                out int numberOfFiles, false, out List<string> directoryContentsFilesFirst);
+            bool pathShown = false;
+            bool longPathFound = false;
 
             if (!canAccess) {
                 counter.UnaccesableDirs++;
@@ -162,46 +162,38 @@ namespace FileNameNormalizer
                 return;
             }
 
-            bool pathShown = false;
-            bool longPathFound = false;
-
             for (int pos = 0; pos < directoryContentsFilesFirst.Count(); pos++) {
 
                 bool isDir = pos >= numberOfFiles;
                 string path = directoryContentsFilesFirst[pos];
                 bool isPackage = false;
+                string fileName = FileOp.GetFileName(path, isDir);
+                string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
+                //string pathWithoutFileName = sourcePath; //FileOp.GetDirectoryPath(path, isDir); // SEPARATOR?
+                bool needsRename = false;
+                bool normalize = false;
+                bool fixDuplicates = false;
 
-                //if (!FileOp.FileOrDirectoryExists(path)) {
-                //    Console.WriteLine("*** Error: Cannot Access {1:s}: {0:s}", path, isDir ? "Directory" : "File");
-                //    continue;
-                //}
-
+                // long path detection
                 if (noLongPathWarnings == false && !isDir) {
                     if (path.Length >= FileOp.MAX_DIR_PATH_LENGTH) {
                         longPathFound = true;
-                        //Console.WriteLine("*** Warning: Path too long for individual file ({0:g}): {1:s} ", path.Length, path);
-                        //counter.TooLongFilePaths++;
                     }
                 }
 
+                // macOS package detection. (folder names will be renamed like file names)
                 if (isDir) {
-                    if (IsSkippableDirectory(FileOp.GetFileName(path, true))) {
+                    if (IsMacPackage(FileOp.GetFileName(path, true))) {
                         isPackage = true;
                     }
                 }
 
-                string fileName = FileOp.GetFileName(path, isDir);
-                string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
-                bool needsRename = false;
-                bool normalize = false;
-                bool fixDuplicates = false;
-                string prefix;
                 if (_optionNormalize) {
                     normalize = !fileName.IsNormalized(_optionNormalizationForm);
                 }
 
                 if (_optionCaseInsensitive) {
-                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir, startIndex: pos + 1);
+                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir, startIndex: 0);
                 }
 
                 bool fixSpaces = false;
@@ -209,28 +201,12 @@ namespace FileNameNormalizer
                     fixSpaces = HasLeadingOrTrailingSpaces(path, isDir, _optionFixSpacesAll);
                 }
 
-                prefix = isDir ? "DIR:   " : "File:  ";
+                string prefix = GetReportingPrefix(isDir, normalize, fixDuplicates, fixSpaces);
 
-                if (normalize && fixSpaces && fixDuplicates) {
-                    prefix += "NORM+S+D  ";
-                } else {
-                    if (normalize && fixDuplicates)
-                        prefix += "NORM+DUPL ";
-                    else if (normalize && fixSpaces)
-                        prefix += "NORM+SPCS ";
-
-                    else if (fixSpaces && fixDuplicates)
-                        prefix += "SPCS+DUPL ";
-                    else if (fixSpaces)
-                        prefix += "SPACES    ";
-                    else if (fixDuplicates)
-                        prefix += "DUPLICATE ";
-                    else if (normalize)
-                        prefix += "NORMALIZE ";
-                }
                 string newPath = path;
 
                 bool createsDuplicate = false;
+
                 if (fixDuplicates || fixSpaces || normalize) {
                     if (normalize) {
                         newPath = Normalize(newPath, _optionNormalizationForm, isDir);
@@ -285,6 +261,7 @@ namespace FileNameNormalizer
                             }
 
                         } else {
+
                             renameFailed = true;
                             if (isDir) {
                                 Console.WriteLine("*** Error: Cannot rename directory: {0:s}", path);
@@ -383,7 +360,7 @@ namespace FileNameNormalizer
                     }
 
                     // Recurse if recursion flag set
-                    if (!IsSkippableDirectory(dirName)) {
+                    if (!IsMacPackage(dirName)) {
                         if (FileOp.DirectoryExists(subDirectory)) {
                             if (!FileOp.IsSymbolicDir(subDirectory))
                                 HandleDirectory(subDirectory, ref counter, noLongPathWarnings: tooLongPath || noLongPathWarnings); // -> Recurse subdirectories
@@ -403,6 +380,31 @@ namespace FileNameNormalizer
             }
 
             return;
+        }
+
+
+        static string GetReportingPrefix(bool isDir, bool normalize, bool fixDuplicates, bool fixSpaces)
+        {
+            string prefix = isDir ? "DIR:   " : "File:  ";
+
+            if (normalize && fixSpaces && fixDuplicates) {
+                prefix += "NORM+S+D  ";
+            } else {
+                if (normalize && fixDuplicates)
+                    prefix += "NORM+DUPL ";
+                else if (normalize && fixSpaces)
+                    prefix += "NORM+SPCS ";
+
+                else if (fixSpaces && fixDuplicates)
+                    prefix += "SPCS+DUPL ";
+                else if (fixSpaces)
+                    prefix += "SPACES    ";
+                else if (fixDuplicates)
+                    prefix += "DUPLICATE ";
+                else if (normalize)
+                    prefix += "NORMALIZE ";
+            }
+            return prefix;
         }
 
         /// <summary>
@@ -691,7 +693,7 @@ namespace FileNameNormalizer
             return NormalizeIfNeeded(ref path, _optionNormalizationForm, ref counter, dirContents, isDir);
         }
 
-        static bool IsSkippableDirectory(string dirName)
+        static bool IsMacPackage(string dirName)
         {
             if (_optionMacAware) {
                 foreach (string suffix in _macPackages) {

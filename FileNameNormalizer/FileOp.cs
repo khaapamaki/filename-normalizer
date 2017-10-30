@@ -303,7 +303,7 @@ namespace FileNameNormalizer
         //    return pathComponents.Last();
         //}
 
-        public static string GetDirectoryPart(string path, bool isDir)
+        public static string GetDirectoryPath(string path, bool isDir)
         {
             if (isDir) {
                 if (path.Length < MAX_DIR_PATH_LENGTH)
