@@ -42,6 +42,7 @@ namespace FileNameNormalizer
         private static bool _optionNormalize = true;
         private static bool _optionMacAware = true;
         private static List<string> _tooLongPaths;
+        private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
         private static NormalizationForm _defaultNormalizationForm = NormalizationForm.FormC;
         private static NormalizationForm _optionNormalizationForm = _defaultNormalizationForm;
@@ -54,6 +55,26 @@ namespace FileNameNormalizer
         // useful stuff keep along with this project for future use
         const string acceptableCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜŸabcdefghijklmnopqrstuvwxyzáàâäãåçéèêëíìîïñóòôöõúùûüÿ_ !@#£$€%&()[]{}'+-.,;§½";
         const string replacementCharacter = "_";
+
+        private enum TrimOptions
+        {
+            FileBaseLeft = 0b00000001,
+            FileBaseRight = 0b00000010,
+            FileExtLeft = 0b00000100,
+            FileExtRight = 0b00001000,
+            DirLeft = 0b00010000,
+            DirRight = 0b00100000,
+            None = 0
+
+        }
+
+        private static TrimOptions _optionTrimAll =
+            TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight
+            | TrimOptions.FileExtLeft | TrimOptions.FileExtRight
+            | TrimOptions.DirLeft | TrimOptions.DirRight;
+
+        private static TrimOptions _optionTrimMandatory =
+            TrimOptions.DirRight;
 
         /// <summary>
         /// Reads options and paths from command line arguments, and process all accessible paths
@@ -105,6 +126,12 @@ namespace FileNameNormalizer
 
             OpCounter counter = new OpCounter();
             _tooLongPaths = new List<string>(500);
+
+
+            if (_optionFixSpacesMandatory)
+                _optionTrimOptions = _optionTrimMandatory;
+            if (_optionFixSpacesAll)
+                _optionTrimOptions = _optionTrimAll;
 
             foreach (string sourcePath in paths) {
                 string path = sourcePath;
@@ -170,9 +197,9 @@ namespace FileNameNormalizer
                 string fileName = FileOp.GetFileName(path, isDir);
                 string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
                 //string pathWithoutFileName = sourcePath; //FileOp.GetDirectoryPath(path, isDir); // SEPARATOR?
-                bool needsRename = false;
-                bool normalize = false;
-                bool fixDuplicates = false;
+                //bool needsRename = false;
+                //bool needNormalization = false;
+                //bool fixDuplicates = false;
 
                 // long path detection
                 if (noLongPathWarnings == false && !isDir) {
@@ -188,41 +215,35 @@ namespace FileNameNormalizer
                     }
                 }
 
-                if (_optionNormalize) {
-                    normalize = !fileName.IsNormalized(_optionNormalizationForm);
-                }
+                string newPath = GetUniqueName(
+                    path,
+                    directoryContentsFilesFirst,
+                    isDir,
+                    isPackage,
+                    _optionNormalize,
+                    _optionTrimOptions,
+                    _optionCaseInsensitive,
+                    out bool needNormalization,
+                    out bool needTrim,
+                    out bool createsDuplicate,
+                    out bool needsRename,
+                    out bool genuineDuplicate,
+                    skipIndex: pos);
 
-                if (_optionCaseInsensitive) {
-                    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir, startIndex: 0);
-                }
+                //if (_optionCaseInsensitive) {
+                //    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir, startIndex: 0);
+                //}
 
-                bool fixSpaces = false;
-                if (_optionFixSpacesMandatory || _optionFixSpacesAll) {
-                    fixSpaces = HasLeadingOrTrailingSpaces(path, isDir, _optionFixSpacesAll);
-                }
+                //bool fixSpaces = false;
+                //if (_optionFixSpacesMandatory || _optionFixSpacesAll) {
+                //    fixSpaces = HasLeadingOrTrailingSpaces(path, isDir, _optionFixSpacesAll);
+                //}
 
-                string prefix = GetReportingPrefix(isDir, normalize, fixDuplicates, fixSpaces);
+                string prefix = GetReportingPrefix(isDir, needNormalization, createsDuplicate, needTrim);
+                //if (fixDuplicates || fixSpaces || needNormalization) {
+                //    needsRename = true;
+                //}
 
-                string newPath = path;
-
-                bool createsDuplicate = false;
-
-                if (fixDuplicates || fixSpaces || normalize) {
-                    if (normalize) {
-                        newPath = Normalize(newPath, _optionNormalizationForm, isDir);
-                    }
-
-                    newPath = GetUniqueName(newPath,
-                        directoryContentsFilesFirst,
-                        isDir, isPackage,
-                        out createsDuplicate,
-                        caseInsensitive: _optionCaseInsensitive,
-                        removeSpaces: fixSpaces,
-                        removeSpacesFull: _optionFixSpacesAll,
-
-                        skipIndex: pos);
-                    needsRename = true;
-                }
 
                 if (needsRename) {
                     if (!pathShown) {
@@ -240,7 +261,7 @@ namespace FileNameNormalizer
                     /// 
                     if (_optionRename) {
                         if (FileOp.Rename(path, newPath, isDir)) {
-                            if (normalize) {
+                            if (needNormalization) {
                                 if (isDir)
                                     counter.DirsNeedNormalizeRenamed++;
                                 else
@@ -268,7 +289,7 @@ namespace FileNameNormalizer
                             } else {
                                 Console.WriteLine("*** Error: Cannot rename file: {0:s}", path);
                             }
-                            if (normalize) {
+                            if (needNormalization) {
                                 if (isDir)
                                     counter.DirsNeedNormalizeFailed++;
                                 else
@@ -289,7 +310,7 @@ namespace FileNameNormalizer
                         }
                     }
 
-                    if (normalize) {
+                    if (needNormalization) {
                         if (isDir) {
                             counter.DirsNeedNormalize++;
                         } else {
@@ -307,14 +328,14 @@ namespace FileNameNormalizer
                         }
                     }
 
-                    if (fixDuplicates) {
+                    if (genuineDuplicate) {
                         if (isDir) {
                             counter.DirsWithDuplicateNames++;
                         } else {
                             counter.FilesWithDuplicateNames++;
                         }
                     }
-                    if (fixSpaces) {
+                    if (needTrim) {
                         if (isDir) {
                             counter.DirsWithSpaces++;
                         } else {
@@ -328,7 +349,6 @@ namespace FileNameNormalizer
                             }
                         }
                     }
-
                 }
             }
 
@@ -408,19 +428,113 @@ namespace FileNameNormalizer
         }
 
         /// <summary>
-        /// Adds 'Duplicate' suffix to the filename if needed and remove unwanted spaces (if asked)
+        /// Does all the stuff and produces a new unique path for a file/folder
         /// </summary>
         /// <param name="path"></param>
         /// <param name="dirContents"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        private static string GetUniqueName(string path, List<string> dirContents, bool isDir, bool isPackage, out bool duplicate, bool caseInsensitive, bool removeSpaces, bool removeSpacesFull, int skipIndex = -1)
+        private static string GetUniqueName(
+            string path,
+            List<string> dirContents,
+            bool isDir,
+            bool isPackage,
+            bool normalize,
+            TrimOptions trimOptions,
+            bool caseInsensitive,
+            out bool didNormalize,
+            out bool didTrim,
+            out bool createdDuplicate,
+            out bool needRename,
+            out bool genuineDuplicate,
+            int skipIndex = -1)
         {
+            string newPath = path;
+            string fileName = FileOp.GetFileName(path, isDir);
+            didNormalize = false;
+            didTrim = false;
+            createdDuplicate = false;
+            needRename = false;
+            genuineDuplicate = false;
+
+            /// Normalize
+            /// 
+            if (normalize) {
+                bool needNormalization = !fileName.IsNormalized(_optionNormalizationForm);
+                if (needNormalization)
+                    didNormalize = NormalizeFileNameÍnPath(ref newPath, _optionNormalizationForm, isDir);
+            }
+
+            /// Trim
+            /// 
+            if (trimOptions != TrimOptions.None) {
+                didTrim = Trim(ref newPath, trimOptions, isDir);
+            }
+
+            /// Get new name
+            /// 
+            fileName = FileOp.GetFileName(newPath, isDir);
+            string pathWihtoutLastComponent = newPath.Substring(0, newPath.Count() - fileName.Count());
+            pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
+            string extension = FileOp.GetExtension(newPath, isDir);
+            string baseName = FileOp.GetFileNameWithoutExtension(newPath, isDir);
+
+            string newBase = baseName;
+            string dot = "";
+            if (extension.StartsWith(".")) {
+                extension = extension.Substring(1);
+                dot = ".";
+            }
+
+            /// Add suffix if file/folder already exists
+            /// 
+            string originalPath = null;
+            if (caseInsensitive)
+                originalPath = path;
+
+            int i = 1;
+            while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out genuineDuplicate, skipIndex, path)) {
+                createdDuplicate = true;
+
+                string suffix = " [Duplicate Name]";
+                if (i != 1) {
+                    suffix = $" [Duplicate Name ({i})]";
+                }
+
+                if (baseName != "") {
+                    if (!isDir || isPackage) {
+                        newPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + newPath;
+                    } else {
+                        newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newPath + suffix;
+                    }
+                } else {
+                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newPath + suffix;
+                }
+                i++;
+            }
+
+            if (newPath != path)
+                needRename = true;
+
+            return newPath;
+        }
+
+        /// <summary>
+        /// Trim
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="options"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
+        private static bool Trim(ref string path, TrimOptions options, bool isDir)
+        {
+            string newPath = path;
             string fileName = FileOp.GetFileName(path, isDir);
             string pathWihtoutLastComponent = path.Substring(0, path.Count() - fileName.Count());
+            pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
             string extension = FileOp.GetExtension(path, isDir);
             string baseName = FileOp.GetFileNameWithoutExtension(path, isDir);
-            string testPath = path;
+
             string newBase = baseName;
             string dot = "";
             if (extension.StartsWith(".")) {
@@ -431,63 +545,32 @@ namespace FileNameNormalizer
             string newExt = extension;
             string newFolderName = fileName;
 
-            pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
-
-            if (removeSpaces) {
-                if (!isDir) {
-                    if (removeSpacesFull) {
-                        newBase = baseName.Trim();
-                        newExt = extension.Trim();
-                        testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
-                    }
-                    //else {
-                    //    newBase = baseName.TrimStart();
-                    //    newExt = extension.Trim();
-                    //    testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
-                    //}
+            if (!isDir) {
+                if (false) {
+                    newBase = baseName.Trim();
+                    newExt = extension.Trim();
+                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+                }
+                //else {
+                //    newBase = baseName.TrimStart();
+                //    newExt = extension.Trim();
+                //    testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+                //}
+            } else {
+                if (false) {
+                    newFolderName = fileName.Trim();
+                    newPath = pathWihtoutLastComponent + @"\" + newFolderName;
                 } else {
-                    if (removeSpacesFull) {
-                        newFolderName = fileName.Trim();
-                        testPath = pathWihtoutLastComponent + @"\" + newFolderName;
-                    } else {
-                        newFolderName = fileName.TrimEnd();
-                        testPath = pathWihtoutLastComponent + @"\" + newFolderName;
-                    }
+                    newFolderName = fileName.TrimEnd();
+                    newPath = pathWihtoutLastComponent + @"\" + newFolderName;
                 }
             }
+            bool didTrim = newPath != path;
+            path = newPath;
+            return didTrim;
 
-            duplicate = false;
-            int i = 1;
-            while (FileOp.NameExists(testPath, dirContents, caseInsensitive, skipIndex)) {
-                duplicate = true;
-                string suffix;
-                if (isDir) {
-                    suffix = " [Duplicate Foldername]";
-                } else {
-                    suffix = " [Duplicate Filename]";
-                }
-
-                if (i != 1) {
-                    if (isDir) {
-                        suffix = $" [Duplicate Foldername ({i})]";
-                    } else {
-                        suffix = $" [Duplicate Filename ({i})]";
-                    }
-                }
-
-                if (baseName != "") {
-                    if (!isDir || isPackage) {
-                        testPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + newExt;
-                    } else {
-                        testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt + suffix;
-                    }
-                } else {
-                    testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt + suffix;
-                }
-                i++;
-            }
-            return testPath;
         }
+
 
         /// <summary>
         /// Checks is file/folder has a duplicate name when compared case insensitively
@@ -563,7 +646,7 @@ namespace FileNameNormalizer
         /// <returns>
         /// Return true if normalization is needed
         /// </returns>
-        static string Normalize(string path, NormalizationForm form, bool isDir)
+        static bool NormalizeFileNameÍnPath(ref string path, NormalizationForm form, bool isDir)
         {
             string fileName = FileOp.GetFileName(path, isDir);
             string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
@@ -574,7 +657,9 @@ namespace FileNameNormalizer
 
             normalizedFileName = fileName.Normalize(form);
             normalizedPath = pathWithoutFileName + @"\" + normalizedFileName;
-            return normalizedPath;
+            bool didNormalize = (path != normalizedPath);
+            path = normalizedPath;
+            return didNormalize;
         }
 
         [Obsolete]

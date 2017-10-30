@@ -271,15 +271,36 @@ namespace FileNameNormalizer
             }
         }
 
-        public static bool NameExists(string name, List<string> dirContents, bool caseInsensitive, int skipIndex = -1)
+        public static bool NameExists(string path,
+            List<string> dirContents,
+            bool caseInsensitive,
+            out bool genuineCIDuplicate,
+            int skipIndex = -1,
+            string originalPath = null
+            )
         {
+            genuineCIDuplicate = false;
             if (dirContents == null)
                 return false;
             for (int i = 0; i < dirContents.Count(); i++) {
                 if (i == skipIndex)
                     continue;
-                if ((caseInsensitive == false && name == dirContents[i]) || (caseInsensitive == true && name.ToLower() == dirContents[i].ToLower()))
-                    return true;
+                if (caseInsensitive) {
+                    string lcaseItem = dirContents[i].ToLower();
+                    if (path.ToLower() == lcaseItem) {
+                        if (originalPath != null) {
+                            if (originalPath.ToLower() == lcaseItem) {
+                                genuineCIDuplicate = true;
+                            }
+                        }
+                        return true;
+                    }
+                } else {
+                    if (path == dirContents[i]) {
+                        return true;
+                    }
+                }
+
             }
             return false;
         }
