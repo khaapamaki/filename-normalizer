@@ -72,14 +72,6 @@ namespace FileNameNormalizer
 
         }
 
-        //private static TrimOptions _optionTrimAll =
-        //    TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight
-        //    | TrimOptions.FileExtLeft | TrimOptions.FileExtRight
-        //    | TrimOptions.DirLeft | TrimOptions.DirRight;
-
-        //private static TrimOptions _optionTrimMandatory =
-        //    TrimOptions.DirRight;
-
         /// <summary>
         /// Reads options and paths from command line arguments, and process all accessible paths
         /// </summary>
@@ -153,13 +145,28 @@ namespace FileNameNormalizer
                             Console.WriteLine("*** Processing {0:s}", path);
                         else
                             Console.WriteLine("*** Checking {0:s}", path);
-                        HandleDirectory(path, ref counter);
+
+                        string parentPath = FileOp.GetDirectoryPath(path, true);
+                        if (parentPath == path) {
+                            HandleDirectory(path, ref counter, !_optionDumpLongPaths);
+                        } else {
+                            HandleDirectory(parentPath, ref counter, !_optionDumpLongPaths, path);
+                        }
+
+
                     } else {
                         counter.SkippedDirectories++;
                     }
+
                 } else if (FileOp.FileExists(path)) {
-                    Console.WriteLine("Processing a single file is not supported in the current version.");
-                    continue;
+
+                    string parentPath = FileOp.GetDirectoryPath(path, false);
+
+                    HandleDirectory(parentPath, ref counter, !_optionDumpLongPaths, path);
+
+
+                    //Console.WriteLine("Processing a single file is not supported in the current version.");
+                    //continue;
                     //// Path is a file
                     //string normalizedPath = path;
                     //NormalizeIfNeeded(ref normalizedPath, ref counter, isDir: false);
@@ -187,7 +194,7 @@ namespace FileNameNormalizer
         /// Reads directory contents, processes files/directories and optionally recurses subdirectories
         /// </summary>
         /// <param name="sourcePath">Path to the directory to be processed</param>
-        static void HandleDirectory(string sourcePath, ref OpCounter counter, bool noLongPathWarnings = false)
+        static void HandleDirectory(string sourcePath, ref OpCounter counter, bool noLongPathWarnings = false, string singlePath = null)
         {
             // Read directory contents
             bool canAccess = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern,
@@ -205,6 +212,9 @@ namespace FileNameNormalizer
 
                 bool isDir = pos >= numberOfFiles;
                 string path = directoryContents[pos];
+                if (singlePath != null && singlePath != path)
+                    continue;
+
                 bool isPackage = false;
                 string fileName = FileOp.GetFileName(path, isDir);
                 string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
@@ -364,27 +374,30 @@ namespace FileNameNormalizer
                 if (!FileOp.GetSubDirectories(sourcePath, out List<string> subDirectories))
                     counter.IOErrors++;
 
-                foreach (string subDirectory in subDirectories) {
-                    string dirName = FileOp.GetFileName(subDirectory, isDir: true);
-                    bool tooLongPath = subDirectory.Length >= FileOp.MAX_FILE_PATH_LENGTH;
+                foreach (string path in subDirectories) {
+                    if (singlePath != null && singlePath != path)
+                        continue;
+
+                    string dirName = FileOp.GetFileName(path, isDir: true);
+                    bool tooLongPath = path.Length >= FileOp.MAX_FILE_PATH_LENGTH;
                     if (tooLongPath) {
                         //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
                         //Console.WriteLine("*** Subsequent warnings in this path are supressed.");
                         counter.TooLongDirPaths++;
-                        _tooLongPaths.Add(subDirectory);
+                        _tooLongPaths.Add(path);
                     }
 
                     // Recurse if recursion flag set
                     if (!IsMacPackage(dirName)) {
-                        if (FileOp.DirectoryExists(subDirectory)) {
-                            if (!FileOp.IsSymbolicDir(subDirectory))
-                                HandleDirectory(subDirectory, ref counter, noLongPathWarnings: tooLongPath || noLongPathWarnings); // -> Recurse subdirectories
+                        if (FileOp.DirectoryExists(path)) {
+                            if (!FileOp.IsSymbolicDir(path))
+                                HandleDirectory(path, ref counter, noLongPathWarnings: tooLongPath || noLongPathWarnings); // -> Recurse subdirectories
                             else {
-                                Console.WriteLine("*** SymLink - not following: {0:s}", subDirectory);
+                                Console.WriteLine("*** SymLink - not following: {0:s}", path);
                                 counter.SkippedDirectories++;
                             }
                         } else {
-                            Console.WriteLine("*** Error: Cannot Access Directory (After renaming): {0:s}", subDirectory);
+                            Console.WriteLine("*** Error: Cannot Access Directory (After renaming): {0:s}", path);
                             counter.IOErrors++;
                         }
                     } else {
@@ -457,8 +470,9 @@ namespace FileNameNormalizer
             if (normalize) {
                 bool needNormalization = !fileName.IsNormalized(_optionNormalizationForm);
                 if (needNormalization)
-                    didNormalize = NormalizeFileNameÍnPath(ref newPath, _optionNormalizationForm, isDir);
+                    didNormalize = NormalizeFileNameInPath(ref newPath, _optionNormalizationForm, isDir);
             }
+            fileName = FileOp.GetFileName(newPath, isDir);
 
             /// Trim
             /// 
@@ -596,18 +610,18 @@ namespace FileNameNormalizer
         /// <param name="comparePath"></param>
         /// <param name="dirContents"></param>
         /// <returns></returns>
-        static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents, bool isDir, int startIndex = 0)
-        {
-            string compareName = FileOp.GetFileName(comparePath, isDir);
+        //static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents, bool isDir, int startIndex = 0)
+        //{
+        //    string compareName = FileOp.GetFileName(comparePath, isDir);
 
-            for (int i = startIndex; i < dirContents.Count(); i++) {
-                //foreach (string path in dirContents) {
-                string filename = FileOp.GetFileName(dirContents[i], isDir);
-                if (compareName.ToLower() == filename.ToLower() && compareName != filename)
-                    return true;
-            }
-            return false;
-        }
+        //    for (int i = startIndex; i < dirContents.Count(); i++) {
+        //        //foreach (string path in dirContents) {
+        //        string filename = FileOp.GetFileName(dirContents[i], isDir);
+        //        if (compareName.ToLower() == filename.ToLower() && compareName != filename)
+        //            return true;
+        //    }
+        //    return false;
+        //}
 
         /// <summary>
         /// 
@@ -615,43 +629,43 @@ namespace FileNameNormalizer
         /// <param name="path"></param>
         /// <param name="isDir"></param>
         /// <returns></returns>
-        static bool HasLeadingOrTrailingSpaces(string path, bool isDir, bool full = false)
-        {
-            string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
-            string extension = FileOp.GetExtension(path, isDir);
-            string dot = "";
-            if (extension.StartsWith(".")) {
-                extension = extension.Substring(1);
-                dot = ".";
-            }
-            string fName = FileOp.GetFileName(path, isDir);
-            if (!isDir) {
-                if (full) {
-                    if (basename.Trim() != basename || extension.Trim() != extension)
-                        return true;
-                    else
-                        return false;
-                } else {
-                    return false;
-                    //if (basename.TrimStart() != basename || extension.Trim() != extension)
-                    //    return true;
-                    //else
-                    //    return false;
-                }
-            } else {
-                if (full) {
-                    if (fName.Trim() != fName)
-                        return true;
-                    else
-                        return false;
-                } else {
-                    if (fName.TrimEnd() != fName)
-                        return true;
-                    else
-                        return false;
-                }
-            }
-        }
+        //static bool HasLeadingOrTrailingSpaces(string path, bool isDir, bool full = false)
+        //{
+        //    string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
+        //    string extension = FileOp.GetExtension(path, isDir);
+        //    string dot = "";
+        //    if (extension.StartsWith(".")) {
+        //        extension = extension.Substring(1);
+        //        dot = ".";
+        //    }
+        //    string fName = FileOp.GetFileName(path, isDir);
+        //    if (!isDir) {
+        //        if (full) {
+        //            if (basename.Trim() != basename || extension.Trim() != extension)
+        //                return true;
+        //            else
+        //                return false;
+        //        } else {
+        //            return false;
+        //            //if (basename.TrimStart() != basename || extension.Trim() != extension)
+        //            //    return true;
+        //            //else
+        //            //    return false;
+        //        }
+        //    } else {
+        //        if (full) {
+        //            if (fName.Trim() != fName)
+        //                return true;
+        //            else
+        //                return false;
+        //        } else {
+        //            if (fName.TrimEnd() != fName)
+        //                return true;
+        //            else
+        //                return false;
+        //        }
+        //    }
+        //}
 
         /// <summary>
         /// Check if file or directory name needs normalization, and normalize if normalize
@@ -664,14 +678,14 @@ namespace FileNameNormalizer
         /// <returns>
         /// Return true if normalization is needed
         /// </returns>
-        static bool NormalizeFileNameÍnPath(ref string path, NormalizationForm form, bool isDir)
+        static bool NormalizeFileNameInPath(ref string path, NormalizationForm form, bool isDir)
         {
             string fileName = FileOp.GetFileName(path, isDir);
             string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
             string normalizedPath = path;
             string normalizedFileName = fileName;
-            if (pathWithoutFileName.EndsWith(@"\"))
-                pathWithoutFileName.Substring(0, pathWithoutFileName.Length - 1);
+
+            pathWithoutFileName = FileOp.PathWithoutPathSeparator(pathWithoutFileName);
 
             normalizedFileName = fileName.Normalize(form);
             normalizedPath = pathWithoutFileName + @"\" + normalizedFileName;
