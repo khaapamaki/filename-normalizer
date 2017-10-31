@@ -37,10 +37,11 @@ namespace FileNameNormalizer
         private static bool _optionCaseInsensitive = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
-        private static bool _optionFixSpacesAll = false;
-        private static bool _optionFixSpacesMandatory = false;
+        //private static bool _optionFixSpacesAll = false;
+        //private static bool _optionFixSpacesMandatory = false;
         private static bool _optionNormalize = true;
         private static bool _optionMacAware = true;
+        private static bool _optionDumpLongPaths = false;
         private static List<string> _tooLongPaths;
         private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
@@ -60,21 +61,24 @@ namespace FileNameNormalizer
         {
             FileBaseLeft = 0b00000001,
             FileBaseRight = 0b00000010,
+            FileBase = 0b00000011,
             FileExtLeft = 0b00000100,
             FileExtRight = 0b00001000,
+            FileExt = 0b00001100,
             DirLeft = 0b00010000,
             DirRight = 0b00100000,
+            Dir = 0b01100000,
             None = 0
 
         }
 
-        private static TrimOptions _optionTrimAll =
-            TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight
-            | TrimOptions.FileExtLeft | TrimOptions.FileExtRight
-            | TrimOptions.DirLeft | TrimOptions.DirRight;
+        //private static TrimOptions _optionTrimAll =
+        //    TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight
+        //    | TrimOptions.FileExtLeft | TrimOptions.FileExtRight
+        //    | TrimOptions.DirLeft | TrimOptions.DirRight;
 
-        private static TrimOptions _optionTrimMandatory =
-            TrimOptions.DirRight;
+        //private static TrimOptions _optionTrimMandatory =
+        //    TrimOptions.DirRight;
 
         /// <summary>
         /// Reads options and paths from command line arguments, and process all accessible paths
@@ -88,6 +92,8 @@ namespace FileNameNormalizer
             //string productVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
 
             Console.WriteLine("File and Folder Name Normalizer " + assemblyVersion + " beta");
+
+            _optionTrimOptions = TrimOptions.None;
 
             // Parse arguments. Sets options and extracts valid paths.
             string[] paths = ParseArguments(args);
@@ -103,8 +109,9 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /formc        Performs Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
                 Console.WriteLine("  /c            Remames file and folder names that would be considered the same in a case-insensitive file systems.");
-                Console.WriteLine("  /s            Fixes illegal folder names with trailing spaces.");
-                Console.WriteLine("  /spaces       Fixes all file and folder names with leading and trailing spaces.");
+                Console.WriteLine("  /t            Trims illegal folder names with trailing spaces. The same as option /t=dirright");
+                Console.WriteLine("  /t=all        Trims all file and folder names with leading and trailing spaces.");
+                Console.WriteLine("  /t=opt1,opt2  Specific trim instructions: base, ext, dir, baseleft, baseright, extleft, extright, dirleft, dirright.");
                 Console.WriteLine("  /nonorm       Bypass normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
@@ -128,10 +135,11 @@ namespace FileNameNormalizer
             _tooLongPaths = new List<string>(500);
 
 
-            if (_optionFixSpacesMandatory)
-                _optionTrimOptions = _optionTrimMandatory;
-            if (_optionFixSpacesAll)
-                _optionTrimOptions = _optionTrimAll;
+
+            //if (_optionFixSpacesMandatory)
+            //    _optionTrimOptions = _optionTrimMandatory;
+            //if (_optionFixSpacesAll)
+            //    _optionTrimOptions = _optionTrimAll;
 
             foreach (string sourcePath in paths) {
                 string path = sourcePath;
@@ -161,7 +169,11 @@ namespace FileNameNormalizer
                 }
             }
 
-            _tooLongPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
+            // Output the list of long paths
+            if (_optionDumpLongPaths)
+                _tooLongPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
+
+            // Output the report
             Console.Write(counter.ToString());
 
 #if DEBUG
@@ -532,7 +544,7 @@ namespace FileNameNormalizer
             string newFolderName = fileName;
 
             if (!isDir) {
-                if ((options & (TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight)) != 0) {
+                if (IsBinaryMatch(options, TrimOptions.FileBase)) {
                     newBase = baseName.Trim();
                 } else {
                     if ((options & TrimOptions.FileBaseLeft) != 0) {
@@ -542,7 +554,7 @@ namespace FileNameNormalizer
                         newBase = baseName.TrimEnd();
                     }
                 }
-                if ((options & (TrimOptions.FileExtLeft | TrimOptions.FileExtRight)) != 0) {
+                if (IsBinaryMatch(options, TrimOptions.FileExt)) {
                     newExt = extension.Trim();
                 } else {
                     if ((options & TrimOptions.FileExtLeft) != 0) {
@@ -555,7 +567,7 @@ namespace FileNameNormalizer
                 newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
 
             } else {
-                if ((options & (TrimOptions.DirLeft | TrimOptions.DirRight)) != 0) {
+                if (IsBinaryMatch(options, TrimOptions.Dir)) {
                     newFolderName = fileName.Trim();
                 } else {
                     if ((options & TrimOptions.DirLeft) != 0) {
@@ -573,6 +585,10 @@ namespace FileNameNormalizer
 
         }
 
+        private static bool IsBinaryMatch(TrimOptions options, TrimOptions requirements)
+        {
+            return (options & requirements) == requirements;
+        }
 
         /// <summary>
         /// Checks is file/folder has a duplicate name when compared case insensitively
@@ -724,12 +740,12 @@ namespace FileNameNormalizer
                     _optionCaseInsensitive = true;
                 }
                 // option check trailing and leading spaces
-                if (lcaseArg == "/s") {
-                    _optionFixSpacesMandatory = true;
+                if (lcaseArg == "/t") {
+                    _optionTrimOptions = ParseTrimOptions("dirright");
                 }
-                if (lcaseArg == "/spaces") {
-                    _optionFixSpacesAll = true;
-                }
+                //if (lcaseArg == "/spaces") {
+                //    _optionFixSpacesAll = true;
+                //}
                 // option directories only
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
@@ -748,6 +764,12 @@ namespace FileNameNormalizer
                         _optionProcessDirs = false;
                     }
                 }
+
+                if (lcaseArg.StartsWith("/t=")) {
+                    string trimStr = lcaseArg.Substring(3);
+                    _optionTrimOptions = _optionTrimOptions | ParseTrimOptions(trimStr);
+                }
+
 
                 if (!arg.StartsWith("/")) {
                     string path = arg;
@@ -768,6 +790,40 @@ namespace FileNameNormalizer
             return validPaths.ToArray();
         }
 
+        private static TrimOptions ParseTrimOptions(string trimStr)
+        {
+            TrimOptions result = TrimOptions.None;
+            string[] args = trimStr.Split(',');
+            foreach (string arg in args) {
+
+                if (arg == "baseleft")
+                    result = result | TrimOptions.FileBaseLeft;
+                if (arg == "baseright")
+                    result = result | TrimOptions.FileBaseRight;
+                if (arg == "base")
+                    result = result | TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight;
+                if (arg == "extleft")
+                    result = result | TrimOptions.FileExtLeft;
+                if (arg == "extright")
+                    result = result | TrimOptions.FileExtRight;
+                if (arg == "ext")
+                    result = result | TrimOptions.FileExtLeft | TrimOptions.FileExtRight;
+
+                if (arg == "dirleft")
+                    result = result | TrimOptions.DirLeft;
+                if (arg == "dirright")
+                    result = result | TrimOptions.DirRight;
+                if (arg == "dir")
+                    result = result | TrimOptions.DirLeft | TrimOptions.DirRight;
+
+                if (arg == "all") {
+                    result = result | TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight
+                        | TrimOptions.FileExtLeft | TrimOptions.FileExtRight
+                        | TrimOptions.DirLeft | TrimOptions.DirRight;
+                }
+            }
+            return result;
+        }
         /// <summary>
         /// Print Name in Hexadecimal. For Debuging.
         /// </summary>
