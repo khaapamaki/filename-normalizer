@@ -196,10 +196,6 @@ namespace FileNameNormalizer
                 bool isPackage = false;
                 string fileName = FileOp.GetFileName(path, isDir);
                 string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
-                //string pathWithoutFileName = sourcePath; //FileOp.GetDirectoryPath(path, isDir); // SEPARATOR?
-                //bool needsRename = false;
-                //bool needNormalization = false;
-                //bool fixDuplicates = false;
 
                 // long path detection
                 if (noLongPathWarnings == false && !isDir) {
@@ -230,20 +226,7 @@ namespace FileNameNormalizer
                     out bool genuineDuplicate,
                     skipIndex: pos);
 
-                //if (_optionCaseInsensitive) {
-                //    fixDuplicates = HasCaseInsensitiveDuplicate(path, directoryContentsFilesFirst, isDir, startIndex: 0);
-                //}
-
-                //bool fixSpaces = false;
-                //if (_optionFixSpacesMandatory || _optionFixSpacesAll) {
-                //    fixSpaces = HasLeadingOrTrailingSpaces(path, isDir, _optionFixSpacesAll);
-                //}
-
                 string prefix = GetReportingPrefix(isDir, needNormalization, createsDuplicate, needTrim);
-                //if (fixDuplicates || fixSpaces || needNormalization) {
-                //    needsRename = true;
-                //}
-
 
                 if (needsRename) {
                     if (!pathShown) {
@@ -268,13 +251,13 @@ namespace FileNameNormalizer
                                     counter.FilesNeedNormalizeRenamed++;
                             }
 
-                            if (fixDuplicates) {
+                            if (genuineDuplicate) {
                                 if (isDir)
                                     counter.DirsWithDuplicateNamesRenamed++;
                                 else
                                     counter.FilesWithDuplicateNamesRenamed++;
                             }
-                            if (fixSpaces) {
+                            if (needTrim) {
                                 if (isDir)
                                     counter.DirsWithSpacesRenamed++;
                                 else
@@ -295,13 +278,13 @@ namespace FileNameNormalizer
                                 else
                                     counter.FilesNeedNormalizeFailed++;
                             }
-                            if (fixDuplicates) {
+                            if (genuineDuplicate) {
                                 if (isDir)
                                     counter.DirsWithDuplicateNamesFailed++;
                                 else
                                     counter.FilesWithDuplicateNamesFailed++;
                             }
-                            if (fixSpaces) {
+                            if (needTrim) {
                                 if (isDir)
                                     counter.DirsWithSpacesFailed++;
                                 else
@@ -546,24 +529,37 @@ namespace FileNameNormalizer
             string newFolderName = fileName;
 
             if (!isDir) {
-                if (false) {
+                if ((options & (TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight)) != 0) {
                     newBase = baseName.Trim();
+                }
+                if ((options & TrimOptions.FileBaseLeft) != 0) {
+                    newBase = baseName.TrimStart();
+                }
+                if ((options & TrimOptions.FileBaseRight) != 0) {
+                    newBase = baseName.TrimEnd();
+                }
+                if ((options & (TrimOptions.FileExtLeft | TrimOptions.FileExtRight)) != 0) {
                     newExt = extension.Trim();
-                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
                 }
-                //else {
-                //    newBase = baseName.TrimStart();
-                //    newExt = extension.Trim();
-                //    testPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
-                //}
+                if ((options & TrimOptions.FileExtLeft) != 0) {
+                    newExt = extension.TrimStart();
+                }
+                if ((options & TrimOptions.FileExtRight) != 0) {
+                    newExt = extension.TrimEnd();
+                }
+                newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+
             } else {
-                if (false) {
+                if ((options & (TrimOptions.DirLeft | TrimOptions.DirRight)) != 0) {
                     newFolderName = fileName.Trim();
-                    newPath = pathWihtoutLastComponent + @"\" + newFolderName;
-                } else {
-                    newFolderName = fileName.TrimEnd();
-                    newPath = pathWihtoutLastComponent + @"\" + newFolderName;
                 }
+                if ((options & TrimOptions.DirLeft) != 0) {
+                    newFolderName = fileName.TrimStart();
+                }
+                if ((options & TrimOptions.DirRight) != 0) {
+                    newFolderName = fileName.TrimEnd();
+                }
+                newPath = pathWihtoutLastComponent + @"\" + newFolderName;
             }
             bool didTrim = newPath != path;
             path = newPath;
@@ -660,122 +656,6 @@ namespace FileNameNormalizer
             bool didNormalize = (path != normalizedPath);
             path = normalizedPath;
             return didNormalize;
-        }
-
-        [Obsolete]
-        /// <summary>
-        /// Check if file or directory name needs normalization, and normalize if normalize
-        /// option is set
-        /// </summary>
-        /// <param name="path">Path to be examined</param>
-        /// <param name="isDir">Boolean flag that tells us wheter the path is a directory or
-        /// a file</param>
-        /// <param name="form">Form C (default), Form D</param>
-        /// <returns>
-        /// Return true if normalization is needed
-        /// </returns>
-        static bool NormalizeIfNeeded(ref string path, NormalizationForm form, ref OpCounter counter, List<string> dirContents, bool isDir = false)
-        {
-            string fileName = FileOp.GetFileName(path, isDir);
-            string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
-            bool normalizationNeeded = false;
-            bool wasRenamed = false;
-            string normalizedPath = path;
-            string normalizedFileName = fileName;
-
-            string prefix;
-            if (isDir) prefix = "DIR:  "; else prefix = "File: ";
-            prefix += "Normalize ";
-
-            string suffix = "";
-            if (isDir) suffix = @"\";
-
-            // Do we need to normalize?
-            if (!fileName.IsNormalized(form)) {
-                normalizedFileName = fileName.Normalize(form);
-                normalizedPath = pathWithoutFileName + normalizedFileName;
-
-                if (FileOp.NameExists(normalizedPath, dirContents, caseInsensitive: _optionCaseInsensitive)) {
-                    normalizedPath = GetUniqueName(normalizedPath,
-                        dirContents,
-                        isDir, false,
-                        out bool dupl,
-                        caseInsensitive: _optionCaseInsensitive,
-                        removeSpaces: false,
-                        removeSpacesFull: _optionFixSpacesAll);
-
-                    normalizedFileName = FileOp.GetFileName(normalizedPath, isDir);
-                    Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
-                    if (isDir) {
-                        counter.DirsNeedNormalizeProducedDuplicate++;
-                    } else {
-                        counter.FilesNeedNormalizeProducedDuplicate++;
-                    }
-                } else {
-                    // Show the normalization that will/would be made
-                    if (!_optionPrintErrorsOnly)
-                        Console.WriteLine("{2:s}{0:s}{3:s} => {1:s}", path, normalizedFileName, prefix, suffix);
-                }
-                normalizationNeeded = true;
-                if (isDir) {
-                    counter.DirsNeedNormalize++;
-                } else {
-                    counter.FilesNeedNormalize++;
-                }
-            } else {
-                // Normalization not needed
-                // In verbose mode, this will show correct files too
-                if (_optionShowEveryFile && !_optionPrintErrorsOnly)
-                    Console.WriteLine("{1:s}{0:s}{2:s} ", path, prefix, suffix);
-                normalizationNeeded = false;
-            }
-
-
-            /// Actual Renaming
-            /// 
-            if (normalizationNeeded && _optionRename) {
-                bool succeded = FileOp.Rename(path, normalizedPath, isDir);
-                if (succeded) {
-                    if (isDir)
-                        succeded = FileOp.DirectoryExists(normalizedPath);
-                    else
-                        succeded = FileOp.FileExists(normalizedPath);
-
-                }
-                wasRenamed = succeded;
-                if (succeded) {
-                    if (isDir) {
-                        counter.DirsNeedNormalizeRenamed++;
-                    } else {
-                        counter.FilesNeedNormalizeRenamed++;
-                    }
-                } else {
-                    if (isDir) {
-                        Console.WriteLine("*** Error: Renaming Directory Failed");
-                        counter.DirsNeedNormalizeFailed++;
-                    } else {
-                        Console.WriteLine("*** Error: Renaming Failed");
-                        counter.FilesNeedNormalizeFailed++;
-                    }
-                }
-            }
-            if (wasRenamed || !_optionRename)
-                path = normalizedPath;
-
-            return _optionRename ? wasRenamed : normalizationNeeded;
-
-        }
-
-        [Obsolete]
-        /// <summary>
-        /// Check if file or directory name needs normalization, and normalize if normalize option is set
-        /// </summary>
-        /// <param name="path">Path to be examined</param>
-        /// <param name="isDir">Boolean flag that tells us wheter the path is a directory or a file</param>
-        /// <returns>Return true if normalization is needed</returns>
-        static bool NormalizeIfNeeded(ref string path, ref OpCounter counter, List<string> dirContents, bool isDir = false)
-        {
-            return NormalizeIfNeeded(ref path, _optionNormalizationForm, ref counter, dirContents, isDir);
         }
 
         static bool IsMacPackage(string dirName)
