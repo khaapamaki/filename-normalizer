@@ -3,10 +3,7 @@
 
 // ToDo: parse . and .. from path
 // Varoitut jos renamettu nimi aiheuttaa long pathin
-// Testaa missä kohtaa .fcpcache feilaa ja koita catchata sen yli ??
-// WHITE SPACE HEAD OR TRAIL, rename with option
-// -"- näytä palku errorissa
-// älä varoita pitkästä polusta kuin kerran (ei rekursiossa)
+// case sensivite mode ei ehkä toimi duplikaattien kanssa
 
 
 
@@ -129,13 +126,6 @@ namespace FileNameNormalizer
             OpCounter counter = new OpCounter();
             _tooLongPaths = new List<string>(500);
 
-
-
-            //if (_optionFixSpacesMandatory)
-            //    _optionTrimOptions = _optionTrimMandatory;
-            //if (_optionFixSpacesAll)
-            //    _optionTrimOptions = _optionTrimAll;
-
             foreach (string sourcePath in paths) {
                 string path = sourcePath;
                 string pathWithoutSep = FileOp.PathWithoutPathSeparator(path);
@@ -144,7 +134,8 @@ namespace FileNameNormalizer
                     path = pathWithoutSep;
 
                 if (FileOp.DirectoryExists(path)) {
-                    if (!IsMacPackage(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
+                    //if (!IsMacPackage(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
+                    if (!FileOp.IsSymbolicDir(path)) {
                         // Path is a dictory
                         if (_optionRename)
                             Console.WriteLine("*** Processing {0:s}", path);
@@ -154,28 +145,21 @@ namespace FileNameNormalizer
                         string parentPath = FileOp.GetDirectoryPath(path, true);
 
                         if (parentPath == path || parentPath == null) {
+                            // start scanning from given path that is root and cannot have a parent path
                             HandleDirectory(path, ref counter, !_optionDumpLongPaths);
                         } else {
+                            // start form parent path but process only given source item
+                            // comparison is made to siblings though
                             HandleDirectory(parentPath, ref counter, !_optionDumpLongPaths, path);
                         }
-
-
                     } else {
                         counter.SkippedDirectories++;
                     }
-
-                } else if (FileOp.FileExists(path)) {
-
+                } else if (FileOp.FileOrDirectoryExists(path)) {
+                    // Scan single file or a package
                     string parentPath = FileOp.GetDirectoryPath(path, false);
-
                     HandleDirectory(parentPath, ref counter, false, path);
 
-
-                    //Console.WriteLine("Processing a single file is not supported in the current version.");
-                    //continue;
-                    //// Path is a file
-                    //string normalizedPath = path;
-                    //NormalizeIfNeeded(ref normalizedPath, ref counter, isDir: false);
                 } else if (path != null) {
                     // Invalid path. Shouldn't occur since argument parser skips invalid paths.
                     Console.WriteLine("*** Error: Invalid path {0:s}", path);
@@ -698,7 +682,7 @@ namespace FileNameNormalizer
                     _optionHexDump = true;
                 }
                 // case sensitive operation in case sensitive systems
-                if (lcaseArg == "/c") {
+                if (lcaseArg == "/case") {
                     _optionCaseInsensitive = false;
                 }
                 // option check trailing and leading spaces
