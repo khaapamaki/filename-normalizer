@@ -237,6 +237,9 @@ namespace FileNameNormalizer
 
                 string prefix = GetReportingPrefix(isDir, needNormalization, genuineDuplicate, needTrim);
 
+                if (needsRename && !needNormalization && !genuineDuplicate && !needTrim)
+                    throw new Exception("Gathering statistics failed.");
+
                 if (needsRename) {
                     if (!pathShown) {
                         Console.WriteLine("* " + sourcePath);
@@ -490,9 +493,11 @@ namespace FileNameNormalizer
 
             if (didNormalize || didTrim || fixDuplicates) {
                 int i = 1;
-                while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out genuineDuplicate, skipIndex, path)) {
-                    if (!genuineDuplicate)
+                while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out bool genuineDup, skipIndex, path)) {
+                    if (!genuineDup)
                         createdDuplicate = true;
+                    else
+                        genuineDuplicate = true;
 
                     string suffix = " [Duplicate Name]";
                     if (i != 1) {
