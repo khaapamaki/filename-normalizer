@@ -271,6 +271,15 @@ namespace FileNameNormalizer
             }
         }
 
+        public static bool AreSame(string path1, string path2, bool caseInsensitive = true)
+        {
+            if (caseInsensitive) {
+                path1 = path1.ToLower();
+                path2 = path2.ToLower();
+            }
+            return path1 == path2;
+        }
+
         public static bool NameExists(string path,
             List<string> dirContents,
             bool caseInsensitive,

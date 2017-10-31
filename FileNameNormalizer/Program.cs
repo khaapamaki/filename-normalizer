@@ -137,9 +137,11 @@ namespace FileNameNormalizer
 
             foreach (string sourcePath in paths) {
                 string path = sourcePath;
-                if (sourcePath.EndsWith(@"\")) {
-                    //path = sourcePath.Substring(0, sourcePath.Length - 1);
-                }
+                string pathWithoutSep = FileOp.PathWithoutPathSeparator(path);
+                string pathroot = FileOp.GetPathRoot(path);
+                if (path != FileOp.GetPathRoot(path))
+                    path = pathWithoutSep;
+
                 if (FileOp.DirectoryExists(path)) {
                     if (!IsMacPackage(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
                         // Path is a dictory
@@ -149,7 +151,8 @@ namespace FileNameNormalizer
                             Console.WriteLine("*** Checking {0:s}", path);
 
                         string parentPath = FileOp.GetDirectoryPath(path, true);
-                        if (parentPath == path) {
+
+                        if (parentPath == path || parentPath == null) {
                             HandleDirectory(path, ref counter, !_optionDumpLongPaths);
                         } else {
                             HandleDirectory(parentPath, ref counter, !_optionDumpLongPaths, path);
@@ -196,7 +199,7 @@ namespace FileNameNormalizer
         /// Reads directory contents, processes files/directories and optionally recurses subdirectories
         /// </summary>
         /// <param name="sourcePath">Path to the directory to be processed</param>
-        static void HandleDirectory(string sourcePath, ref OpCounter counter, bool noLongPathWarnings = false, string singlePath = null)
+        static void HandleDirectory(string sourcePath, ref OpCounter counter, bool noLongPathWarnings = false, string singletonPath = null)
         {
             // Read directory contents
             bool canAccess = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern,
@@ -214,7 +217,7 @@ namespace FileNameNormalizer
 
                 bool isDir = pos >= numberOfFiles;
                 string path = directoryContents[pos];
-                if (singlePath != null && singlePath != path)
+                if (singletonPath != null && FileOp.AreSame(singletonPath, path, _optionCaseInsensitive))
                     continue;
 
                 bool isPackage = false;
@@ -378,7 +381,7 @@ namespace FileNameNormalizer
                     counter.IOErrors++;
 
                 foreach (string path in subDirectories) {
-                    if (singlePath != null && singlePath != path)
+                    if (singletonPath != null && FileOp.AreSame(singletonPath, path, _optionCaseInsensitive))
                         continue;
 
                     string dirName = FileOp.GetFileName(path, isDir: true);
