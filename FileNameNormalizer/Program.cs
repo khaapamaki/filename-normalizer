@@ -34,7 +34,8 @@ namespace FileNameNormalizer
         private static bool _optionPrintErrorsOnly = false;
         private static string _optionSearchPattern = "*";
         private static bool _optionHexDump = false;
-        private static bool _optionCaseInsensitive = false;
+        private static bool _optionCaseInsensitive = true;
+        private static bool _optionFixDuplicates = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
         //private static bool _optionFixSpacesAll = false;
@@ -241,6 +242,7 @@ namespace FileNameNormalizer
                     _optionNormalize,
                     _optionTrimOptions,
                     _optionCaseInsensitive,
+                    _optionFixDuplicates,
                     out bool needNormalization,
                     out bool needTrim,
                     out bool createsDuplicate,
@@ -248,7 +250,7 @@ namespace FileNameNormalizer
                     out bool genuineDuplicate,
                     skipIndex: pos);
 
-                string prefix = GetReportingPrefix(isDir, needNormalization, createsDuplicate, needTrim);
+                string prefix = GetReportingPrefix(isDir, needNormalization, genuineDuplicate, needTrim);
 
                 if (needsRename) {
                     if (!pathShown) {
@@ -450,6 +452,7 @@ namespace FileNameNormalizer
             bool normalize,
             TrimOptions trimOptions,
             bool caseInsensitive,
+            bool fixDuplicates,
             out bool didNormalize,
             out bool didTrim,
             out bool createdDuplicate,
@@ -497,32 +500,31 @@ namespace FileNameNormalizer
 
             /// Add suffix if file/folder already exists
             /// 
-            string originalPath = null;
-            if (caseInsensitive)
-                originalPath = path;
 
-            int i = 1;
-            while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out genuineDuplicate, skipIndex, path)) {
-                createdDuplicate = true;
+            if (didNormalize || didTrim || fixDuplicates) {
+                int i = 1;
+                while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out genuineDuplicate, skipIndex, path)) {
+                    createdDuplicate = true;
 
-                string suffix = " [Duplicate Name]";
-                if (i != 1) {
-                    suffix = $" [Duplicate Name ({i})]";
-                }
+                    string suffix = " [Duplicate Name]";
+                    if (i != 1) {
+                        suffix = $" [Duplicate Name ({i})]";
+                    }
 
-                if (baseName != "") {
-                    if (!isDir || isPackage) {
-                        // normal file or package type folder
-                        newPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + extension;
+                    if (baseName != "") {
+                        if (!isDir || isPackage) {
+                            // normal file or package type folder
+                            newPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + extension;
+                        } else {
+                            // folder
+                            newPath = pathWihtoutLastComponent + @"\" + newBase + dot + extension + suffix;
+                        }
                     } else {
-                        // folder
+                        // .dotfile
                         newPath = pathWihtoutLastComponent + @"\" + newBase + dot + extension + suffix;
                     }
-                } else {
-                    // .dotfile
-                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + extension + suffix;
+                    i++;
                 }
-                i++;
             }
 
             if (newPath != path)
@@ -603,69 +605,6 @@ namespace FileNameNormalizer
         {
             return (options & requirements) == requirements;
         }
-
-        /// <summary>
-        /// Checks is file/folder has a duplicate name when compared case insensitively
-        /// </summary>
-        /// <param name="comparePath"></param>
-        /// <param name="dirContents"></param>
-        /// <returns></returns>
-        //static bool HasCaseInsensitiveDuplicate(string comparePath, List<string> dirContents, bool isDir, int startIndex = 0)
-        //{
-        //    string compareName = FileOp.GetFileName(comparePath, isDir);
-
-        //    for (int i = startIndex; i < dirContents.Count(); i++) {
-        //        //foreach (string path in dirContents) {
-        //        string filename = FileOp.GetFileName(dirContents[i], isDir);
-        //        if (compareName.ToLower() == filename.ToLower() && compareName != filename)
-        //            return true;
-        //    }
-        //    return false;
-        //}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="path"></param>
-        /// <param name="isDir"></param>
-        /// <returns></returns>
-        //static bool HasLeadingOrTrailingSpaces(string path, bool isDir, bool full = false)
-        //{
-        //    string basename = FileOp.GetFileNameWithoutExtension(path, isDir);
-        //    string extension = FileOp.GetExtension(path, isDir);
-        //    string dot = "";
-        //    if (extension.StartsWith(".")) {
-        //        extension = extension.Substring(1);
-        //        dot = ".";
-        //    }
-        //    string fName = FileOp.GetFileName(path, isDir);
-        //    if (!isDir) {
-        //        if (full) {
-        //            if (basename.Trim() != basename || extension.Trim() != extension)
-        //                return true;
-        //            else
-        //                return false;
-        //        } else {
-        //            return false;
-        //            //if (basename.TrimStart() != basename || extension.Trim() != extension)
-        //            //    return true;
-        //            //else
-        //            //    return false;
-        //        }
-        //    } else {
-        //        if (full) {
-        //            if (fName.Trim() != fName)
-        //                return true;
-        //            else
-        //                return false;
-        //        } else {
-        //            if (fName.TrimEnd() != fName)
-        //                return true;
-        //            else
-        //                return false;
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// Check if file or directory name needs normalization, and normalize if normalize
@@ -750,8 +689,8 @@ namespace FileNameNormalizer
                     _optionHexDump = true;
                 }
                 // option /c handle case insensitive duplicates
-                if (lcaseArg == "/c") {
-                    _optionCaseInsensitive = true;
+                if (lcaseArg == "/case") {
+                    _optionCaseInsensitive = false;
                 }
                 // option check trailing and leading spaces
                 if (lcaseArg == "/t") {
@@ -763,6 +702,10 @@ namespace FileNameNormalizer
                 // option directories only
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
+                }
+
+                if (lcaseArg == "/dup") {
+                    _optionFixDuplicates = true;
                 }
                 if (lcaseArg == "/nonorm") {
                     _optionNormalize = false;
@@ -838,6 +781,7 @@ namespace FileNameNormalizer
             }
             return result;
         }
+
         /// <summary>
         /// Print Name in Hexadecimal. For Debuging.
         /// </summary>
