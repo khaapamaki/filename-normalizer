@@ -5,8 +5,6 @@
 // Varoitut jos renamettu nimi aiheuttaa long pathin
 // case sensivite mode ei ehkä toimi duplikaattien kanssa
 
-
-
 using System;
 using System.Text;
 using System.Linq;
@@ -35,8 +33,6 @@ namespace FileNameNormalizer
         private static bool _optionFixDuplicates = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
-        //private static bool _optionFixSpacesAll = false;
-        //private static bool _optionFixSpacesMandatory = false;
         private static bool _optionNormalize = true;
         private static bool _optionMacAware = true;
         private static bool _optionDumpLongPaths = false;
@@ -202,7 +198,7 @@ namespace FileNameNormalizer
 
                 bool isDir = pos >= numberOfFiles;
                 string path = directoryContents[pos];
-                if (singletonPath != null && FileOp.AreSame(singletonPath, path, _optionCaseInsensitive))
+                if (singletonPath != null && !FileOp.AreSame(singletonPath, path, _optionCaseInsensitive))
                     continue;
 
                 bool isPackage = false;
@@ -366,7 +362,7 @@ namespace FileNameNormalizer
                     counter.IOErrors++;
 
                 foreach (string path in subDirectories) {
-                    if (singletonPath != null && FileOp.AreSame(singletonPath, path, _optionCaseInsensitive))
+                    if (singletonPath != null && !FileOp.AreSame(singletonPath, path, _optionCaseInsensitive))
                         continue;
 
                     string dirName = FileOp.GetFileName(path, isDir: true);
@@ -403,7 +399,6 @@ namespace FileNameNormalizer
 
             return;
         }
-
 
         static string GetReportingPrefix(bool isDir, bool normalize, bool duplicate, bool trim)
         {
@@ -496,7 +491,8 @@ namespace FileNameNormalizer
             if (didNormalize || didTrim || fixDuplicates) {
                 int i = 1;
                 while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out genuineDuplicate, skipIndex, path)) {
-                    createdDuplicate = true;
+                    if (!genuineDuplicate)
+                        createdDuplicate = true;
 
                     string suffix = " [Duplicate Name]";
                     if (i != 1) {

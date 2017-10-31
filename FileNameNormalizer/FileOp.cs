@@ -289,26 +289,36 @@ namespace FileNameNormalizer
             )
         {
             genuineCIDuplicate = false;
+
             if (dirContents == null)
                 return false;
+
             for (int i = 0; i < dirContents.Count(); i++) {
                 if (i == skipIndex)
                     continue;
-                if (caseInsensitive) {
-                    string lcaseItem = dirContents[i].ToLower();
-                    if (path.ToLower() == lcaseItem) {
-                        if (originalPath != null) {
-                            if (originalPath.ToLower() == lcaseItem) {
-                                genuineCIDuplicate = true;
-                            }
-                        }
-                        return true;
+
+                if (AreSame(path, dirContents[i], caseInsensitive)) {
+                    if (AreSame(originalPath, dirContents[i], true)) {
+                        genuineCIDuplicate = true;
                     }
-                } else {
-                    if (path == dirContents[i]) {
-                        return true;
-                    }
+                    return true;
                 }
+
+                //if (caseInsensitive) {
+                //    string lcaseItem = dirContents[i].ToLower();
+                //    if (path.ToLower() == lcaseItem) {
+                //        if (originalPath != null) {
+                //            if (originalPath.ToLower() != lcaseItem) {
+                //                genuineCIDuplicate = true;
+                //            }
+                //        }
+                //        return true;
+                //    }
+                //} else {
+                //    if (path == dirContents[i]) {
+                //        return true;
+                //    }
+                //}
 
             }
             return false;
