@@ -179,7 +179,7 @@ namespace FileNameNormalizer
         {
             // Read directory contents
             bool canAccess = FileOp.GetFilesAndDirectories(sourcePath, _optionSearchPattern,
-                out int numberOfFiles, false, out List<string> directoryContentsFilesFirst);
+                out int numberOfFiles, false, out List<string> directoryContents);
             bool pathShown = false;
             bool longPathFound = false;
 
@@ -189,10 +189,10 @@ namespace FileNameNormalizer
                 return;
             }
 
-            for (int pos = 0; pos < directoryContentsFilesFirst.Count(); pos++) {
+            for (int pos = 0; pos < directoryContents.Count(); pos++) {
 
                 bool isDir = pos >= numberOfFiles;
-                string path = directoryContentsFilesFirst[pos];
+                string path = directoryContents[pos];
                 bool isPackage = false;
                 string fileName = FileOp.GetFileName(path, isDir);
                 string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
@@ -213,7 +213,7 @@ namespace FileNameNormalizer
 
                 string newPath = GetUniqueName(
                     path,
-                    directoryContentsFilesFirst,
+                    directoryContents,
                     isDir,
                     isPackage,
                     _optionNormalize,
@@ -233,7 +233,7 @@ namespace FileNameNormalizer
                         Console.WriteLine("* " + sourcePath);
                         pathShown = true;
                     }
-                    directoryContentsFilesFirst[pos] = newPath;
+                    directoryContents[pos] = newPath;
                     string fName = FileOp.GetFileName(path, isDir);
                     string newFName = FileOp.GetFileName(newPath, isDir);
                     Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
@@ -337,7 +337,7 @@ namespace FileNameNormalizer
 
             /// Free memory before a recursion takes place
 
-            directoryContentsFilesFirst = null;
+            directoryContents = null;
             //directoryContentsDirsFirst = null;
 
             if (longPathFound) {
@@ -386,23 +386,23 @@ namespace FileNameNormalizer
         }
 
 
-        static string GetReportingPrefix(bool isDir, bool normalize, bool fixDuplicates, bool fixSpaces)
+        static string GetReportingPrefix(bool isDir, bool normalize, bool duplicate, bool trim)
         {
             string prefix = isDir ? "DIR:   " : "File:  ";
 
-            if (normalize && fixSpaces && fixDuplicates) {
+            if (normalize && trim && duplicate) {
                 prefix += "NORM+S+D  ";
             } else {
-                if (normalize && fixDuplicates)
+                if (normalize && duplicate)
                     prefix += "NORM+DUPL ";
-                else if (normalize && fixSpaces)
+                else if (normalize && trim)
                     prefix += "NORM+SPCS ";
 
-                else if (fixSpaces && fixDuplicates)
+                else if (trim && duplicate)
                     prefix += "SPCS+DUPL ";
-                else if (fixSpaces)
+                else if (trim)
                     prefix += "SPACES    ";
-                else if (fixDuplicates)
+                else if (duplicate)
                     prefix += "DUPLICATE ";
                 else if (normalize)
                     prefix += "NORMALIZE ";
@@ -451,7 +451,7 @@ namespace FileNameNormalizer
             /// Trim
             /// 
             if (trimOptions != TrimOptions.None) {
-                didTrim = Trim(ref newPath, trimOptions, isDir);
+                didTrim = Trim(ref newPath, trimOptions, (isDir && !isPackage));
             }
 
             /// Get new name
@@ -486,12 +486,15 @@ namespace FileNameNormalizer
 
                 if (baseName != "") {
                     if (!isDir || isPackage) {
-                        newPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + newPath;
+                        // normal file or package type folder
+                        newPath = pathWihtoutLastComponent + @"\" + newBase + suffix + dot + extension;
                     } else {
-                        newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newPath + suffix;
+                        // folder
+                        newPath = pathWihtoutLastComponent + @"\" + newBase + dot + extension + suffix;
                     }
                 } else {
-                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newPath + suffix;
+                    // .dotfile
+                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + extension + suffix;
                 }
                 i++;
             }
@@ -531,33 +534,36 @@ namespace FileNameNormalizer
             if (!isDir) {
                 if ((options & (TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight)) != 0) {
                     newBase = baseName.Trim();
-                }
-                if ((options & TrimOptions.FileBaseLeft) != 0) {
-                    newBase = baseName.TrimStart();
-                }
-                if ((options & TrimOptions.FileBaseRight) != 0) {
-                    newBase = baseName.TrimEnd();
+                } else {
+                    if ((options & TrimOptions.FileBaseLeft) != 0) {
+                        newBase = baseName.TrimStart();
+                    }
+                    if ((options & TrimOptions.FileBaseRight) != 0) {
+                        newBase = baseName.TrimEnd();
+                    }
                 }
                 if ((options & (TrimOptions.FileExtLeft | TrimOptions.FileExtRight)) != 0) {
                     newExt = extension.Trim();
-                }
-                if ((options & TrimOptions.FileExtLeft) != 0) {
-                    newExt = extension.TrimStart();
-                }
-                if ((options & TrimOptions.FileExtRight) != 0) {
-                    newExt = extension.TrimEnd();
+                } else {
+                    if ((options & TrimOptions.FileExtLeft) != 0) {
+                        newExt = extension.TrimStart();
+                    }
+                    if ((options & TrimOptions.FileExtRight) != 0) {
+                        newExt = extension.TrimEnd();
+                    }
                 }
                 newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
 
             } else {
                 if ((options & (TrimOptions.DirLeft | TrimOptions.DirRight)) != 0) {
                     newFolderName = fileName.Trim();
-                }
-                if ((options & TrimOptions.DirLeft) != 0) {
-                    newFolderName = fileName.TrimStart();
-                }
-                if ((options & TrimOptions.DirRight) != 0) {
-                    newFolderName = fileName.TrimEnd();
+                } else {
+                    if ((options & TrimOptions.DirLeft) != 0) {
+                        newFolderName = fileName.TrimStart();
+                    }
+                    if ((options & TrimOptions.DirRight) != 0) {
+                        newFolderName = fileName.TrimEnd();
+                    }
                 }
                 newPath = pathWihtoutLastComponent + @"\" + newFolderName;
             }
