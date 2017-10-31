@@ -70,7 +70,6 @@ namespace FileNameNormalizer
             DirRight = 0b00100000,
             Dir = 0b01100000,
             None = 0
-
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurses subdirectories");
-                Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done.");
+
                 //Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /formc        Performs Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
@@ -110,8 +109,10 @@ namespace FileNameNormalizer
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Search pattern for files, eg. *.txt");
+                Console.WriteLine("  /l            Detailed report about long paths.");
+                Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done.");
                 //Console.WriteLine("  /e            Show errors only.");
-                Console.WriteLine("  /hex          Shows hex codes for files needing normalization");
+                Console.WriteLine("  /hex          Shows hex codes for files to be normalized");
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
 
@@ -650,6 +651,7 @@ namespace FileNameNormalizer
             }
             return false;
         }
+
         /// <summary>
         /// Parses command line arguments
         /// Sets options and reads accessible paths from argument array.
@@ -695,25 +697,30 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/hex") {
                     _optionHexDump = true;
                 }
-                // option /c handle case insensitive duplicates
-                if (lcaseArg == "/case") {
+                // case sensitive operation in case sensitive systems
+                if (lcaseArg == "/c") {
                     _optionCaseInsensitive = false;
                 }
                 // option check trailing and leading spaces
                 if (lcaseArg == "/t") {
                     _optionTrimOptions = ParseTrimOptions("dirright");
                 }
-                //if (lcaseArg == "/spaces") {
-                //    _optionFixSpacesAll = true;
-                //}
+
                 // option directories only
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
                 }
 
+                // option directories only
+                if (lcaseArg == "/l") {
+                    _optionDumpLongPaths = true;
+                }
+
+                // option to handle case insensitive duplicates
                 if (lcaseArg == "/dup") {
                     _optionFixDuplicates = true;
                 }
+                // bypass normalization
                 if (lcaseArg == "/nonorm") {
                     _optionNormalize = false;
                 }
@@ -729,12 +736,13 @@ namespace FileNameNormalizer
                     }
                 }
 
+                // Trim options
                 if (lcaseArg.StartsWith("/t=")) {
                     string trimStr = lcaseArg.Substring(3);
                     _optionTrimOptions = _optionTrimOptions | ParseTrimOptions(trimStr);
                 }
 
-
+                // Get source paths
                 if (!arg.StartsWith("/")) {
                     string path = arg;
                     if (arg.EndsWith(@"\")) {

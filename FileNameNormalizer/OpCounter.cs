@@ -230,7 +230,7 @@ namespace FileNameNormalizer
 
             if (TooLongDirPaths > 0) {
                 if (IsPlural(TooLongDirPaths))
-                    s.AppendLine($"{TooLongDirPaths} long path branches found. ");
+                    s.AppendLine($"{TooLongDirPaths} long path branches found");
                 else
                     s.AppendLine($"1 long path branch found");
             }
