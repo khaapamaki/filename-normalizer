@@ -97,15 +97,16 @@ namespace FileNameNormalizer
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurses subdirectories");
-                Console.WriteLine("  /rename       Normalizes and renames file and directory names when needed.");
+                Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done.");
                 //Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /formc        Performs Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
-                Console.WriteLine("  /c            Remames file and folder names that would be considered the same in a case-insensitive file systems.");
-                Console.WriteLine("  /t            Trims illegal folder names with trailing spaces. The same as option /t=dirright");
+                Console.WriteLine("  /dup          Renames file and folder names that would have a duplicate name in a case-insensitive file system.");
+                Console.WriteLine("                This is effective only when scanning case sensitive file system.");
+                Console.WriteLine("  /t            Trims illegal folder names with trailing spaces. Same as option /t=dirright");
                 Console.WriteLine("  /t=all        Trims all file and folder names with leading and trailing spaces.");
                 Console.WriteLine("  /t=opt1,opt2  Specific trim instructions: base, ext, dir, baseleft, baseright, extleft, extright, dirleft, dirright.");
-                Console.WriteLine("  /nonorm       Bypass normalization.");
+                Console.WriteLine("  /nonorm       Bypass all normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Search pattern for files, eg. *.txt");
@@ -163,7 +164,7 @@ namespace FileNameNormalizer
 
                     string parentPath = FileOp.GetDirectoryPath(path, false);
 
-                    HandleDirectory(parentPath, ref counter, !_optionDumpLongPaths, path);
+                    HandleDirectory(parentPath, ref counter, false, path);
 
 
                     //Console.WriteLine("Processing a single file is not supported in the current version.");
@@ -381,12 +382,15 @@ namespace FileNameNormalizer
                         continue;
 
                     string dirName = FileOp.GetFileName(path, isDir: true);
+
+
                     bool tooLongPath = path.Length >= FileOp.MAX_FILE_PATH_LENGTH;
-                    if (tooLongPath) {
+                    if (tooLongPath & !noLongPathWarnings) {
                         //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
                         //Console.WriteLine("*** Subsequent warnings in this path are supressed.");
                         counter.TooLongDirPaths++;
-                        _tooLongPaths.Add(path);
+                        if (_optionDumpLongPaths)
+                            _tooLongPaths.Add(path);
                     }
 
                     // Recurse if recursion flag set
