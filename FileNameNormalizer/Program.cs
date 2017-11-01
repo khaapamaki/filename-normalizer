@@ -142,11 +142,11 @@ namespace FileNameNormalizer
 
                         if (parentPath == path || parentPath == null) {
                             // start scanning from given path that is root and cannot have a parent path
-                            HandleDirectory(path, ref counter, !_optionDumpLongPaths);
+                            HandleDirectory(path, ref counter, false);
                         } else {
                             // start form parent path but process only given source item
                             // comparison is made to siblings though
-                            HandleDirectory(parentPath, ref counter, !_optionDumpLongPaths, path);
+                            HandleDirectory(parentPath, ref counter, false, path);
                         }
                     } else {
                         counter.SkippedDirectories++;
@@ -239,6 +239,15 @@ namespace FileNameNormalizer
 
                 if (needsRename && !needNormalization && !genuineDuplicate && !needTrim)
                     throw new Exception("Gathering statistics failed.");
+
+                if (!needsRename && _optionShowEveryFile) {
+                    if (!pathShown) {
+                        Console.WriteLine("* " + sourcePath);
+                        pathShown = true;
+                    }
+                    string fName = FileOp.GetFileName(path, isDir);
+                    Console.WriteLine($"    {prefix:s} \"{fName:s}\"");
+                }
 
                 if (needsRename) {
                     if (!pathShown) {
@@ -423,6 +432,8 @@ namespace FileNameNormalizer
                     prefix += "DUPLICATE ";
                 else if (normalize)
                     prefix += "NORMALIZE ";
+                else
+                    prefix += "noop       ";
             }
             return prefix;
         }
