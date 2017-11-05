@@ -36,6 +36,7 @@ namespace FileNameNormalizer
         private static bool _optionNormalize = true;
         private static bool _optionMacAware = true;
         private static bool _optionDumpLongPaths = false;
+        private static bool _optionShowHelp = false;
         private static List<string> _tooLongPaths;
         private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
@@ -84,26 +85,25 @@ namespace FileNameNormalizer
             string[] paths = ParseArguments(args);
 
             // Print help, if no valid path given
-            if (paths.Length == 0) {
+            if (args.Length == 0 || _optionShowHelp) {
                 Console.WriteLine("Usage:");
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurses subdirectories");
-
-                //Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /formc        Performs Form C normalization. Default operation.");
                 Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
+                Console.WriteLine("  /nonorm       Bypass all normalization.");
                 Console.WriteLine("  /dup          Renames file and folder names that would have a duplicate name in a case-insensitive file system.");
                 Console.WriteLine("                This is effective only when scanning case sensitive file system.");
                 Console.WriteLine("  /t            Trims illegal folder names with trailing spaces. Same as option /t=dirright");
                 Console.WriteLine("  /t=all        Trims all file and folder names with leading and trailing spaces.");
                 Console.WriteLine("  /t=opt1,opt2  Specific trim instructions: base, ext, dir, baseleft, baseright, extleft, extright, dirleft, dirright.");
-                Console.WriteLine("  /nonorm       Bypass all normalization.");
                 //Console.WriteLine("  /d            Processes folder names only");
                 //Console.WriteLine("  /f            Processes filenames only");
                 Console.WriteLine("  /p=<pattern>  Search pattern for files, eg. *.txt");
-                Console.WriteLine("  /l            Detailed report about long paths.");
                 Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done.");
+                Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
+                Console.WriteLine("  /l            Detailed report about long paths.");
                 //Console.WriteLine("  /e            Show errors only.");
                 Console.WriteLine("  /hex          Shows hex codes for files to be normalized");
                 Console.WriteLine("");
@@ -118,56 +118,58 @@ namespace FileNameNormalizer
             }
 
             // Process valid paths
+            if (paths.Count() > 0) {
 
-            OpCounter counter = new OpCounter();
-            _tooLongPaths = new List<string>(500);
+                OpCounter counter = new OpCounter();
+                _tooLongPaths = new List<string>(500);
 
-            foreach (string sourcePath in paths) {
-                string path = sourcePath;
-                string pathWithoutSep = FileOp.PathWithoutPathSeparator(path);
-                string pathroot = FileOp.GetPathRoot(path);
-                if (path != FileOp.GetPathRoot(path))
-                    path = pathWithoutSep;
+                foreach (string sourcePath in paths) {
+                    string path = sourcePath;
+                    string pathWithoutSep = FileOp.PathWithoutPathSeparator(path);
+                    string pathroot = FileOp.GetPathRoot(path);
+                    if (path != FileOp.GetPathRoot(path))
+                        path = pathWithoutSep;
 
-                if (FileOp.DirectoryExists(path)) {
-                    //if (!IsMacPackage(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
-                    if (!FileOp.IsSymbolicDir(path)) {
-                        // Path is a dictory
-                        if (_optionRename)
-                            Console.WriteLine("*** Processing {0:s}", path);
-                        else
-                            Console.WriteLine("*** Checking {0:s}", path);
+                    if (FileOp.DirectoryExists(path) && _optionProcessDirs) {
+                        //if (!IsMacPackage(FileOp.GetFileName(path, isDir: true)) && !FileOp.IsSymbolicDir(path)) {
+                        if (!FileOp.IsSymbolicDir(path)) {
+                            // Path is a dictory
+                            if (_optionRename)
+                                Console.WriteLine("*** Processing {0:s}", path);
+                            else
+                                Console.WriteLine("*** Checking {0:s}", path);
 
-                        string parentPath = FileOp.GetDirectoryPath(path, true);
+                            string parentPath = FileOp.GetDirectoryPath(path, true);
 
-                        if (parentPath == path || parentPath == null) {
-                            // start scanning from given path that is root and cannot have a parent path
-                            HandleDirectory(path, ref counter, false);
+                            if (parentPath == path || parentPath == null) {
+                                // start scanning from given path that is root and cannot have a parent path
+                                HandleDirectory(path, ref counter, false);
+                            } else {
+                                // start form parent path but process only given source item
+                                // comparison is made to siblings though
+                                HandleDirectory(parentPath, ref counter, false, path);
+                            }
                         } else {
-                            // start form parent path but process only given source item
-                            // comparison is made to siblings though
-                            HandleDirectory(parentPath, ref counter, false, path);
+                            counter.SkippedDirectories++;
                         }
-                    } else {
-                        counter.SkippedDirectories++;
+                    } else if (FileOp.FileOrDirectoryExists(path) && _optionProcessFiles) {
+                        // Scan single file or a package
+                        string parentPath = FileOp.GetDirectoryPath(path, false);
+                        HandleDirectory(parentPath, ref counter, false, path);
+
+                    } else if (!FileOp.FileOrDirectoryExists(path)) {
+                        // Invalid path. Shouldn't occur since argument parser skips invalid paths.
+                        Console.WriteLine("*** Error: Invalid path {0:s}", path);
                     }
-                } else if (FileOp.FileOrDirectoryExists(path)) {
-                    // Scan single file or a package
-                    string parentPath = FileOp.GetDirectoryPath(path, false);
-                    HandleDirectory(parentPath, ref counter, false, path);
-
-                } else if (path != null) {
-                    // Invalid path. Shouldn't occur since argument parser skips invalid paths.
-                    Console.WriteLine("*** Error: Invalid path {0:s}", path);
                 }
+
+                // Output the list of long paths
+                if (_optionDumpLongPaths)
+                    _tooLongPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
+
+                // Output the report
+                Console.Write(counter.ToString());
             }
-
-            // Output the list of long paths
-            if (_optionDumpLongPaths)
-                _tooLongPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
-
-            // Output the report
-            Console.Write(counter.ToString());
 
 #if DEBUG
             Console.ReadLine();
