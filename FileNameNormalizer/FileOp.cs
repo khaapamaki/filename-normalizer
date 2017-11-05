@@ -1,14 +1,10 @@
 ﻿// Long Path Aware File Operations
 // Uses Pri.LongPath library by Peter Richman
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using Pri.LongPath;
+using System.Linq;
 
 /// <summary>
 /// FileNameNormalizer
@@ -32,8 +28,8 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="path"></param>
         /// <param name="pattern"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
-        /// 
         public static bool GetFiles(string path, string pattern, out List<string> result)
         {
             List<string> fileList = new List<string>(100);
@@ -64,6 +60,7 @@ namespace FileNameNormalizer
         /// Get SubDirectory Array
         /// </summary>
         /// <param name="directoryItem"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
         public static bool GetSubDirectories(string directoryItem, out List<string> result)
         {
@@ -98,6 +95,7 @@ namespace FileNameNormalizer
         /// <param name="pattern"></param>
         /// <param name="dividePoint"></param>
         /// <param name="directoriesFirst"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
         public static bool GetFilesAndDirectories(string path, string pattern, out int dividePoint, bool directoriesFirst, out List<string> result)
         {
@@ -127,6 +125,8 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="path"></param>
         /// <param name="newPath"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
         public static bool Rename(string path, string newPath, bool isDir = false)
         {
             if (isDir) {
@@ -195,12 +195,6 @@ namespace FileNameNormalizer
                 return Pri.LongPath.File.Exists(path);
         }
 
-        /// <summary>
-        /// Enumerates all files and directories. Not currently in use. Code from C# Cook Book
-        /// Modified to use Pri.LongPath library
-        /// </summary>
-        /// <param name="dir"></param>
-        /// <returns></returns>
         //public static IEnumerable<Pri.LongPath.FileSystemInfo> GetAllFilesAndDirectories(string dir)
         //{
         //    if (string.IsNullOrWhiteSpace(dir))
@@ -223,10 +217,6 @@ namespace FileNameNormalizer
         //    }
         //}
 
-        /// <summary>
-        /// Testing. Just displays all file items
-        /// </summary>
-        /// <param name="dir"></param>
         //public static void DisplayAllFilesAndDirectories(string dir)
         //{
         //    if (string.IsNullOrWhiteSpace(dir))
@@ -271,6 +261,14 @@ namespace FileNameNormalizer
             }
         }
 
+        /// <summary>
+        /// Compares too paths case-sensitive or case-insensitvely and returns true if they are same
+        /// NEED MORE: Implementation is pretty simple. Should take care of drive letters.
+        /// </summary>
+        /// <param name="path1"></param>
+        /// <param name="path2"></param>
+        /// <param name="caseInsensitive"></param>
+        /// <returns></returns>
         public static bool AreSame(string path1, string path2, bool caseInsensitive = true)
         {
             if (caseInsensitive) {
@@ -280,15 +278,25 @@ namespace FileNameNormalizer
             return path1 == path2;
         }
 
+        /// <summary>
+        /// Tests if file or folder exists in the list of directory items
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="dirContents"></param>
+        /// <param name="caseInsensitive"></param>
+        /// <param name="genuineDuplicate"></param>
+        /// <param name="skipIndex"></param>
+        /// <param name="originalPath"></param>
+        /// <returns></returns>
         public static bool NameExists(string path,
             List<string> dirContents,
             bool caseInsensitive,
-            out bool genuineCIDuplicate,
+            out bool genuineDuplicate,
             int skipIndex = -1,
             string originalPath = null
             )
         {
-            genuineCIDuplicate = false;
+            genuineDuplicate = false;
 
             if (dirContents == null)
                 return false;
@@ -299,50 +307,21 @@ namespace FileNameNormalizer
 
                 if (AreSame(path, dirContents[i], caseInsensitive)) {
                     if (AreSame(originalPath, dirContents[i], true)) {
-                        genuineCIDuplicate = true;
+                        genuineDuplicate = true;
                     }
                     return true;
                 }
-
-                //if (caseInsensitive) {
-                //    string lcaseItem = dirContents[i].ToLower();
-                //    if (path.ToLower() == lcaseItem) {
-                //        if (originalPath != null) {
-                //            if (originalPath.ToLower() != lcaseItem) {
-                //                genuineCIDuplicate = true;
-                //            }
-                //        }
-                //        return true;
-                //    }
-                //} else {
-                //    if (path == dirContents[i]) {
-                //        return true;
-                //    }
-                //}
-
             }
             return false;
         }
 
+
         /// <summary>
-        /// Get the path without the last component
+        /// Gets parent path to file or directory
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="isDir"></param>
         /// <returns></returns>
-        //[Obsolete]
-        //public static string GetLastComponent(string path)
-        //{
-        //    string root = GetPathRoot(path);
-        //    if (root == path)
-        //        return "";
-
-        //    char[] delimiterChars = { '\\' };
-        //    if (path.EndsWith(@"\"))
-        //        path = path.Substring(0, path.Length - 1);
-        //    string[] pathComponents = path.Split(delimiterChars);
-        //    return pathComponents.Last();
-        //}
-
         public static string GetDirectoryPath(string path, bool isDir)
         {
             if (isDir) {
@@ -359,7 +338,7 @@ namespace FileNameNormalizer
         }
 
         /// <summary>
-        /// Get file or folder name
+        /// Get file's or folder's name
         /// </summary>
         /// <param name="path"></param>
         /// <param name="isDir"></param>
@@ -379,6 +358,12 @@ namespace FileNameNormalizer
             }
         }
 
+        /// <summary>
+        /// Get file's or folder's name without extension
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
         public static string GetFileNameWithoutExtension(string path, bool isDir)
         {
             if (isDir) {
@@ -395,6 +380,12 @@ namespace FileNameNormalizer
 
         }
 
+        /// <summary>
+        /// Get the extension of a file or a folder
+        /// </summary>
+        /// <param name="path"></param>
+        /// <param name="isDir"></param>
+        /// <returns></returns>
         public static string GetExtension(string path, bool isDir)
         {
             if (isDir) {
@@ -424,6 +415,11 @@ namespace FileNameNormalizer
                 return Pri.LongPath.Path.GetPathRoot(path);
         }
 
+        /// <summary>
+        /// Removes \ from the end of the path
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string PathWithoutPathSeparator(string path)
         {
             if (path.EndsWith(@"\"))

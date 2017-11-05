@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace FileNameNormalizer
 {
@@ -262,6 +258,7 @@ namespace FileNameNormalizer
 
             return s.ToString();
         }
+
         private bool IsPlural(int number)
         {
             return number == 1 ? false : true;

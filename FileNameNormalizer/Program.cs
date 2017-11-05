@@ -6,14 +6,11 @@
 // case sensivite mode ei ehkä toimi duplikaattien kanssa
 
 using System;
-using System.Text;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.IO;
-using System.Reflection;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace FileNameNormalizer
 {
