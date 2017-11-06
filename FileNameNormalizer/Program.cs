@@ -40,7 +40,7 @@ namespace FileNameNormalizer
         private static bool _optionMacAware = true;
         private static bool _optionDumpLongPaths = false;
         private static bool _optionShowHelp = false;
-        private static bool _optionFixIllegalChar = false;
+        private static bool _optionFixIllegalChars = false;
         private static List<string> _tooLongPaths;
         private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
@@ -51,8 +51,11 @@ namespace FileNameNormalizer
             ".mdimporter", ".bundle", ".lproj", ".nib", ".xib", ".download", ".rtfd", ".fcarch", ".pkg", ".dmg"
         };
 
-        private static List<int> illegalCharCodes = new List<int> { 0xF029, 0x2DC, 0xF020, 0xF021, 0xF022, 0xF023, 0xF024, 0xF025, 0xF026, 0xF027, 0xF028 };
+        //private static List<int> illegalCharCodes = new List<int> { 0xF029, 0x2DC, 0xF020, 0xF021, 0xF022, 0xF023, 0xF024, 0xF025, 0xF026, 0xF027, 0xF028 };
         private static char[] dotTrimChars = { ' ', '.', '\xF029' };
+        private static List<char> illegalChars = new List<char> { '\xF029', '\x2DC', '\xF020', '\xF021', '\xF022', '\xF023', '\xF024', '\xF025', '\xF026', '\xF027',
+                                                                    '<', '>', '|', '\\', '/', '\"', '*', '?', '~', ':', '\xF028', '\xF029',};
+
 
         // not currently in use
         // useful stuff keep along with this project for future use
@@ -90,6 +93,8 @@ namespace FileNameNormalizer
 
             // Parse arguments. Sets options and extracts valid paths.
             string[] paths = ParseArguments(args);
+
+            PrintIllegalChars();
 
             // Print help, if no valid path given
             if (args.Length == 0 || _optionShowHelp) {
@@ -753,7 +758,7 @@ namespace FileNameNormalizer
                 }
                 // option directories only
                 if (lcaseArg == "/i") {
-                    _optionFixIllegalChar = true;
+                    _optionFixIllegalChars = true;
                 }
                 // option to handle case insensitive duplicates
                 if (lcaseArg == "/dup") {
@@ -847,6 +852,17 @@ namespace FileNameNormalizer
                 Console.Write($"{(int)chars[i]:X}({chars[i]:s}) ");
             }
             Console.WriteLine($" [{fname.Length}]");
+        }
+        
+        /// <summary>
+        /// Testing
+        /// </summary>
+        private static void PrintIllegalChars()
+        {
+            foreach (char c in illegalChars) {
+
+                Console.WriteLine($"{(int)c:X}({c:s}) ");
+            }
         }
     }
 }
