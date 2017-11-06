@@ -72,7 +72,7 @@ namespace FileNameNormalizer
             FileExt = 0b00001100,
             DirLeft = 0b00010000,
             DirRight = 0b00100000,
-            Dir = 0b01100000,
+            Dir = 0b00110000,
             None = 0
         }
 
@@ -853,7 +853,7 @@ namespace FileNameNormalizer
             }
             Console.WriteLine($" [{fname.Length}]");
         }
-        
+
         /// <summary>
         /// Testing
         /// </summary>
