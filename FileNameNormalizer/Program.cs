@@ -617,6 +617,7 @@ namespace FileNameNormalizer
                     if ((options & TrimOptions.FileBaseRight) != 0) {
                         newBase = baseName.TrimEnd();
                     }
+
                 }
                 if (IsBinaryMatch(options, TrimOptions.FileExt)) {
                     newExt = extension.Trim();
@@ -628,7 +629,12 @@ namespace FileNameNormalizer
                         newExt = extension.TrimEnd();
                     }
                 }
-                newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+                if (baseName != "" && newBase == "")
+                    newBase = "[No Name]";
+                if (newExt != "")
+                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+                else
+                    newPath = pathWihtoutLastComponent + @"\" + newBase;
 
             } else {
                 if (IsBinaryMatch(options, TrimOptions.Dir)) {
@@ -642,6 +648,8 @@ namespace FileNameNormalizer
                         newFolderName = fileName.TrimEnd(dotTrimChars);
                     }
                 }
+                if (newFolderName == "")
+                    newFolderName = "[No Name]";
                 newPath = pathWihtoutLastComponent + @"\" + newFolderName;
             }
             bool didTrim = newPath != path;
