@@ -252,12 +252,12 @@ namespace FileNameNormalizer
                         out bool createsDuplicate,
                         out bool needsRename,
                         out bool genuineDuplicate,
-                        out bool didFixIllegal,
+                        out bool needFixIllegal,
                         skipIndex: pos);
 
-                    string prefix = GetReportingPrefix(isDir, needNormalization, didFixIllegal, genuineDuplicate, needTrim);
+                    string prefix = GetReportingPrefix(isDir, needNormalization, needFixIllegal, genuineDuplicate, needTrim);
 
-                    if (needsRename && !needNormalization && !genuineDuplicate && !needTrim && !didFixIllegal)
+                    if (needsRename && !needNormalization && !genuineDuplicate && !needTrim && !needFixIllegal)
                         throw new Exception("Gathering statistics failed.");
 
                     if (!needsRename && _optionShowEveryFile) {
@@ -293,7 +293,7 @@ namespace FileNameNormalizer
                         bool renameFailed = false;
 
                         /// Rename part for filename fixing (not normalization)
-                        /// 
+
                         if (_optionRename) {
                             if (FileOp.Rename(path, newPath, isDir)) {
                                 if (needNormalization) {
@@ -303,12 +303,20 @@ namespace FileNameNormalizer
                                         counter.FilesNeedNormalizeRenamed++;
                                 }
 
+                                if (needFixIllegal) {
+                                    if (isDir)
+                                        counter.DirsWithIllegalCharsRenamed++;
+                                    else
+                                        counter.FilesWithIllegalCharsRenamed++;
+                                }
+
                                 if (genuineDuplicate) {
                                     if (isDir)
                                         counter.DirsWithDuplicateNamesRenamed++;
                                     else
                                         counter.FilesWithDuplicateNamesRenamed++;
                                 }
+
                                 if (needTrim) {
                                     if (isDir)
                                         counter.DirsNeedTrimRenamed++;
@@ -324,18 +332,28 @@ namespace FileNameNormalizer
                                 } else {
                                     Console.WriteLine("*** Error: Cannot rename file: {0:s}", path);
                                 }
+
                                 if (needNormalization) {
                                     if (isDir)
                                         counter.DirsNeedNormalizeFailed++;
                                     else
                                         counter.FilesNeedNormalizeFailed++;
                                 }
+
+                                if (needFixIllegal) {
+                                    if (isDir)
+                                        counter.DirsWithIllegalCharsFailed++;
+                                    else
+                                        counter.FilesWithIllegalCharsFailed++;
+                                }
+
                                 if (genuineDuplicate) {
                                     if (isDir)
                                         counter.DirsWithDuplicateNamesFailed++;
                                     else
                                         counter.FilesWithDuplicateNamesFailed++;
                                 }
+
                                 if (needTrim) {
                                     if (isDir)
                                         counter.DirsNeedTrimFailed++;
@@ -360,6 +378,21 @@ namespace FileNameNormalizer
                             }
                         }
 
+                        if (needFixIllegal) {
+                            if (isDir) {
+                                counter.DirsWithIllegalChars++;
+                            } else {
+                                counter.FilesWithIllegalChars++;
+                            }
+                            if (createsDuplicate && !renameFailed) {
+                                if (isDir) {
+                                    counter.DirsWithIllegalCharsProducedDuplicate++;
+                                } else {
+                                    counter.FilesWithIllegalCharsProducedDuplicate++;
+                                }
+                            }
+                        }
+
                         if (genuineDuplicate) {
                             if (isDir) {
                                 counter.DirsWithDuplicateNames++;
@@ -367,6 +400,7 @@ namespace FileNameNormalizer
                                 counter.FilesWithDuplicateNames++;
                             }
                         }
+
                         if (needTrim) {
                             if (isDir) {
                                 counter.DirsNeedTrim++;
