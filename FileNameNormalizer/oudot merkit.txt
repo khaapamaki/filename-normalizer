@@ -1,0 +1,39 @@
+. F029
+. 2E
+
+~ 2DC
+\ F026
+/ F022
+* F021
+< F023
+| F027
+? F025
+" F020
+> F024
+
+    DIR:   noop        "Erikoismerkit"
+45(E) 72(r) 69(i) 6B(k) 6F(o) 69(i) 73(s) 6D(m) 65(e) 72(r) 6B(k) 69(i) 74(t)  [13]
+* K:\temp\Elements Test Sync\Erikoismerkit
+    File:  noop        "~ tilde.txt"
+2DC(~) 20( ) 74(t) 69(i) 6C(l) 64(d) 65(e) 2E(.) 74(t) 78(x) 74(t)  [11]
+    File:  noop        "? keno.txt"
+F026(?) 20( ) 6B(k) 65(e) 6E(n) 6F(o) 2E(.) 74(t) 78(x) 74(t)  [10]
+    File:  noop        "? tavu.txt"
+F022(?) 20( ) 74(t) 61(a) 76(v) 75(u) 2E(.) 74(t) 78(x) 74(t)  [10]
+    File:  noop        "? asterisk.txt"
+F021(?) 20( ) 61(a) 73(s) 74(t) 65(e) 72(r) 69(i) 73(s) 6B(k) 2E(.) 74(t) 78(x) 74(t)  [14]
+    File:  noop        "? pienempi kuin.txt"
+F023(?) 20( ) 70(p) 69(i) 65(e) 6E(n) 65(e) 6D(m) 70(p) 69(i) 20( ) 6B(k) 75(u) 69(i) 6E(n) 2E(.) 74(t) 78(x) 74(t)  [19]
+    File:  noop        "? pipe.txt"
+F027(?) 20( ) 70(p) 69(i) 70(p) 65(e) 2E(.) 74(t) 78(x) 74(t)  [10]
+    File:  noop        "? kysym.txt"
+F025(?) 20( ) 6B(k) 79(y) 73(s) 79(y) 6D(m) 2E(.) 74(t) 78(x) 74(t)  [11]
+    File:  noop        "? lainaus.txt"
+F020(?) 20( ) 6C(l) 61(a) 69(i) 6E(n) 61(a) 75(u) 73(s) 2E(.) 74(t) 78(x) 74(t)  [13]
+    File:  noop        "? suurempi kuin.txt"
+F024(?) 20( ) 73(s) 75(u) 75(u) 72(r) 65(e) 6D(m) 70(p) 69(i) 20( ) 6B(k) 75(u) 69(i) 6E(n) 2E(.) 74(t) 78(x) 74(t)  [19]
+
+
+    DIR:   noop        "Kansio loppuu pisteeseen?"
+4B(K) 61(a) 6E(n) 73(s) 69(i) 6F(o) 20( ) 6C(l) 6F(o) 70(p) 70(p) 75(u) 75(u) 20( ) 70(p) 69(i) 73(s) 74(t) 65(e) 65(e)
+73(s) 65(e) 65(e) 6E(n) F029(?)  [25]

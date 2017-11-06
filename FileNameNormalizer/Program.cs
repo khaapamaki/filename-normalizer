@@ -5,8 +5,11 @@
 // pisteenseen päättyvät kansiot?
 // jos trimmaus poistaa kokonaan basen, tilalle _
 // Varoitus jos renamettu nimi aiheuttaa long pathin
-// case sensivite mode ei ehkä toimi duplikaattien kanssa
-// kiellettyjen merkkien poistaminen ainakin ?
+// case sensivite mode ei ehkä toimi duplikaattien kanssa?
+// kiellettyjen merkkien poistaminen
+// mitä tapahtuu jos filename päättyy pisteeseen ext=""
+// /t=dir jättää dirleftin huomiotta
+
 
 using System;
 using System.Collections.Generic;
@@ -37,6 +40,7 @@ namespace FileNameNormalizer
         private static bool _optionMacAware = true;
         private static bool _optionDumpLongPaths = false;
         private static bool _optionShowHelp = false;
+        private static bool _optionFixIllegalChar = false;
         private static List<string> _tooLongPaths;
         private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
@@ -46,6 +50,9 @@ namespace FileNameNormalizer
         private static List<string> _macPackages = new List<string> { ".fcpcache", ".app", ".framework", ".kext", ".plugin", ".docset", ".xpc", ".qlgenerator", ".component",
             ".mdimporter", ".bundle", ".lproj", ".nib", ".xib", ".download", ".rtfd", ".fcarch", ".pkg", ".dmg"
         };
+
+        private static List<int> illegalCharCodes = new List<int> { 0xF029, 0x2DC, 0xF020, 0xF021, 0xF022, 0xF023, 0xF024, 0xF025, 0xF026, 0xF027, 0xF028 };
+        private static char[] dotTrimChars = { ' ', '.', '\xF029' };
 
         // not currently in use
         // useful stuff keep along with this project for future use
@@ -465,6 +472,17 @@ namespace FileNameNormalizer
         /// <param name="path"></param>
         /// <param name="dirContents"></param>
         /// <param name="isDir"></param>
+        /// <param name="isPackage"></param>
+        /// <param name="normalize"></param>
+        /// <param name="trimOptions"></param>
+        /// <param name="caseInsensitive"></param>
+        /// <param name="fixDuplicates"></param>
+        /// <param name="didNormalize"></param>
+        /// <param name="didTrim"></param>
+        /// <param name="createdDuplicate"></param>
+        /// <param name="needRename"></param>
+        /// <param name="genuineDuplicate"></param>
+        /// <param name="skipIndex"></param>
         /// <returns></returns>
         private static string GetUniqueName(
             string path,
@@ -609,13 +627,14 @@ namespace FileNameNormalizer
 
             } else {
                 if (IsBinaryMatch(options, TrimOptions.Dir)) {
-                    newFolderName = fileName.Trim();
+                    newFolderName = fileName.TrimEnd(dotTrimChars);
+                    newFolderName = newFolderName.TrimStart();
                 } else {
                     if ((options & TrimOptions.DirLeft) != 0) {
                         newFolderName = fileName.TrimStart();
                     }
                     if ((options & TrimOptions.DirRight) != 0) {
-                        newFolderName = fileName.TrimEnd();
+                        newFolderName = fileName.TrimEnd(dotTrimChars);
                     }
                 }
                 newPath = pathWihtoutLastComponent + @"\" + newFolderName;
@@ -732,7 +751,10 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/l") {
                     _optionDumpLongPaths = true;
                 }
-
+                // option directories only
+                if (lcaseArg == "/i") {
+                    _optionFixIllegalChar = true;
+                }
                 // option to handle case insensitive duplicates
                 if (lcaseArg == "/dup") {
                     _optionFixDuplicates = true;
