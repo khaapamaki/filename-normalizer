@@ -119,6 +119,12 @@ namespace FileNameNormalizer
                 }
             }
 
+
+
+            // INSERT REPORT FOR ILLEGALS FIX
+
+
+
             if (FilesWithDuplicateNames > 0) {
                 if (IsPlural(FilesWithDuplicateNames))
                     s.AppendLine($"{FilesWithDuplicateNames} files have duplicate names in case sensitive domain");
@@ -194,9 +200,9 @@ namespace FileNameNormalizer
 
             if (DirsNeedTrim > 0) {
                 if (IsPlural(DirsNeedTrim))
-                    s.AppendLine($"{DirsNeedTrim} foldernames that have leading or trailing spaces");
+                    s.AppendLine($"{DirsNeedTrim} foldernames that have leading or trailing spaces or trailing dots");
                 else
-                    s.AppendLine($"1 foldername that has leading or trailing spaces");
+                    s.AppendLine($"1 foldername that has leading or trailing spaces or trailing dots");
                 if (DirsNeedTrimRenamed > 0 || DirsNeedTrimFailed > 0) {
                     if (DirsNeedTrimRenamed > 0) {
                         if (IsPlural(DirsNeedTrimRenamed))
