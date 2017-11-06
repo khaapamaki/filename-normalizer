@@ -258,8 +258,15 @@ namespace FileNameNormalizer
                         }
                         string fName = FileOp.GetFileName(path, isDir);
                         Console.WriteLine($"    {prefix:s} \"{fName:s}\"");
+                        // Hex Dump
+                        if (_optionHexDump) {
+                            PrintHexFileName(FileOp.GetFileName(path, isDir));
+                        }
+
                     }
 
+                    /// Rename
+                    /// 
                     if (needsRename) {
                         if (!pathShown) {
                             Console.WriteLine("* " + sourcePath);
@@ -269,6 +276,10 @@ namespace FileNameNormalizer
                         string fName = FileOp.GetFileName(path, isDir);
                         string newFName = FileOp.GetFileName(newPath, isDir);
                         Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
+                        // Hex Dump
+                        if (_optionHexDump) {
+                            PrintHexFileName(FileOp.GetFileName(path, isDir));
+                        }
 
                         bool renameFailed = false;
 
@@ -325,10 +336,6 @@ namespace FileNameNormalizer
                             }
                         }
 
-                        if (_optionHexDump) {
-                            PrintHexFileName(FileOp.GetFileName(path, isDir));
-                        }
-
                         if (needNormalization) {
                             if (isDir) {
                                 counter.DirsNeedNormalize++;
@@ -366,6 +373,7 @@ namespace FileNameNormalizer
                             }
                         }
                     }
+
                 }
             }
 
@@ -381,7 +389,7 @@ namespace FileNameNormalizer
 
             /// Recursion part
             /// 
-            if (_optionRecurse) {
+            if (_optionRecurse || singletonPath != null) {
                 // reread subdirectories because some may have changed
                 if (!FileOp.GetSubDirectories(sourcePath, out List<string> subDirectories))
                     counter.IOErrors++;
