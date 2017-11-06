@@ -49,6 +49,8 @@ namespace FileNameNormalizer
         {
             StringBuilder s = new StringBuilder(1000);
 
+            /// Normalization reporting
+
             if (FilesNeedNormalize > 0) {
                 if (IsPlural(FilesNeedNormalize))
                     s.AppendLine($"{FilesNeedNormalize} filenames need normalization");
@@ -119,11 +121,79 @@ namespace FileNameNormalizer
                 }
             }
 
+            /// Illegal chars reportingg
 
+            if (FilesWithIllegalChars > 0) {
+                if (IsPlural(FilesWithIllegalChars))
+                    s.AppendLine($"{FilesWithIllegalChars} filenames have illegal charcters");
+                else
+                    s.AppendLine($"1 filename has illegal characters");
 
-            // INSERT REPORT FOR ILLEGALS FIX
+                if (FilesWithIllegalCharsRenamed > 0 || FilesWithIllegalCharsFailed > 0) {
+                    if (FilesWithIllegalCharsRenamed > 0) {
+                        if (IsPlural(FilesWithIllegalCharsRenamed))
+                            s.AppendLine($"   of which {FilesWithIllegalCharsRenamed} filenames were renamed succesfully");
+                        else
+                            s.AppendLine("    of which 1 filename was renamed succesfully");
+                    }
+                    if (FilesWithIllegalCharsFailed > 0) {
+                        if (IsPlural(FilesWithIllegalCharsFailed))
+                            s.AppendLine($"   with {FilesWithIllegalCharsFailed} filenames failed to be renamed succesfully");
+                        else
+                            s.AppendLine($"   with 1 filename failed to be renamed succesfully");
+                    }
+                    if (FilesWithIllegalCharsProducedDuplicate > 0) {
+                        if (IsPlural(FilesWithIllegalCharsProducedDuplicate))
+                            s.AppendLine($"   {FilesWithIllegalCharsProducedDuplicate} files were renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   1 file was renamed with a 'Duplicate' suffix");
+                    }
+                } else {
+                    if (FilesWithIllegalCharsProducedDuplicate > 0) {
+                        if (IsPlural(FilesWithIllegalCharsProducedDuplicate))
+                            s.AppendLine($"   of which {FilesWithIllegalCharsProducedDuplicate} files would get duplicate names and need to be renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   of which 1 file would get a duplicate name and need to be renamed a 'Duplicate' suffix");
+                    }
+                }
+            }
 
+            if (DirsWithIllegalChars > 0) {
+                if (IsPlural(DirsWithIllegalChars))
+                    s.AppendLine($"{DirsWithIllegalChars} foldernames have illegal charcters");
+                else
+                    s.AppendLine($"1 foldername has illegal characters");
 
+                if (DirsWithIllegalCharsRenamed > 0 || DirsWithIllegalCharsFailed > 0) {
+                    if (DirsWithIllegalCharsRenamed > 0) {
+                        if (IsPlural(DirsWithIllegalCharsRenamed))
+                            s.AppendLine($"   of which {DirsWithIllegalCharsRenamed} foldernames were renamed succesfully");
+                        else
+                            s.AppendLine("    of which 1 foldername was renamed succesfully");
+                    }
+                    if (DirsWithIllegalCharsFailed > 0) {
+                        if (IsPlural(DirsWithIllegalCharsFailed))
+                            s.AppendLine($"   with {DirsWithIllegalCharsFailed} foldernames failed to be renamed succesfully");
+                        else
+                            s.AppendLine($"   with 1 foldername failed to be renamed succesfully");
+                    }
+                    if (DirsWithIllegalCharsProducedDuplicate > 0) {
+                        if (IsPlural(DirsWithIllegalCharsProducedDuplicate))
+                            s.AppendLine($"   {DirsWithIllegalCharsProducedDuplicate} folders were renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   1 folder was renamed with a 'Duplicate' suffix");
+                    }
+                } else {
+                    if (DirsWithIllegalCharsProducedDuplicate > 0) {
+                        if (IsPlural(DirsWithIllegalCharsProducedDuplicate))
+                            s.AppendLine($"   of which {DirsWithIllegalCharsProducedDuplicate} folders would get duplicate names and need to be renamed with 'Duplicate' suffixes");
+                        else
+                            s.AppendLine($"   of which 1 folder would get a duplicate name and need to be renamed a 'Duplicate' suffix");
+                    }
+                }
+            }
+
+            /// Genuine duplicate names reporting
 
             if (FilesWithDuplicateNames > 0) {
                 if (IsPlural(FilesWithDuplicateNames))
@@ -163,6 +233,8 @@ namespace FileNameNormalizer
                         s.AppendLine($"   with 1 folder failed to be renamed");
                 }
             }
+
+            /// Trim reporting
 
             if (FilesNeedTrim > 0) {
                 if (IsPlural(FilesNeedTrim))
@@ -239,6 +311,8 @@ namespace FileNameNormalizer
             //        s.AppendLine($"1 file has long path");
             //}
 
+            /// Long Path reporting
+
             if (TooLongDirPaths > 0) {
                 if (IsPlural(TooLongDirPaths))
                     s.AppendLine($"{TooLongDirPaths} long path branches found");
@@ -256,6 +330,8 @@ namespace FileNameNormalizer
                 else
                     s.AppendLine($"1 macOS package or symlink skipped");
             }
+
+            /// Error reporting
 
             if (UnaccesableDirs > 0) {
                 if (IsPlural(UnaccesableDirs))
