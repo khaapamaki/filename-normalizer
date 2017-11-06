@@ -5,6 +5,7 @@
 // Varoitus jos renamettu nimi aiheuttaa long pathin
 // case sensivite mode ei ehkä toimi duplikaattien kanssa?
 // mitä tapahtuu jos filename päättyy pisteeseen ext=""
+// raporttiin fixatut
 
 
 
@@ -90,8 +91,6 @@ namespace FileNameNormalizer
 
             // Parse arguments. Sets options and extracts valid paths.
             string[] paths = ParseArguments(args);
-
-            PrintIllegalChars();
 
             // Print help, if no valid path given
             if (args.Length == 0 || _optionShowHelp) {
@@ -312,9 +311,9 @@ namespace FileNameNormalizer
                                 }
                                 if (needTrim) {
                                     if (isDir)
-                                        counter.DirsWithSpacesRenamed++;
+                                        counter.DirsNeedTrimRenamed++;
                                     else
-                                        counter.FilesWithSpacesRenamed++;
+                                        counter.FilesNeedTrimRenamed++;
                                 }
 
                             } else {
@@ -339,9 +338,9 @@ namespace FileNameNormalizer
                                 }
                                 if (needTrim) {
                                     if (isDir)
-                                        counter.DirsWithSpacesFailed++;
+                                        counter.DirsNeedTrimFailed++;
                                     else
-                                        counter.FilesWithSpacesFailed++;
+                                        counter.FilesNeedTrimFailed++;
                                 }
                             }
                         }
@@ -370,15 +369,15 @@ namespace FileNameNormalizer
                         }
                         if (needTrim) {
                             if (isDir) {
-                                counter.DirsWithSpaces++;
+                                counter.DirsNeedTrim++;
                             } else {
-                                counter.FilesWithSpaces++;
+                                counter.FilesNeedTrim++;
                             }
                             if (createsDuplicate && !renameFailed) {
                                 if (isDir) {
-                                    counter.DirsWithSpacesProducedDuplicate++;
+                                    counter.DirsNeedTrimProducedDuplicate++;
                                 } else {
-                                    counter.FilesWithSpacesProducedDuplicate++;
+                                    counter.FilesNeedTrimProducedDuplicate++;
                                 }
                             }
                         }
