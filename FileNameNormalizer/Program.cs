@@ -105,7 +105,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /l            Detailed report about long paths.");
                 //Console.WriteLine("  /e            Show errors only.");
-                Console.WriteLine("  /hex          Shows hex codes for files to be normalized");
+                Console.WriteLine("  /hex          Shows hex codes for file and folder names");
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
 
@@ -325,6 +325,10 @@ namespace FileNameNormalizer
                             }
                         }
 
+                        if (_optionHexDump) {
+                            PrintHexFileName(FileOp.GetFileName(path, isDir));
+                        }
+
                         if (needNormalization) {
                             if (isDir) {
                                 counter.DirsNeedNormalize++;
@@ -337,9 +341,6 @@ namespace FileNameNormalizer
                                 } else {
                                     counter.FilesNeedNormalizeProducedDuplicate++;
                                 }
-                            }
-                            if (_optionHexDump) {
-                                PrintHexFileName(FileOp.GetFileName(path, isDir));
                             }
                         }
 
