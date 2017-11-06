@@ -2,13 +2,10 @@
 // Kati Haapamäki 2016-2017
 
 // ToDo: parse . and .. from path
-// pisteenseen päättyvät kansiot?
-// jos trimmaus poistaa kokonaan basen, tilalle _
 // Varoitus jos renamettu nimi aiheuttaa long pathin
 // case sensivite mode ei ehkä toimi duplikaattien kanssa?
-// kiellettyjen merkkien poistaminen
 // mitä tapahtuu jos filename päättyy pisteeseen ext=""
-// /t=dir jättää dirleftin huomiotta
+
 
 
 using System;
@@ -36,7 +33,7 @@ namespace FileNameNormalizer
         private static bool _optionFixDuplicates = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
-        private static bool _optionNormalize = true;
+        private static bool _optionNormalize = false;
         private static bool _optionMacAware = true;
         private static bool _optionDumpLongPaths = false;
         private static bool _optionShowHelp = false;
@@ -53,7 +50,7 @@ namespace FileNameNormalizer
 
         //private static List<int> illegalCharCodes = new List<int> { 0xF029, 0x2DC, 0xF020, 0xF021, 0xF022, 0xF023, 0xF024, 0xF025, 0xF026, 0xF027, 0xF028 };
         private static char[] dotTrimChars = { ' ', '.', '\xF029' };
-        private static List<char> illegalChars = new List<char> { '\xF029', '\x2DC', '\xF020', '\xF021', '\xF022', '\xF023', '\xF024', '\xF025', '\xF026', '\xF027',
+        private static List<char> illegalChars = new List<char> { '\x2DC', '\xF020', '\xF021', '\xF022', '\xF023', '\xF024', '\xF025', '\xF026', '\xF027',
                                                                     '<', '>', '|', '\\', '/', '\"', '*', '?', '~', ':', '\xF028', '\xF029',};
 
 
@@ -102,10 +99,10 @@ namespace FileNameNormalizer
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurses subdirectories");
-                Console.WriteLine("  /formc        Performs Form C normalization. Default operation.");
-                Console.WriteLine("  /formd        Performs Form D normalization. Reverse for Form C.");
-                Console.WriteLine("  /nonorm       Bypass all normalization.");
-                Console.WriteLine("  /dup          Renames file and folder names that would have a duplicate name in a case-insensitive file system.");
+                Console.WriteLine("  /nc           Performs Form C normalization. Normal operation.");
+                Console.WriteLine("  /nd           Performs Form D normalization. Reverse for Form C.");
+                //Console.WriteLine("  /nonorm       Bypass all normalization.");
+                Console.WriteLine("  /b,/dup       Renames file and folder names that would have a duplicate name in a case-insensitive file system.");
                 Console.WriteLine("                This is effective only when scanning case sensitive file system.");
                 Console.WriteLine("  /t            Trims illegal folder names with trailing spaces. Same as option /t=dirright");
                 Console.WriteLine("  /t=all        Trims all file and folder names with leading and trailing spaces.");
@@ -259,7 +256,7 @@ namespace FileNameNormalizer
                         out bool didFixIllegal,
                         skipIndex: pos);
 
-                    string prefix = GetReportingPrefix(isDir, needNormalization, genuineDuplicate, needTrim);
+                    string prefix = GetReportingPrefix(isDir, needNormalization, didFixIllegal, genuineDuplicate, needTrim);
 
                     if (needsRename && !needNormalization && !genuineDuplicate && !needTrim && !didFixIllegal)
                         throw new Exception("Gathering statistics failed.");
@@ -446,29 +443,45 @@ namespace FileNameNormalizer
             return;
         }
 
-        static string GetReportingPrefix(bool isDir, bool normalize, bool duplicate, bool trim)
+        static string GetReportingPrefix(bool isDir, bool normalize, bool illegals, bool duplicate, bool trim)
         {
             string prefix = isDir ? "DIR:   " : "File:  ";
 
-            if (normalize && trim && duplicate) {
-                prefix += "NORM+S+D  ";
-            } else {
-                if (normalize && duplicate)
-                    prefix += "NORM+DUPL ";
-                else if (normalize && trim)
-                    prefix += "NORM+SPCS ";
-
-                else if (trim && duplicate)
-                    prefix += "SPCS+DUPL ";
-                else if (trim)
-                    prefix += "SPACES    ";
-                else if (duplicate)
-                    prefix += "DUPLICATE ";
-                else if (normalize)
-                    prefix += "NORMALIZE ";
-                else
-                    prefix += "noop       ";
+            StringBuilder sb = new StringBuilder(4);
+            if (normalize)
+                sb.Append("N");
+            if (illegals)
+                sb.Append("I");
+            if (duplicate)
+                sb.Append("D");
+            if (trim)
+                sb.Append("T");
+            for (int i = sb.Length; i <= 4; i++) {
+                sb.Append(" ");
             }
+
+            prefix += sb.ToString();
+            prefix += " ";
+
+            //if (normalize && trim && duplicate) {
+            //    prefix += "NORM+S+D  ";
+            //} else {
+            //    if (normalize && duplicate)
+            //        prefix += "NORM+DUPL ";
+            //    else if (normalize && trim)
+            //        prefix += "NORM+SPCS ";
+
+            //    else if (trim && duplicate)
+            //        prefix += "SPCS+DUPL ";
+            //    else if (trim)
+            //        prefix += "SPACES    ";
+            //    else if (duplicate)
+            //        prefix += "DUPLICATE ";
+            //    else if (normalize)
+            //        prefix += "NORMALIZE ";
+            //    else
+            //        prefix += "noop       ";
+            //}
             return prefix;
         }
 
@@ -760,12 +773,12 @@ namespace FileNameNormalizer
                     _optionRename = true;
                 }
                 // option /formd = use Form D normalization instead of default Form C
-                if (lcaseArg == "/formd") {
+                if (lcaseArg == "/nd" && _optionNormalize == false) {
                     _optionNormalizationForm = NormalizationForm.FormD;
                     _optionNormalize = true;
                 }
-                // option /formc = use Form C normalization (default)
-                if (lcaseArg == "/formc") {
+                // option /formc = use Form C normalization (normal operation)
+                if (lcaseArg == "/nc") {
                     _optionNormalizationForm = NormalizationForm.FormC;
                     _optionNormalize = true;
                 }
@@ -807,13 +820,13 @@ namespace FileNameNormalizer
                     _optionFixIllegalChars = true;
                 }
                 // option to handle case insensitive duplicates
-                if (lcaseArg == "/dup") {
+                if (lcaseArg == "/dup" || lcaseArg == "/b") {
                     _optionFixDuplicates = true;
                 }
                 // bypass normalization
-                if (lcaseArg == "/nonorm") {
-                    _optionNormalize = false;
-                }
+                //if (lcaseArg == "/nonorm") {
+                //    _optionNormalize = false;
+                //}
                 // option files only
                 if (lcaseArg == "/f") {
                     if (_optionProcessFiles == false) {
@@ -855,27 +868,27 @@ namespace FileNameNormalizer
         private static TrimOptions ParseTrimOptions(string trimStr)
         {
             TrimOptions result = TrimOptions.None;
-            string[] args = trimStr.Split(',');
+            string[] args = trimStr.ToLower().Split(',');
             foreach (string arg in args) {
 
-                if (arg == "baseleft")
+                if (arg == "baseleft" || arg == "bl")
                     result = result | TrimOptions.FileBaseLeft;
-                if (arg == "baseright")
+                if (arg == "baseright" || arg == "br")
                     result = result | TrimOptions.FileBaseRight;
-                if (arg == "base")
+                if (arg == "base" || arg == "b")
                     result = result | TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight;
-                if (arg == "extleft")
+                if (arg == "extleft" || arg == "el")
                     result = result | TrimOptions.FileExtLeft;
-                if (arg == "extright")
+                if (arg == "extright" || arg == "er")
                     result = result | TrimOptions.FileExtRight;
-                if (arg == "ext")
+                if (arg == "ext" || arg == "e")
                     result = result | TrimOptions.FileExtLeft | TrimOptions.FileExtRight;
 
-                if (arg == "dirleft")
+                if (arg == "dirleft" || arg == "dl")
                     result = result | TrimOptions.DirLeft;
-                if (arg == "dirright")
+                if (arg == "dirright" || arg == "dr")
                     result = result | TrimOptions.DirRight;
-                if (arg == "dir")
+                if (arg == "dir" || arg == "d")
                     result = result | TrimOptions.DirLeft | TrimOptions.DirRight;
 
                 if (arg == "all") {
