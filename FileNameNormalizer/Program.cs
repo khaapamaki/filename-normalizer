@@ -631,10 +631,17 @@ namespace FileNameNormalizer
                 }
                 if (baseName != "" && newBase == "")
                     newBase = "[No Name]";
+
+                string newFileName;
                 if (newExt != "")
-                    newPath = pathWihtoutLastComponent + @"\" + newBase + dot + newExt;
+                    newFileName = newBase + dot + newExt;
                 else
-                    newPath = pathWihtoutLastComponent + @"\" + newBase;
+                    newFileName = newBase;
+
+                if (newFileName == "")
+                    newFileName = "[No Name]";
+
+                newPath = pathWihtoutLastComponent + @"\" + newFileName;
 
             } else {
                 if (IsBinaryMatch(options, TrimOptions.Dir)) {
