@@ -2,8 +2,11 @@
 // Kati Haapamäki 2016-2017
 
 // ToDo: parse . and .. from path
-// Varoitut jos renamettu nimi aiheuttaa long pathin
+// pisteenseen päättyvät kansiot?
+// jos trimmaus poistaa kokonaan basen, tilalle _
+// Varoitus jos renamettu nimi aiheuttaa long pathin
 // case sensivite mode ei ehkä toimi duplikaattien kanssa
+// kiellettyjen merkkien poistaminen ainakin ?
 
 using System;
 using System.Collections.Generic;
