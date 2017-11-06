@@ -60,7 +60,7 @@ namespace FileNameNormalizer
         // not currently in use
         // useful stuff keep along with this project for future use
         const string acceptableCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜŸabcdefghijklmnopqrstuvwxyzáàâäãåçéèêëíìîïñóòôöõúùûüÿ_ !@#£$€%&()[]{}'+-.,;§½";
-        const string replacementCharacter = "_";
+        const char replacementCharacter = '_';
 
         private enum TrimOptions
         {
@@ -256,11 +256,12 @@ namespace FileNameNormalizer
                         out bool createsDuplicate,
                         out bool needsRename,
                         out bool genuineDuplicate,
+                        out bool didFixIllegal,
                         skipIndex: pos);
 
                     string prefix = GetReportingPrefix(isDir, needNormalization, genuineDuplicate, needTrim);
 
-                    if (needsRename && !needNormalization && !genuineDuplicate && !needTrim)
+                    if (needsRename && !needNormalization && !genuineDuplicate && !needTrim && !didFixIllegal)
                         throw new Exception("Gathering statistics failed.");
 
                     if (!needsRename && _optionShowEveryFile) {
@@ -503,6 +504,7 @@ namespace FileNameNormalizer
             out bool createdDuplicate,
             out bool needRename,
             out bool genuineDuplicate,
+            out bool didFixIllegal,
             int skipIndex = -1)
         {
             string newPath = path;
@@ -512,6 +514,7 @@ namespace FileNameNormalizer
             createdDuplicate = false;
             needRename = false;
             genuineDuplicate = false;
+            didFixIllegal = false;
 
             /// Normalize
             /// 
@@ -521,6 +524,12 @@ namespace FileNameNormalizer
                     didNormalize = NormalizeFileNameInPath(ref newPath, _optionNormalizationForm, isDir);
             }
             fileName = FileOp.GetFileName(newPath, isDir);
+
+            /// Illegal Characters
+            /// 
+            if (_optionFixIllegalChars) {
+                didFixIllegal = FixIllegalChars(ref newPath, isDir);
+            }
 
             /// Trim
             /// 
@@ -579,6 +588,28 @@ namespace FileNameNormalizer
                 needRename = true;
 
             return newPath;
+        }
+
+        private static bool FixIllegalChars(ref string path, bool isDir)
+        {
+            bool didFix = false;
+            string newPath = path;
+            string fileName = FileOp.GetFileName(path, isDir);
+            string pathWihtoutLastComponent = path.Substring(0, path.Count() - fileName.Count());
+            pathWihtoutLastComponent = FileOp.PathWithoutPathSeparator(pathWihtoutLastComponent);
+            StringBuilder sb = new StringBuilder(fileName.Length);
+            for (int i = 0; i < fileName.Length; i++) {
+                char c = fileName[i];
+                if (illegalChars.Contains(c)) {
+                    didFix = true;
+                    sb.Append(replacementCharacter);
+                } else {
+                    sb.Append(fileName[i]);
+                }
+            }
+            string newFileName = sb.ToString();
+            newPath = pathWihtoutLastComponent + @"\" + newFileName;
+            return didFix;
         }
 
         /// <summary>
