@@ -443,7 +443,6 @@ namespace FileNameNormalizer
 
                     string dirName = FileOp.GetFileName(path, isDir: true);
 
-
                     bool tooLongPath = path.Length >= FileOp.MAX_FILE_PATH_LENGTH;
                     if (tooLongPath & !noLongPathWarnings) {
                         //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
@@ -654,7 +653,8 @@ namespace FileNameNormalizer
                 }
             }
             string newFileName = sb.ToString();
-            newPath = pathWihtoutLastComponent + @"\" + newFileName;
+            if (didFix)
+                path = pathWihtoutLastComponent + @"\" + newFileName;
             return didFix;
         }
 
