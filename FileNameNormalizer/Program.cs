@@ -51,8 +51,8 @@ namespace FileNameNormalizer
 
         //private static List<int> illegalCharCodes = new List<int> { 0xF029, 0x2DC, 0xF020, 0xF021, 0xF022, 0xF023, 0xF024, 0xF025, 0xF026, 0xF027, 0xF028 };
         private static char[] dotTrimChars = { ' ', '.', '\xF029' };
-        private static List<char> illegalChars = new List<char> { '\x2DC', '\xF020', '\xF021', '\xF022', '\xF023', '\xF024', '\xF025', '\xF026', '\xF027',
-                                                                    '<', '>', '|', '\\', '/', '\"', '*', '?', '~', ':', '\xF028', '\xF029',};
+        private static List<char> illegalChars = new List<char> { '\xF020', '\xF021', '\xF022', '\xF023', '\xF024', '\xF025', '\xF026', '\xF027',
+                                                                    '<', '>', '|', '\\', '/', '\"', '*', '?', ':', '\xF028', '\xF029',};
 
 
         // not currently in use
