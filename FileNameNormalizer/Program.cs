@@ -98,24 +98,25 @@ namespace FileNameNormalizer
                 Console.WriteLine("  fnamenorm <options> <path> [<path2>] [<path3>]\n");
                 Console.WriteLine("Options:");
                 Console.WriteLine("  /r            Recurses subdirectories");
-                Console.WriteLine("  /nc           Performs Form C normalization. Normal operation.");
-                Console.WriteLine("  /nd           Performs Form D normalization. Reverse for Form C.");
-                //Console.WriteLine("  /nonorm       Bypass all normalization.");
-                Console.WriteLine("  /b,/dup       Renames file and folder names that would have a duplicate name in a case-insensitive file system.");
-                Console.WriteLine("                This is effective only when scanning case sensitive file system.");
+                Console.WriteLine("  /nc           Performs Form C normalization. Normal operation");
+                Console.WriteLine("  /nd           Performs Form D normalization. Reverse for Form C");
+                Console.WriteLine(@"  /i            Replaces illegal characters < > / \ | : * with underscore");
+                Console.WriteLine("  /b,/dup       Renames file and folder names that would have a duplicate name in a case-insensitive file system");
+                Console.WriteLine("                This is effective only when scanning case sensitive file system");
                 Console.WriteLine("  /t            Trims illegal folder names with trailing spaces. Same as option /t=dirright");
-                Console.WriteLine("  /t=all        Trims all file and folder names with leading and trailing spaces.");
-                Console.WriteLine("  /t=opt1,opt2  Specific trim instructions: base, ext, dir, baseleft, baseright, extleft, extright, dirleft, dirright.");
+                Console.WriteLine("  /t=all        Trims all file and folder names with leading and trailing space.");
+                Console.WriteLine("  /t=opt1,opt2  Specific trim instructions: base, ext, dir, baseleft, baseright, extleft, extright, dirleft, dirright");
                 Console.WriteLine("  /d            Processes folder names only");
                 Console.WriteLine("  /f            Processes filenames only");
+                Console.WriteLine("  /a            Sets options /nc /b /t /i at once.");
                 Console.WriteLine("  /p=<pattern>  Search pattern for files, eg. *.txt");
-                Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done.");
+                Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done");
                 Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
-                Console.WriteLine("  /l            Detailed report about long paths.");
+                Console.WriteLine("  /l            Detailed report about long paths");
                 //Console.WriteLine("  /e            Show errors only.");
                 Console.WriteLine("  /hex          Shows hex codes for file and folder names");
                 Console.WriteLine("");
-                Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming.");
+                Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming");
 
 #if DEBUG
                 Console.ReadLine();
@@ -823,6 +824,15 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/e") {
                     _optionPrintErrorsOnly = true;
                 }
+                // option /e, print errors only
+                if (lcaseArg == "/a") {
+                    _optionNormalizationForm = NormalizationForm.FormC;
+                    _optionNormalize = true;
+                    _optionTrimOptions = ParseTrimOptions("dirright");
+                    _optionFixIllegalChars = true;
+                    _optionFixDuplicates = true;
+                }
+
                 // option /p=<pattern>, search pattern for files
                 if (lcaseArg.StartsWith("/p=")) {
                     _optionSearchPattern = arg.Substring(3);
@@ -924,10 +934,10 @@ namespace FileNameNormalizer
                 if (arg == "dir" || arg == "d")
                     result = result | TrimOptions.DirLeft | TrimOptions.DirRight;
 
-                if (arg == "all") {
-                    result = result | TrimOptions.FileBaseLeft | TrimOptions.FileBaseRight
-                        | TrimOptions.FileExtLeft | TrimOptions.FileExtRight
-                        | TrimOptions.DirLeft | TrimOptions.DirRight;
+                if (arg == "all" || arg == "a") {
+                    result = result | TrimOptions.FileBase
+                        | TrimOptions.FileExt
+                        | TrimOptions.Dir;
                 }
             }
             return result;
