@@ -39,6 +39,7 @@ namespace FileNameNormalizer
         private static bool _optionDumpLongPaths = false;
         private static bool _optionShowHelp = false;
         private static bool _optionFixIllegalChars = false;
+        private static bool _optionOnlyShowParentFolder = false;
         private static List<string> _tooLongPaths;
         private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
@@ -112,6 +113,7 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /p=<pattern>  Search pattern for files, eg. *.txt");
                 Console.WriteLine("  /rename       Does actual renaming instead of displaying info about what should be done");
                 Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
+                Console.WriteLine("  /o            Only show folders that includes items to be fixed hiding items itself");
                 Console.WriteLine("  /l            Detailed report about long paths");
                 //Console.WriteLine("  /e            Show errors only.");
                 Console.WriteLine("  /hex          Shows hex codes for file and folder names");
@@ -267,7 +269,8 @@ namespace FileNameNormalizer
                             pathShown = true;
                         }
                         string fName = FileOp.GetFileName(path, isDir);
-                        Console.WriteLine($"    {prefix:s} \"{fName:s}\"");
+                        if (!_optionOnlyShowParentFolder)
+                            Console.WriteLine($"    {prefix:s} \"{fName:s}\"");
                         // Hex Dump
                         if (_optionHexDump) {
                             PrintHexFileName(FileOp.GetFileName(path, isDir));
@@ -285,7 +288,8 @@ namespace FileNameNormalizer
                         directoryContents[pos] = newPath;
                         string fName = FileOp.GetFileName(path, isDir);
                         string newFName = FileOp.GetFileName(newPath, isDir);
-                        Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
+                        if (!_optionOnlyShowParentFolder)
+                            Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
                         // Hex Dump
                         if (_optionHexDump) {
                             PrintHexFileName(FileOp.GetFileName(path, isDir));
@@ -496,25 +500,6 @@ namespace FileNameNormalizer
             prefix += sb.ToString();
             prefix += " ";
 
-            //if (normalize && trim && duplicate) {
-            //    prefix += "NORM+S+D  ";
-            //} else {
-            //    if (normalize && duplicate)
-            //        prefix += "NORM+DUPL ";
-            //    else if (normalize && trim)
-            //        prefix += "NORM+SPCS ";
-
-            //    else if (trim && duplicate)
-            //        prefix += "SPCS+DUPL ";
-            //    else if (trim)
-            //        prefix += "SPACES    ";
-            //    else if (duplicate)
-            //        prefix += "DUPLICATE ";
-            //    else if (normalize)
-            //        prefix += "NORMALIZE ";
-            //    else
-            //        prefix += "noop       ";
-            //}
             return prefix;
         }
 
@@ -853,8 +838,11 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
                 }
-
-                // option directories only
+                // option only show parent folders
+                if (lcaseArg == "/o") {
+                    _optionOnlyShowParentFolder = true;
+                }
+                // option list all long path branches
                 if (lcaseArg == "/l") {
                     _optionDumpLongPaths = true;
                 }
