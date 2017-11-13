@@ -226,7 +226,12 @@ namespace FileNameNormalizer
                 string pathWithoutFileName = path.Substring(0, path.Length - fileName.Length);
 
                 // long path detection
-                if (noLongPathWarnings == false && !isDir) {
+                if (!noLongPathWarnings && !isDir) {
+                    if (path.Length >= FileOp.MAX_FILE_PATH_LENGTH) {
+                        longPathFound = true;
+                    }
+                }
+                if (!noLongPathWarnings && !isDir) {
                     if (path.Length >= FileOp.MAX_DIR_PATH_LENGTH) {
                         longPathFound = true;
                     }
@@ -449,7 +454,7 @@ namespace FileNameNormalizer
                     string dirName = FileOp.GetFileName(path, isDir: true);
 
                     bool tooLongPath = path.Length >= FileOp.MAX_FILE_PATH_LENGTH;
-                    if (tooLongPath & !noLongPathWarnings) {
+                    if (tooLongPath && !noLongPathWarnings) {
                         //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
                         //Console.WriteLine("*** Subsequent warnings in this path are supressed.");
                         counter.TooLongDirPaths++;
