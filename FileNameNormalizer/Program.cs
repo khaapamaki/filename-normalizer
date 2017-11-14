@@ -231,7 +231,7 @@ namespace FileNameNormalizer
                         longPathFound = true;
                     }
                 }
-                if (!noLongPathWarnings && !isDir) {
+                if (!noLongPathWarnings && isDir) {
                     if (path.Length >= FileOp.MAX_DIR_PATH_LENGTH) {
                         longPathFound = true;
                     }
@@ -435,9 +435,10 @@ namespace FileNameNormalizer
             directoryContents = null;
             //directoryContentsDirsFirst = null;
 
-            if (longPathFound) {
+            if (longPathFound && !noLongPathWarnings) {
                 counter.TooLongDirPaths++;
-                _tooLongPaths.Add(sourcePath);
+                if (_optionDumpLongPaths)
+                    _tooLongPaths.Add(sourcePath);
             }
 
             /// Recursion part
@@ -453,20 +454,20 @@ namespace FileNameNormalizer
 
                     string dirName = FileOp.GetFileName(path, isDir: true);
 
-                    bool tooLongPath = path.Length >= FileOp.MAX_FILE_PATH_LENGTH;
-                    if (tooLongPath && !noLongPathWarnings) {
-                        //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
-                        //Console.WriteLine("*** Subsequent warnings in this path are supressed.");
-                        counter.TooLongDirPaths++;
-                        if (_optionDumpLongPaths)
-                            _tooLongPaths.Add(path);
-                    }
+                    //bool tooLongPath = path.Length >= FileOp.MAX_FILE_PATH_LENGTH;
+                    //if (longPathFound && !noLongPathWarnings) {
+                    //    //Console.WriteLine("*** Warning: Path too long for DIRECTORY ({0:g}): {1:s} ", subDirectory.Length, subDirectory);
+                    //    //Console.WriteLine("*** Subsequent warnings in this path are supressed.");
+                    //    counter.TooLongDirPaths++;
+                    //    if (_optionDumpLongPaths)
+                    //        _tooLongPaths.Add(sourcePath);
+                    //}
 
                     // Recurse if recursion flag set
                     if (!IsMacPackage(dirName)) {
                         if (FileOp.DirectoryExists(path)) {
                             if (!FileOp.IsSymbolicDir(path))
-                                HandleDirectory(path, ref counter, noLongPathWarnings: tooLongPath || noLongPathWarnings); // -> Recurse subdirectories
+                                HandleDirectory(path, ref counter, noLongPathWarnings: longPathFound || noLongPathWarnings); // -> Recurse subdirectories
                             else {
                                 Console.WriteLine("*** SymLink - not following: {0:s}", path);
                                 counter.SkippedDirectories++;
