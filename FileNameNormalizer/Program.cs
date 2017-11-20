@@ -1,12 +1,11 @@
-﻿// File Name Normalizer
-// Kati Haapamäki 2016-2017
+﻿/// File Name Normalizer
+/// Kati Haapamäki 2016-2017
 
 // ToDo: parse . and .. from path
 // Varoitus jos renamettu nimi aiheuttaa long pathin
 // case sensivite mode ei ehkä toimi duplikaattien kanssa?
 // mitä tapahtuu jos filename päättyy pisteeseen ext=""
 // raporttiin fixatut
-
 
 
 using System;
@@ -26,21 +25,20 @@ namespace FileNameNormalizer
         // User options that are set by cmd line options
         private static bool _optionRecurse = false;
         private static bool _optionRename = false;
-        private static bool _optionShowEveryFile = false;
-        private static bool _optionPrintErrorsOnly = false;
+        private static bool _optionPrintEveryFile = false;
         private static string _optionSearchPattern = "*";
-        private static bool _optionHexDump = false;
+        private static bool _optionPrintHexCodes = false;
         private static bool _optionCaseInsensitive = true;
         private static bool _optionFixDuplicates = false;
         private static bool _optionProcessFiles = true;
         private static bool _optionProcessDirs = true;
         private static bool _optionNormalize = false;
         private static bool _optionMacAware = true;
-        private static bool _optionDumpLongPaths = false;
+        private static bool _optionPrintLongPaths = false;
         private static bool _optionShowHelp = false;
         private static bool _optionFixIllegalChars = false;
-        private static bool _optionOnlyShowParentFolder = false;
-        private static List<string> _tooLongPaths;
+        private static bool _optionOnlyPrintParentFolder = false; // to prevent displaying individual files or folders to be fixed
+        private static List<string> _longPaths; // list of long paths to show later
         private static TrimOptions _optionTrimOptions = TrimOptions.None;
 
         private static NormalizationForm _defaultNormalizationForm = NormalizationForm.FormC;
@@ -55,10 +53,10 @@ namespace FileNameNormalizer
         private static List<char> illegalChars = new List<char> { '\xF020', '\xF021', '\xF022', '\xF023', '\xF024', '\xF025', '\xF026', '\xF027',
                                                                     '<', '>', '|', '\\', '/', '\"', '*', '?', ':', '\xF028', '\xF029',};
 
-
         // not currently in use
         // useful stuff keep along with this project for future use
-        const string acceptableCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜŸabcdefghijklmnopqrstuvwxyzáàâäãåçéèêëíìîïñóòôöõúùûüÿ_ !@#£$€%&()[]{}'+-.,;§½";
+        const string acceptableCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜŸ" +
+            "abcdefghijklmnopqrstuvwxyzáàâäãåçéèêëíìîïñóòôöõúùûüÿ_ !@#£$€%&()[]{}'+-.,;§½";
         const char replacementCharacter = '_';
 
         private enum TrimOptions
@@ -115,7 +113,6 @@ namespace FileNameNormalizer
                 Console.WriteLine("  /v            Verbose mode. Print out all files and folders in a tree");
                 Console.WriteLine("  /o            Only show folders that includes items to be fixed hiding items itself");
                 Console.WriteLine("  /l            Detailed report about long paths");
-                //Console.WriteLine("  /e            Show errors only.");
                 Console.WriteLine("  /hex          Shows hex codes for file and folder names");
                 Console.WriteLine("");
                 Console.WriteLine("Note:           Without /rename option only dry run is performed without actual renaming");
@@ -125,14 +122,14 @@ namespace FileNameNormalizer
 #else
 
 #endif
-                return; // No paths -> end program
+                return; // No valid paths given -> end program
             }
 
             // Process valid paths
             if (paths.Count() > 0) {
 
                 OpCounter counter = new OpCounter();
-                _tooLongPaths = new List<string>(500);
+                _longPaths = new List<string>(500);
 
                 foreach (string sourcePath in paths) {
                     // What happens here:
@@ -181,8 +178,8 @@ namespace FileNameNormalizer
                 }
 
                 // Output the list of long paths
-                if (_optionDumpLongPaths)
-                    _tooLongPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
+                if (_optionPrintLongPaths)
+                    _longPaths.ForEach(x => Console.WriteLine("Long Path: " + x));
 
                 // Output the report
                 Console.Write(counter.ToString());
@@ -259,25 +256,25 @@ namespace FileNameNormalizer
                         out bool needTrim,
                         out bool createsDuplicate,
                         out bool needsRename,
-                        out bool genuineDuplicate,
+                        out bool caseDuplicate,
                         out bool needFixIllegal,
                         skipIndex: pos);
 
-                    string prefix = GetReportingPrefix(isDir, needNormalization, needFixIllegal, genuineDuplicate, needTrim);
+                    string prefix = GetReportingPrefix(isDir, needNormalization, needFixIllegal, caseDuplicate, needTrim);
 
-                    if (needsRename && !needNormalization && !genuineDuplicate && !needTrim && !needFixIllegal)
+                    if (needsRename && !needNormalization && !caseDuplicate && !needTrim && !needFixIllegal)
                         throw new Exception("Gathering statistics failed.");
 
-                    if (!needsRename && _optionShowEveryFile) {
+                    if (!needsRename && _optionPrintEveryFile) {
                         if (!pathShown) {
                             Console.WriteLine("* " + sourcePath);
                             pathShown = true;
                         }
                         string fName = FileOp.GetFileName(path, isDir);
-                        if (!_optionOnlyShowParentFolder)
+                        if (!_optionOnlyPrintParentFolder)
                             Console.WriteLine($"    {prefix:s} \"{fName:s}\"");
                         // Hex Dump
-                        if (_optionHexDump) {
+                        if (_optionPrintHexCodes) {
                             PrintHexFileName(FileOp.GetFileName(path, isDir));
                         }
 
@@ -293,10 +290,10 @@ namespace FileNameNormalizer
                         directoryContents[pos] = newPath;
                         string fName = FileOp.GetFileName(path, isDir);
                         string newFName = FileOp.GetFileName(newPath, isDir);
-                        if (!_optionOnlyShowParentFolder)
+                        if (!_optionOnlyPrintParentFolder)
                             Console.WriteLine($"    {prefix:s} \"{fName:s}\"  ==>  \"{newFName:s}\"");
                         // Hex Dump
-                        if (_optionHexDump) {
+                        if (_optionPrintHexCodes) {
                             PrintHexFileName(FileOp.GetFileName(path, isDir));
                         }
 
@@ -320,7 +317,7 @@ namespace FileNameNormalizer
                                         counter.FilesWithIllegalCharsRenamed++;
                                 }
 
-                                if (genuineDuplicate) {
+                                if (caseDuplicate) {
                                     if (isDir)
                                         counter.DirsWithDuplicateNamesRenamed++;
                                     else
@@ -357,7 +354,7 @@ namespace FileNameNormalizer
                                         counter.FilesWithIllegalCharsFailed++;
                                 }
 
-                                if (genuineDuplicate) {
+                                if (caseDuplicate) {
                                     if (isDir)
                                         counter.DirsWithDuplicateNamesFailed++;
                                     else
@@ -403,7 +400,7 @@ namespace FileNameNormalizer
                             }
                         }
 
-                        if (genuineDuplicate) {
+                        if (caseDuplicate) {
                             if (isDir) {
                                 counter.DirsWithDuplicateNames++;
                             } else {
@@ -437,8 +434,8 @@ namespace FileNameNormalizer
 
             if (longPathFound && !noLongPathWarnings) {
                 counter.TooLongDirPaths++;
-                if (_optionDumpLongPaths)
-                    _tooLongPaths.Add(sourcePath);
+                if (_optionPrintLongPaths)
+                    _longPaths.Add(sourcePath);
             }
 
             /// Recursion part
@@ -524,7 +521,7 @@ namespace FileNameNormalizer
         /// <param name="didTrim"></param>
         /// <param name="createdDuplicate"></param>
         /// <param name="needRename"></param>
-        /// <param name="genuineDuplicate"></param>
+        /// <param name="caseDuplicate"></param>
         /// <param name="skipIndex"></param>
         /// <returns></returns>
         private static string GetUniqueName(
@@ -540,7 +537,7 @@ namespace FileNameNormalizer
             out bool didTrim,
             out bool createdDuplicate,
             out bool needRename,
-            out bool genuineDuplicate,
+            out bool caseDuplicate,
             out bool didFixIllegal,
             int skipIndex = -1)
         {
@@ -550,7 +547,7 @@ namespace FileNameNormalizer
             didTrim = false;
             createdDuplicate = false;
             needRename = false;
-            genuineDuplicate = false;
+            caseDuplicate = false;
             didFixIllegal = false;
 
             /// Normalize
@@ -594,11 +591,11 @@ namespace FileNameNormalizer
 
             if (didNormalize || didTrim || fixDuplicates) {
                 int i = 1;
-                while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out bool genuineDup, skipIndex, path)) {
-                    if (!genuineDup)
+                while (FileOp.NameExists(newPath, dirContents, caseInsensitive, out bool caseDupl, skipIndex, path)) {
+                    if (!caseDupl)
                         createdDuplicate = true;
                     else
-                        genuineDuplicate = true;
+                        caseDuplicate = true;
 
                     string suffix = " [Duplicate Name]";
                     if (i != 1) {
@@ -809,11 +806,7 @@ namespace FileNameNormalizer
                 }
                 // option /v = verbose, show all processed files and folders
                 if (lcaseArg == "/v") {
-                    _optionShowEveryFile = true;
-                }
-                // option /e, print errors only
-                if (lcaseArg == "/e") {
-                    _optionPrintErrorsOnly = true;
+                    _optionPrintEveryFile = true;
                 }
                 // option /e, print errors only
                 if (lcaseArg == "/a") {
@@ -823,13 +816,12 @@ namespace FileNameNormalizer
                     _optionFixIllegalChars = true;
                     _optionFixDuplicates = true;
                 }
-
                 // option /p=<pattern>, search pattern for files
                 if (lcaseArg.StartsWith("/p=")) {
                     _optionSearchPattern = arg.Substring(3);
                 }
                 if (lcaseArg == "/hex") {
-                    _optionHexDump = true;
+                    _optionPrintHexCodes = true;
                 }
                 // case sensitive operation in case sensitive systems
                 if (lcaseArg == "/case") {
@@ -839,18 +831,17 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/t") {
                     _optionTrimOptions = ParseTrimOptions("dirright");
                 }
-
                 // option directories only
                 if (lcaseArg == "/d") {
                     _optionProcessFiles = false;
                 }
                 // option only show parent folders
                 if (lcaseArg == "/o") {
-                    _optionOnlyShowParentFolder = true;
+                    _optionOnlyPrintParentFolder = true;
                 }
                 // option list all long path branches
                 if (lcaseArg == "/l") {
-                    _optionDumpLongPaths = true;
+                    _optionPrintLongPaths = true;
                 }
                 // option directories only
                 if (lcaseArg == "/i") {
@@ -860,10 +851,6 @@ namespace FileNameNormalizer
                 if (lcaseArg == "/dup" || lcaseArg == "/b") {
                     _optionFixDuplicates = true;
                 }
-                // bypass normalization
-                //if (lcaseArg == "/nonorm") {
-                //    _optionNormalize = false;
-                //}
                 // option files only
                 if (lcaseArg == "/f") {
                     if (_optionProcessFiles == false) {
@@ -875,13 +862,11 @@ namespace FileNameNormalizer
                         _optionProcessDirs = false;
                     }
                 }
-
                 // Trim options
                 if (lcaseArg.StartsWith("/t=")) {
                     string trimStr = lcaseArg.Substring(3);
                     _optionTrimOptions = _optionTrimOptions | ParseTrimOptions(trimStr);
                 }
-
                 // Get source paths
                 if (!arg.StartsWith("/")) {
                     string path = arg;
