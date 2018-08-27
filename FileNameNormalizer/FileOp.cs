@@ -1,14 +1,13 @@
 ﻿// Long Path Aware File Operations
 // Uses Pri.LongPath library by Peter Richman
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-/// <summary>
-/// FileNameNormalizer
-/// </summary>
+
 namespace FileNameNormalizer
 {
     /// <summary>
@@ -20,8 +19,8 @@ namespace FileNameNormalizer
     /// </remarks>
     public static class FileOp
     {
-        public const int MAX_DIR_PATH_LENGTH = 248;
-        public const int MAX_FILE_PATH_LENGTH = 260;
+        public const int MaxDirPathLength = 248;
+        public const int MaxFilePathLength = 260;
 
         /// <summary>
         /// Get Files Array (path strings)
@@ -33,22 +32,23 @@ namespace FileNameNormalizer
         public static bool GetFiles(string path, string pattern, out List<string> result)
         {
             List<string> fileList = new List<string>(100);
-            IEnumerable filesInDirectory;
             result = fileList;
             try {
-                if (path.Length < MAX_DIR_PATH_LENGTH) {
+                IEnumerable filesInDirectory;
+                if (path.Length < MaxDirPathLength) {
                     // Normal Version
                     filesInDirectory = System.IO.Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
                     foreach (string file in filesInDirectory)
                         fileList.Add(file);
                 } else {
                     // Long path version
-                    filesInDirectory = Pri.LongPath.Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
+                    filesInDirectory =
+                        Pri.LongPath.Directory.EnumerateFiles(path, pattern, SearchOption.TopDirectoryOnly);
                     foreach (string file in filesInDirectory)
                         fileList.Add(file);
                 }
             } catch {
-                //Console.WriteLine("*** Error: Cannot Open Directory: {0:s}", path);
+                Console.WriteLine($"*** Error: Cannot Open Directory: {path}");
                 return false;
             }
 
@@ -64,18 +64,20 @@ namespace FileNameNormalizer
         /// <returns></returns>
         public static bool GetSubDirectories(string directoryItem, out List<string> result)
         {
-            IEnumerable subDirectories;
             List<string> dirList = new List<string>(20);
             result = dirList;
             try {
-                if (directoryItem.Length < MAX_DIR_PATH_LENGTH) {
+                IEnumerable subDirectories;
+                if (directoryItem.Length < MaxDirPathLength) {
                     // Normal Version
-                    subDirectories = System.IO.Directory.EnumerateDirectories(directoryItem, "*", SearchOption.TopDirectoryOnly);
+                    subDirectories =
+                        System.IO.Directory.EnumerateDirectories(directoryItem, "*", SearchOption.TopDirectoryOnly);
                     foreach (string dir in subDirectories)
                         dirList.Add(dir);
                 } else {
                     // Long path version
-                    subDirectories = Pri.LongPath.Directory.EnumerateDirectories(directoryItem, "*", SearchOption.TopDirectoryOnly);
+                    subDirectories =
+                        Pri.LongPath.Directory.EnumerateDirectories(directoryItem, "*", SearchOption.TopDirectoryOnly);
                     foreach (string dir in subDirectories)
                         dirList.Add(dir);
                 }
@@ -97,7 +99,8 @@ namespace FileNameNormalizer
         /// <param name="directoriesFirst"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool GetFilesAndDirectories(string path, string pattern, out int dividePoint, bool directoriesFirst, out List<string> result)
+        public static bool GetFilesAndDirectories(string path, string pattern, out int dividePoint,
+            bool directoriesFirst, out List<string> result)
         {
             bool succeeded1 = GetFiles(path, pattern, out List<string> files);
             bool succeeded2 = GetSubDirectories(path, out List<string> dirs);
@@ -106,6 +109,7 @@ namespace FileNameNormalizer
                 result = new List<string>(0);
                 return false;
             }
+
             List<string> contents = new List<string>(files.Count() + dirs.Count());
             if (directoriesFirst) {
                 dirs.ForEach(x => contents.Add(x));
@@ -116,6 +120,7 @@ namespace FileNameNormalizer
                 dirs.ForEach(x => contents.Add(x));
                 dividePoint = files.Count();
             }
+
             result = contents;
             return true;
         }
@@ -131,25 +136,27 @@ namespace FileNameNormalizer
         {
             if (isDir) {
                 try {
-                    if (path.Length < MAX_DIR_PATH_LENGTH && newPath.Length < MAX_DIR_PATH_LENGTH)
-                        System.IO.Directory.Move(path, newPath);
+                    if (path.Length < MaxDirPathLength && newPath.Length < MaxDirPathLength)
+                        Directory.Move(path, newPath);
                     else
                         Pri.LongPath.Directory.Move(path, newPath);
                 } catch {
                     return false;
                 }
-                return true;
-            } else {
-                try {
-                    if (path.Length < MAX_FILE_PATH_LENGTH && newPath.Length < MAX_FILE_PATH_LENGTH)
-                        System.IO.File.Move(path, newPath);
-                    else
-                        Pri.LongPath.File.Move(path, newPath);
-                } catch {
-                    return false;
-                }
+
                 return true;
             }
+
+            try {
+                if (path.Length < MaxFilePathLength && newPath.Length < MaxFilePathLength)
+                    File.Move(path, newPath);
+                else
+                    Pri.LongPath.File.Move(path, newPath);
+            } catch {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -173,10 +180,7 @@ namespace FileNameNormalizer
             if (path == null)
                 return false;
 
-            if (path.Length < MAX_DIR_PATH_LENGTH)
-                return System.IO.Directory.Exists(path);
-            else
-                return Pri.LongPath.Directory.Exists(path);
+            return path.Length < MaxDirPathLength ? Directory.Exists(path) : Pri.LongPath.Directory.Exists(path);
         }
 
         /// <summary>
@@ -184,50 +188,16 @@ namespace FileNameNormalizer
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public static bool FileExists(string path)
+        private static bool FileExists(string path)
         {
             if (path == null)
                 return false;
 
-            if (path.Length < MAX_FILE_PATH_LENGTH)
+            if (path.Length < MaxFilePathLength)
                 return System.IO.File.Exists(path);
             else
                 return Pri.LongPath.File.Exists(path);
         }
-
-        //public static IEnumerable<Pri.LongPath.FileSystemInfo> GetAllFilesAndDirectories(string dir)
-        //{
-        //    if (string.IsNullOrWhiteSpace(dir))
-        //        throw new ArgumentException(nameof(dir));
-
-        //    Pri.LongPath.DirectoryInfo dirInfo = new Pri.LongPath.DirectoryInfo(dir);
-        //    Stack<Pri.LongPath.FileSystemInfo> stack = new Stack<Pri.LongPath.FileSystemInfo>();
-        //    stack.Push(dirInfo);
-        //    while (dirInfo != null || stack.Count > 0) {
-        //        Pri.LongPath.FileSystemInfo fileSystemInfo = stack.Pop();
-        //        if (fileSystemInfo is Pri.LongPath.DirectoryInfo subDirectoryInfo) {
-        //            yield return subDirectoryInfo;
-        //            foreach (Pri.LongPath.FileSystemInfo fsi in subDirectoryInfo.GetFileSystemInfos())
-        //                stack.Push(fsi);
-        //            dirInfo = subDirectoryInfo;
-        //        } else {
-        //            yield return fileSystemInfo;
-        //            dirInfo = null;
-        //        }
-        //    }
-        //}
-
-        //public static void DisplayAllFilesAndDirectories(string dir)
-        //{
-        //    if (string.IsNullOrWhiteSpace(dir))
-        //        throw new ArgumentException(nameof(dir));
-
-        //    var strings = (from fileSystemInfo in GetAllFilesAndDirectories(dir)
-        //                   select fileSystemInfo.ToString()).ToArray();
-
-        //    Array.ForEach(strings, s => { Console.WriteLine(s); });
-
-        //}
 
         /// <summary>
         /// Test if path is a symbolic link
@@ -236,11 +206,11 @@ namespace FileNameNormalizer
         /// <returns></returns>
         public static bool IsSymbolicFile(string path)
         {
-            if (path.Length < MAX_FILE_PATH_LENGTH) {
-                System.IO.FileInfo pathInfo = new System.IO.FileInfo(path);
+            if (path.Length < MaxFilePathLength) {
+                var pathInfo = new FileInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
             } else {
-                Pri.LongPath.FileInfo pathInfo = new Pri.LongPath.FileInfo(path);
+                var pathInfo = new Pri.LongPath.FileInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
             }
         }
@@ -252,7 +222,7 @@ namespace FileNameNormalizer
         /// <returns></returns>
         public static bool IsSymbolicDir(string path)
         {
-            if (path.Length < MAX_FILE_PATH_LENGTH) {
+            if (path.Length < MaxFilePathLength) {
                 System.IO.DirectoryInfo pathInfo = new System.IO.DirectoryInfo(path);
                 return pathInfo.Attributes.HasFlag(FileAttributes.ReparsePoint);
             } else {
@@ -275,6 +245,7 @@ namespace FileNameNormalizer
                 path1 = path1.ToLower();
                 path2 = path2.ToLower();
             }
+
             return path1 == path2;
         }
 
@@ -294,7 +265,7 @@ namespace FileNameNormalizer
             out bool genuineDuplicate,
             int skipIndex = -1,
             string originalPath = null
-            )
+        )
         {
             genuineDuplicate = false;
 
@@ -309,9 +280,11 @@ namespace FileNameNormalizer
                     if (AreSame(originalPath, dirContents[i], true)) {
                         genuineDuplicate = true;
                     }
+                    
                     return true;
                 }
             }
+
             return false;
         }
 
@@ -325,15 +298,9 @@ namespace FileNameNormalizer
         public static string GetDirectoryPath(string path, bool isDir)
         {
             if (isDir) {
-                if (path.Length < MAX_DIR_PATH_LENGTH)
-                    return System.IO.Path.GetDirectoryName(path);
-                else
-                    return Pri.LongPath.Path.GetDirectoryName(path);
+                return path.Length < MaxDirPathLength ? Path.GetDirectoryName(path) : Pri.LongPath.Path.GetDirectoryName(path);
             } else {
-                if (path.Length < MAX_FILE_PATH_LENGTH)
-                    return System.IO.Path.GetDirectoryName(path);
-                else
-                    return Pri.LongPath.Path.GetDirectoryName(path);
+                return path.Length < MaxFilePathLength ? Path.GetDirectoryName(path) : Pri.LongPath.Path.GetDirectoryName(path);
             }
         }
 
@@ -346,15 +313,9 @@ namespace FileNameNormalizer
         public static string GetFileName(string path, bool isDir)
         {
             if (isDir) {
-                if (path.Length < MAX_DIR_PATH_LENGTH)
-                    return System.IO.Path.GetFileName(path);
-                else
-                    return Pri.LongPath.Path.GetFileName(path);
+                return path.Length < MaxDirPathLength ? Path.GetFileName(path) : Pri.LongPath.Path.GetFileName(path);
             } else {
-                if (path.Length < MAX_FILE_PATH_LENGTH)
-                    return System.IO.Path.GetFileName(path);
-                else
-                    return Pri.LongPath.Path.GetFileName(path);
+                return path.Length < MaxFilePathLength ? Path.GetFileName(path) : Pri.LongPath.Path.GetFileName(path);
             }
         }
 
@@ -367,17 +328,14 @@ namespace FileNameNormalizer
         public static string GetFileNameWithoutExtension(string path, bool isDir)
         {
             if (isDir) {
-                if (path.Length < MAX_DIR_PATH_LENGTH)
-                    return System.IO.Path.GetFileNameWithoutExtension(path);
-                else
-                    return Pri.LongPath.Path.GetFileNameWithoutExtension(path);
+                return path.Length < MaxDirPathLength
+                    ? Path.GetFileNameWithoutExtension(path)
+                    : Pri.LongPath.Path.GetFileNameWithoutExtension(path);
             } else {
-                if (path.Length < MAX_FILE_PATH_LENGTH)
-                    return System.IO.Path.GetFileNameWithoutExtension(path);
-                else
-                    return Pri.LongPath.Path.GetFileNameWithoutExtension(path);
+                return path.Length < MaxFilePathLength
+                    ? Path.GetFileNameWithoutExtension(path)
+                    : Pri.LongPath.Path.GetFileNameWithoutExtension(path);
             }
-
         }
 
         /// <summary>
@@ -389,16 +347,11 @@ namespace FileNameNormalizer
         public static string GetExtension(string path, bool isDir)
         {
             if (isDir) {
-                if (path.Length < MAX_DIR_PATH_LENGTH)
-                    return System.IO.Path.GetExtension(path);
-                else
-                    return Pri.LongPath.Path.GetExtension(path);
-
+                return path.Length < MaxDirPathLength
+                    ? Path.GetExtension(path)
+                    : Pri.LongPath.Path.GetExtension(path);
             } else {
-                if (path.Length < MAX_FILE_PATH_LENGTH)
-                    return System.IO.Path.GetExtension(path);
-                else
-                    return Pri.LongPath.Path.GetExtension(path);
+                return path.Length < MaxFilePathLength ? Path.GetExtension(path) : Pri.LongPath.Path.GetExtension(path);
             }
         }
 
@@ -409,10 +362,7 @@ namespace FileNameNormalizer
         /// <returns></returns>
         public static string GetPathRoot(string path)
         {
-            if (path.Length < MAX_DIR_PATH_LENGTH)
-                return System.IO.Path.GetPathRoot(path);
-            else
-                return Pri.LongPath.Path.GetPathRoot(path);
+            return path.Length < MaxDirPathLength ? Path.GetPathRoot(path) : Pri.LongPath.Path.GetPathRoot(path);
         }
 
         /// <summary>

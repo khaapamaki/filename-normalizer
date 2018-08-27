@@ -1,0 +1,1510 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d13afba8-df73-49aa-924b-d78d18a0b25d" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.FileNameNormalizer/.idea/contentModel.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.FileNameNormalizer/.idea/indexLayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.FileNameNormalizer/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.FileNameNormalizer/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.idea.FileNameNormalizer/riderModule.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileNameNormalizer/FileOp.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileNameNormalizer/FileOp.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileNameNormalizer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileNameNormalizer/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="FileOp.cs" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/FileNameNormalizer/FileOp.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="721">
+              <caret line="213" column="16" selection-start-line="213" selection-start-column="16" selection-end-line="213" selection-end-column="16" />
+              <folding>
+                <marker date="1535371486000" expanded="true" signature="0:80" ph="/* Long Path Aware File Operations ... */" />
+                <marker date="1535371486000" expanded="false" signature="88:191" ph="..." />
+                <marker date="1535371486000" expanded="true" signature="222:13627" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="229:451" ph="/// A class for file operations. All operations are able to handle extended length ... " />
+                <marker date="1535371486000" expanded="true" signature="482:13625" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="597:833" ph="/// Get Files Array (path strings) ... " />
+                <marker date="1535371486000" expanded="true" signature="923:1989" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="1040:1758" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="1140:1424" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="1765:1890" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="1999:2193" ph="/// Get SubDirectory Array ... " />
+                <marker date="1535371486000" expanded="true" signature="2285:3401" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="2399:3156" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="2506:2818" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="3163:3303" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="3411:3765" ph="/// Get direcotry contents with files or folder first ... " />
+                <marker date="1535371486000" expanded="true" signature="3925:4799" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="4153:4277" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="4397:4561" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="4809:5038" ph="/// Rename File or Directory ... " />
+                <marker date="1535371486000" expanded="true" signature="5121:5879" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="5155:5541" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="5177:5437" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="5444:5497" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="5559:5791" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="5798:5843" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="5889:6099" ph="/// Check if given path exists ... " />
+                <marker date="1535371486000" expanded="true" signature="6161:6245" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="6255:6402" ph="/// Test if a directory exists ... " />
+                <marker date="1535371486000" expanded="true" signature="6458:6653" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="6663:6805" ph="/// Test if a file exists ... " />
+                <marker date="1535371486000" expanded="true" signature="6857:7111" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="7121:7273" ph="/// Test if path is a symbolic link ... " />
+                <marker date="1535371486000" expanded="true" signature="7328:7711" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="7388:7535" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="7721:7873" ph="/// Test if path is a symbolic link ... " />
+                <marker date="1535371486000" expanded="true" signature="7927:8373" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="7987:8169" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="8383:8776" ph="/// Compares too paths case-sensitive or case-insensitvely and returns true if they are same ... " />
+                <marker date="1535371486000" expanded="true" signature="8868:9055" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="8912:9009" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="9065:9490" ph="/// Tests if file or folder exists in the list of directory items ... " />
+                <marker date="1535371486000" expanded="true" signature="9733:10312" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="9909:10275" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="10046:10261" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="10117:10189" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="10323:10522" ph="/// Gets parent path to file or directory ... " />
+                <marker date="1535371486000" expanded="true" signature="10593:10930" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="10627:10770" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="10940:11129" ph="/// Get file's or folder's name ... " />
+                <marker date="1535371486000" expanded="true" signature="11195:11512" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="11229:11362" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="11522:11729" ph="/// Get file's or folder's name without extension ... " />
+                <marker date="1535371486000" expanded="true" signature="11811:12272" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="11845:12050" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="12282:12483" ph="/// Get the extension of a file or a folder ... " />
+                <marker date="1535371486000" expanded="true" signature="12550:12911" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="12584:12759" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="12921:13058" ph="/// Get Drive letter ... " />
+                <marker date="1535371486000" expanded="true" signature="13112:13246" ph="{...}" />
+                <marker date="1535371486000" expanded="true" signature="13256:13411" ph="/// Removes \ from the end of the path ... " />
+                <marker date="1535371486000" expanded="true" signature="13478:13619" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="OpCounter.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2109">
+              <caret line="111" column="21" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
+              <folding>
+                <marker date="1535370203000" expanded="true" signature="70:20079" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="2438:19963" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="2584:4840" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="2898:4229" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="2955:3325" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="3381:3758" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="3825:4211" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="4302:4808" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="4881:7090" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="5195:6472" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="5251:5623" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="5678:6000" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="6066:6454" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="6544:7058" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="7175:9474" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="7508:8854" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="7568:7938" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="7997:8374" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="8444:8836" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="8930:9442" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="9518:11821" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="9851:11200" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="9910:10282" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="10340:10719" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="10788:11182" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="11275:11789" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="11917:12996" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="12259:12629" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="12686:12982" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="13042:14116" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="13384:13756" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="13812:14102" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="14183:16268" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="14510:15665" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="14562:14858" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="14909:15209" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="15271:15647" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="15733:16236" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="16304:18425" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="16665:17822" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="16716:17012" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="17062:17364" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="17425:17804" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="17889:18393" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="18439:18735" ph="/* if (TooLongFilePaths &gt; 0) { ... */" />
+                <marker date="1535370203000" expanded="true" signature="18774:19001" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="19039:19114" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="19156:19409" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="19481:19701" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="19733:19919" ph="{...}" />
+                <marker date="1535370203000" expanded="true" signature="20006:20073" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AssemblyInfo.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="418">
+              <caret line="22" column="44" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+              <folding>
+                <marker date="1535367772000" expanded="true" signature="6:101" ph="..." />
+                <marker date="1535367772000" expanded="true" signature="103:290" ph="/* General Information about an assembly is controlled through the following ... */" />
+                <marker date="1535367772000" expanded="true" signature="618:828" ph="/* Setting ComVisible to false makes the types in this assembly not visible ... */" />
+                <marker date="1535367772000" expanded="true" signature="1003:1330" ph="/* Version information for an assembly consists of the following four values: ... */" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="oudot merkit.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/FileNameNormalizer/oudot merkit.txt">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="packages.config" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/FileNameNormalizer/packages.config">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="Program.cs" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Program.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="9006">
+              <caret line="505" selection-start-line="505" selection-end-line="505" />
+              <folding>
+                <marker date="1535370338000" expanded="true" signature="0:276" ph="/* File Name Normalizer ... */" />
+                <marker date="1535370338000" expanded="false" signature="284:414" ph="..." />
+                <marker date="1535370338000" expanded="false" signature="451:548" ph="/// A class for running programs as command line application ... " />
+                <marker date="1535370338000" expanded="true" signature="580:40892" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="1998:2441" ph="{...}" />
+                <marker date="1535370338000" expanded="false" signature="2753:3139" ph="{...}" />
+                <marker date="1535370338000" expanded="false" signature="3150:3241" ph="/* not currently in use ... */" />
+                <marker date="1535370338000" expanded="true" signature="3574:3939" ph="{...}" />
+                <marker date="1535370338000" expanded="false" signature="3949:4123" ph="/// Reads options and paths from command line arguments, and process all accessible paths ... " />
+                <marker date="1535370338000" expanded="true" signature="4171:10674" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="5011:7572" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="7801:10369" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="7819:8263" ph="/* What happens here: ... */" />
+                <marker date="1535370338000" expanded="true" signature="8593:9789" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="8761:9638" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="9071:9274" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="9310:9439" ph="/* start form parent path but process only given source item ... */" />
+                <marker date="1535370338000" expanded="true" signature="9858:10119" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="10166:10355" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="10684:11055" ph="/// Reads directory contents, processes files/directories and optionally recurses subdirectories ... " />
+                <marker date="1535370338000" expanded="true" signature="11216:22831" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="11547:11710" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="11782:20871" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="12323:12453" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="12505:12634" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="12754:12885" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="13002:20857" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="14104:14681" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="14146:14285" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="14750:20839" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="14792:14931" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="15638:18712" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="15709:17061" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="15766:16042" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="16096:16378" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="16431:16717" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="16765:17031" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="17399:17673" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="17727:18007" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="18060:18344" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="18392:18656" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="18761:19328" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="19026:19302" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="19374:19953" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="19645:19927" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="19998:20230" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="20270:20817" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="20525:20791" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="21074:21223" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="21579:22820" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="21887:22657" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="21943:22459" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="22235:22437" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="22951:23504" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="23354:23401" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="23514:24310" ph="/// Does all the stuff and produces a new unique path for a file/folder ... " />
+                <marker date="1535370338000" expanded="true" signature="24842:27891" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="25207:25458" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="25594:25678" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="25749:25845" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="26398:26492" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="26608:27783" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="26754:27769" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="27103:27556" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="27154:27355" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="27965:28880" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="28424:28700" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="28510:28617" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="28890:29099" ph="/// Trim ... " />
+                <marker date="1535370338000" expanded="true" signature="29182:32001" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="29736:29830" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="29941:31205" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="30055:30342" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="30455:30740" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="31274:31424" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="32158:32651" ph="/// Check if file or directory name needs normalization, and normalize if normalize ... " />
+                <marker date="1535370338000" expanded="true" signature="32748:33277" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="33327:33582" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="33371:33545" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="33425:33531" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="33592:33880" ph="/// Parses command line arguments ... " />
+                <marker date="1535370338000" expanded="true" signature="33942:38550" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="34051:38498" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="34320:34381" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="34537:34673" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="34793:34929" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="35183:35490" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="35605:35685" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="35727:35795" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="35908:35979" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="36079:36169" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="36252:36320" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="36411:36487" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="36581:36650" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="36733:36803" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="36929:36997" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="37074:37490" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="37130:37348" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="37572:37740" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="37820:38484" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="37905:38215" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="38619:40179" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="38777:40141" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="39936:40127" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="40189:40319" ph="/// Print Name in Hexadecimal. For Debuging. ... " />
+                <marker date="1535370338000" expanded="true" signature="40378:40634" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="40488:40570" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="40644:40700" ph="/// Testing ... " />
+                <marker date="1535370338000" expanded="true" signature="40748:40886" ph="{...}" />
+                <marker date="1535370338000" expanded="true" signature="40804:40876" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>prefix</find>
+    </findStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/FileNameNormalizer/Program.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FileNameNormalizer/packages.config" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/FileNameNormalizer/FileOp.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs" />
+        <option value="$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs" />
+        <option value="$PROJECT_DIR$/FileNameNormalizer/Program.cs" />
+        <option value="$PROJECT_DIR$/FileNameNormalizer/FileOp.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="379" />
+    <option name="y" value="84" />
+    <option name="width" value="1750" />
+    <option name="height" value="1171" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="" type="13324e5d:SolutionExplorerViewPane$ProjectViewPaneTreeStructure$createRoot$1" />
+              <item name="FileNameNormalizer (1 project)" type="977d5f41:SolutionExplorerNodeRider" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-file-system" value="false" />
+        <option name="show-all-items" value="false" />
+      </pane>
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="Inspections-C#" />
+    <property name="settings.editor.splitter.proportion" value="0.3106796" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/FileNameNormalizer/bin/Release/fnamenorm.exe" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/FileNameNormalizer/bin/Release" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/FileNameNormalizer/FileNameNormalizer.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="Console" />
+      <option name="PROJECT_TFM" value=".NETFramework,Version=v4.5.2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d13afba8-df73-49aa-924b-d78d18a0b25d" name="Default" comment="" />
+      <created>1533110639855</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1533110639855</updated>
+      <workItem from="1533110641910" duration="673000" />
+      <workItem from="1533122388225" duration="192000" />
+      <workItem from="1535363231048" duration="6947000" />
+      <workItem from="1535370535475" duration="954000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="8766000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="379" y="84" width="1750" height="1171" extended-state="0" />
+    <layout>
+      <window_info active="true" anchor="bottom" id="TODO" order="6" visible="true" weight="0.1350093" />
+      <window_info anchor="right" id="Errors In Solution" order="3" />
+      <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Unit Tests" order="7" />
+      <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.40409684" />
+      <window_info anchor="bottom" id="Version Control" order="7" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32960895" />
+      <window_info anchor="bottom" id="NuGet" order="7" weight="0.32960895" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1879391" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32994455" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection Results" order="8" weight="0.33240223" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Build" order="7" weight="0.32960895" />
+    </layout>
+  </component>
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="4" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/FileOp.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2983">
+          <caret line="157" column="29" lean-forward="true" selection-start-line="157" selection-start-column="29" selection-end-line="157" selection-end-column="29" />
+          <folding>
+            <marker date="1535371486000" expanded="true" signature="0:80" ph="/* Long Path Aware File Operations ... */" />
+            <marker date="1535371486000" expanded="false" signature="88:191" ph="..." />
+            <marker date="1535371486000" expanded="true" signature="222:13627" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="229:451" ph="/// A class for file operations. All operations are able to handle extended length ... " />
+            <marker date="1535371486000" expanded="true" signature="482:13625" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="597:833" ph="/// Get Files Array (path strings) ... " />
+            <marker date="1535371486000" expanded="true" signature="923:1989" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1040:1758" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1140:1424" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1765:1890" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1999:2193" ph="/// Get SubDirectory Array ... " />
+            <marker date="1535371486000" expanded="true" signature="2285:3401" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2399:3156" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2506:2818" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3163:3303" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3411:3765" ph="/// Get direcotry contents with files or folder first ... " />
+            <marker date="1535371486000" expanded="true" signature="3925:4799" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4153:4277" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4397:4561" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4809:5038" ph="/// Rename File or Directory ... " />
+            <marker date="1535371486000" expanded="true" signature="5121:5879" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5155:5541" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5177:5437" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5444:5497" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5559:5791" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5798:5843" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5889:6099" ph="/// Check if given path exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6161:6245" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6255:6402" ph="/// Test if a directory exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6458:6653" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6663:6805" ph="/// Test if a file exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6857:7111" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7121:7273" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7328:7711" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7388:7535" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7721:7873" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7927:8373" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7987:8169" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8383:8776" ph="/// Compares too paths case-sensitive or case-insensitvely and returns true if they are same ... " />
+            <marker date="1535371486000" expanded="true" signature="8868:9055" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8912:9009" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9065:9490" ph="/// Tests if file or folder exists in the list of directory items ... " />
+            <marker date="1535371486000" expanded="true" signature="9733:10312" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9909:10275" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10046:10261" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10117:10189" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10323:10522" ph="/// Gets parent path to file or directory ... " />
+            <marker date="1535371486000" expanded="true" signature="10593:10930" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10627:10770" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10940:11129" ph="/// Get file's or folder's name ... " />
+            <marker date="1535371486000" expanded="true" signature="11195:11512" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11229:11362" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11522:11729" ph="/// Get file's or folder's name without extension ... " />
+            <marker date="1535371486000" expanded="true" signature="11811:12272" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11845:12050" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12282:12483" ph="/// Get the extension of a file or a folder ... " />
+            <marker date="1535371486000" expanded="true" signature="12550:12911" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12584:12759" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12921:13058" ph="/// Get Drive letter ... " />
+            <marker date="1535371486000" expanded="true" signature="13112:13246" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="13256:13411" ph="/// Removes \ from the end of the path ... " />
+            <marker date="1535371486000" expanded="true" signature="13478:13619" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2109">
+          <caret line="111" column="21" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
+          <folding>
+            <marker date="1535370203000" expanded="true" signature="70:20079" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2438:19963" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2584:4840" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2898:4229" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2955:3325" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3381:3758" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3825:4211" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4302:4808" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4881:7090" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5195:6472" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5251:5623" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5678:6000" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6066:6454" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6544:7058" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7175:9474" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7508:8854" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7568:7938" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7997:8374" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8444:8836" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8930:9442" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9518:11821" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9851:11200" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9910:10282" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10340:10719" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10788:11182" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11275:11789" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11917:12996" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12259:12629" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12686:12982" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13042:14116" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13384:13756" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13812:14102" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14183:16268" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14510:15665" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14562:14858" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14909:15209" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15271:15647" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15733:16236" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16304:18425" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16665:17822" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16716:17012" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17062:17364" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17425:17804" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17889:18393" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="18439:18735" ph="/* if (TooLongFilePaths &gt; 0) { ... */" />
+            <marker date="1535370203000" expanded="true" signature="18774:19001" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19039:19114" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19156:19409" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19481:19701" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19733:19919" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="20006:20073" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="22" column="44" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+          <folding>
+            <marker date="1535367772000" expanded="true" signature="6:101" ph="..." />
+            <marker date="1535367772000" expanded="true" signature="103:290" ph="/* General Information about an assembly is controlled through the following ... */" />
+            <marker date="1535367772000" expanded="true" signature="618:828" ph="/* Setting ComVisible to false makes the types in this assembly not visible ... */" />
+            <marker date="1535367772000" expanded="true" signature="1003:1330" ph="/* Version information for an assembly consists of the following four values: ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/oudot merkit.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/packages.config">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9006">
+          <caret line="505" selection-start-line="505" selection-end-line="505" />
+          <folding>
+            <marker date="1535370338000" expanded="true" signature="0:276" ph="/* File Name Normalizer ... */" />
+            <marker date="1535370338000" expanded="false" signature="284:414" ph="..." />
+            <marker date="1535370338000" expanded="false" signature="451:548" ph="/// A class for running programs as command line application ... " />
+            <marker date="1535370338000" expanded="true" signature="580:40892" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="1998:2441" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="2753:3139" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3150:3241" ph="/* not currently in use ... */" />
+            <marker date="1535370338000" expanded="true" signature="3574:3939" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3949:4123" ph="/// Reads options and paths from command line arguments, and process all accessible paths ... " />
+            <marker date="1535370338000" expanded="true" signature="4171:10674" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="5011:7572" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7801:10369" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7819:8263" ph="/* What happens here: ... */" />
+            <marker date="1535370338000" expanded="true" signature="8593:9789" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="8761:9638" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9071:9274" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9310:9439" ph="/* start form parent path but process only given source item ... */" />
+            <marker date="1535370338000" expanded="true" signature="9858:10119" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10166:10355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10684:11055" ph="/// Reads directory contents, processes files/directories and optionally recurses subdirectories ... " />
+            <marker date="1535370338000" expanded="true" signature="11216:22831" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11547:11710" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11782:20871" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12323:12453" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12505:12634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12754:12885" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="13002:20857" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14104:14681" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14146:14285" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14750:20839" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14792:14931" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15638:18712" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15709:17061" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15766:16042" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16096:16378" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16431:16717" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16765:17031" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17399:17673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17727:18007" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18060:18344" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18392:18656" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18761:19328" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19026:19302" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19374:19953" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19645:19927" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19998:20230" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20270:20817" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20525:20791" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21074:21223" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21579:22820" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21887:22657" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21943:22459" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22235:22437" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22951:23504" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23354:23401" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23514:24310" ph="/// Does all the stuff and produces a new unique path for a file/folder ... " />
+            <marker date="1535370338000" expanded="true" signature="24842:27891" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25207:25458" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25594:25678" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25749:25845" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26398:26492" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26608:27783" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26754:27769" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27103:27556" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27154:27355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27965:28880" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28424:28700" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28510:28617" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28890:29099" ph="/// Trim ... " />
+            <marker date="1535370338000" expanded="true" signature="29182:32001" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29736:29830" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29941:31205" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30055:30342" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30455:30740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="31274:31424" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="32158:32651" ph="/// Check if file or directory name needs normalization, and normalize if normalize ... " />
+            <marker date="1535370338000" expanded="true" signature="32748:33277" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33327:33582" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33371:33545" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33425:33531" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33592:33880" ph="/// Parses command line arguments ... " />
+            <marker date="1535370338000" expanded="true" signature="33942:38550" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34051:38498" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34320:34381" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34537:34673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34793:34929" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35183:35490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35605:35685" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35727:35795" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35908:35979" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36079:36169" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36252:36320" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36411:36487" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36581:36650" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36733:36803" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36929:36997" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37074:37490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37130:37348" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37572:37740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37820:38484" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37905:38215" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38619:40179" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38777:40141" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="39936:40127" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40189:40319" ph="/// Print Name in Hexadecimal. For Debuging. ... " />
+            <marker date="1535370338000" expanded="true" signature="40378:40634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40488:40570" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40644:40700" ph="/// Testing ... " />
+            <marker date="1535370338000" expanded="true" signature="40748:40886" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40804:40876" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/FileOp.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+          <folding>
+            <marker date="1535371486000" expanded="true" signature="0:80" ph="/* Long Path Aware File Operations ... */" />
+            <marker date="1535371486000" expanded="false" signature="88:191" ph="..." />
+            <marker date="1535371486000" expanded="true" signature="222:13627" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="229:451" ph="/// A class for file operations. All operations are able to handle extended length ... " />
+            <marker date="1535371486000" expanded="true" signature="482:13625" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="597:833" ph="/// Get Files Array (path strings) ... " />
+            <marker date="1535371486000" expanded="true" signature="923:1989" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1040:1758" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1140:1424" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1765:1890" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1999:2193" ph="/// Get SubDirectory Array ... " />
+            <marker date="1535371486000" expanded="true" signature="2285:3401" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2399:3156" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2506:2818" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3163:3303" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3411:3765" ph="/// Get direcotry contents with files or folder first ... " />
+            <marker date="1535371486000" expanded="true" signature="3925:4799" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4153:4277" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4397:4561" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4809:5038" ph="/// Rename File or Directory ... " />
+            <marker date="1535371486000" expanded="true" signature="5121:5879" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5155:5541" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5177:5437" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5444:5497" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5559:5791" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5798:5843" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5889:6099" ph="/// Check if given path exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6161:6245" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6255:6402" ph="/// Test if a directory exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6458:6653" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6663:6805" ph="/// Test if a file exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6857:7111" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7121:7273" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7328:7711" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7388:7535" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7721:7873" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7927:8373" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7987:8169" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8383:8776" ph="/// Compares too paths case-sensitive or case-insensitvely and returns true if they are same ... " />
+            <marker date="1535371486000" expanded="true" signature="8868:9055" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8912:9009" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9065:9490" ph="/// Tests if file or folder exists in the list of directory items ... " />
+            <marker date="1535371486000" expanded="true" signature="9733:10312" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9909:10275" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10046:10261" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10117:10189" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10323:10522" ph="/// Gets parent path to file or directory ... " />
+            <marker date="1535371486000" expanded="true" signature="10593:10930" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10627:10770" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10940:11129" ph="/// Get file's or folder's name ... " />
+            <marker date="1535371486000" expanded="true" signature="11195:11512" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11229:11362" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11522:11729" ph="/// Get file's or folder's name without extension ... " />
+            <marker date="1535371486000" expanded="true" signature="11811:12272" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11845:12050" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12282:12483" ph="/// Get the extension of a file or a folder ... " />
+            <marker date="1535371486000" expanded="true" signature="12550:12911" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12584:12759" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12921:13058" ph="/// Get Drive letter ... " />
+            <marker date="1535371486000" expanded="true" signature="13112:13246" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="13256:13411" ph="/// Removes \ from the end of the path ... " />
+            <marker date="1535371486000" expanded="true" signature="13478:13619" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2299">
+          <caret line="121" column="13" lean-forward="true" selection-start-line="121" selection-start-column="13" selection-end-line="121" selection-end-column="13" />
+          <folding>
+            <marker date="1535370203000" expanded="true" signature="70:20079" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2438:19963" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2584:4840" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2898:4229" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2955:3325" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3381:3758" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3825:4211" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4302:4808" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4881:7090" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5195:6472" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5251:5623" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5678:6000" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6066:6454" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6544:7058" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7175:9474" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7508:8854" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7568:7938" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7997:8374" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8444:8836" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8930:9442" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9518:11821" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9851:11200" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9910:10282" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10340:10719" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10788:11182" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11275:11789" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11917:12996" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12259:12629" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12686:12982" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13042:14116" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13384:13756" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13812:14102" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14183:16268" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14510:15665" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14562:14858" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14909:15209" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15271:15647" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15733:16236" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16304:18425" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16665:17822" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16716:17012" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17062:17364" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17425:17804" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17889:18393" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="18439:18735" ph="/* if (TooLongFilePaths &gt; 0) { ... */" />
+            <marker date="1535370203000" expanded="true" signature="18774:19001" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19039:19114" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19156:19409" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19481:19701" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19733:19919" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="20006:20073" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1535370338000" expanded="true" signature="0:276" ph="/* File Name Normalizer ... */" />
+            <marker date="1535370338000" expanded="false" signature="284:414" ph="..." />
+            <marker date="1535370338000" expanded="false" signature="451:548" ph="/// A class for running programs as command line application ... " />
+            <marker date="1535370338000" expanded="true" signature="580:40892" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="1998:2441" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="2753:3139" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3150:3241" ph="/* not currently in use ... */" />
+            <marker date="1535370338000" expanded="true" signature="3574:3939" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3949:4123" ph="/// Reads options and paths from command line arguments, and process all accessible paths ... " />
+            <marker date="1535370338000" expanded="true" signature="4171:10674" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="5011:7572" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7801:10369" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7819:8263" ph="/* What happens here: ... */" />
+            <marker date="1535370338000" expanded="true" signature="8593:9789" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="8761:9638" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9071:9274" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9310:9439" ph="/* start form parent path but process only given source item ... */" />
+            <marker date="1535370338000" expanded="true" signature="9858:10119" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10166:10355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10684:11055" ph="/// Reads directory contents, processes files/directories and optionally recurses subdirectories ... " />
+            <marker date="1535370338000" expanded="true" signature="11216:22831" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11547:11710" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11782:20871" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12323:12453" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12505:12634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12754:12885" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="13002:20857" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14104:14681" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14146:14285" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14750:20839" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14792:14931" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15638:18712" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15709:17061" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15766:16042" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16096:16378" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16431:16717" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16765:17031" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17399:17673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17727:18007" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18060:18344" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18392:18656" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18761:19328" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19026:19302" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19374:19953" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19645:19927" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19998:20230" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20270:20817" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20525:20791" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21074:21223" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21579:22820" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21887:22657" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21943:22459" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22235:22437" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22951:23504" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23354:23401" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23514:24310" ph="/// Does all the stuff and produces a new unique path for a file/folder ... " />
+            <marker date="1535370338000" expanded="true" signature="24842:27891" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25207:25458" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25594:25678" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25749:25845" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26398:26492" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26608:27783" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26754:27769" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27103:27556" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27154:27355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27965:28880" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28424:28700" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28510:28617" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28890:29099" ph="/// Trim ... " />
+            <marker date="1535370338000" expanded="true" signature="29182:32001" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29736:29830" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29941:31205" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30055:30342" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30455:30740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="31274:31424" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="32158:32651" ph="/// Check if file or directory name needs normalization, and normalize if normalize ... " />
+            <marker date="1535370338000" expanded="true" signature="32748:33277" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33327:33582" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33371:33545" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33425:33531" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33592:33880" ph="/// Parses command line arguments ... " />
+            <marker date="1535370338000" expanded="true" signature="33942:38550" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34051:38498" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34320:34381" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34537:34673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34793:34929" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35183:35490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35605:35685" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35727:35795" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35908:35979" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36079:36169" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36252:36320" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36411:36487" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36581:36650" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36733:36803" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36929:36997" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37074:37490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37130:37348" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37572:37740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37820:38484" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37905:38215" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38619:40179" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38777:40141" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="39936:40127" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40189:40319" ph="/// Print Name in Hexadecimal. For Debuging. ... " />
+            <marker date="1535370338000" expanded="true" signature="40378:40634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40488:40570" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40644:40700" ph="/// Testing ... " />
+            <marker date="1535370338000" expanded="true" signature="40748:40886" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40804:40876" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1535367772000" expanded="true" signature="6:101" ph="..." />
+            <marker date="1535367772000" expanded="true" signature="103:290" ph="/* General Information about an assembly is controlled through the following ... */" />
+            <marker date="1535367772000" expanded="true" signature="618:828" ph="/* Setting ComVisible to false makes the types in this assembly not visible ... */" />
+            <marker date="1535367772000" expanded="true" signature="1003:1330" ph="/* Version information for an assembly consists of the following four values: ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/FileOp.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="17" column="8" selection-start-line="17" selection-start-column="8" selection-end-line="17" selection-end-column="8" />
+          <folding>
+            <marker date="1535371486000" expanded="true" signature="0:80" ph="/* Long Path Aware File Operations ... */" />
+            <marker date="1535371486000" expanded="false" signature="88:191" ph="..." />
+            <marker date="1535371486000" expanded="true" signature="222:13627" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="229:451" ph="/// A class for file operations. All operations are able to handle extended length ... " />
+            <marker date="1535371486000" expanded="true" signature="482:13625" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="597:833" ph="/// Get Files Array (path strings) ... " />
+            <marker date="1535371486000" expanded="true" signature="923:1989" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1040:1758" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1140:1424" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1765:1890" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1999:2193" ph="/// Get SubDirectory Array ... " />
+            <marker date="1535371486000" expanded="true" signature="2285:3401" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2399:3156" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2506:2818" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3163:3303" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3411:3765" ph="/// Get direcotry contents with files or folder first ... " />
+            <marker date="1535371486000" expanded="true" signature="3925:4799" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4153:4277" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4397:4561" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4809:5038" ph="/// Rename File or Directory ... " />
+            <marker date="1535371486000" expanded="true" signature="5121:5879" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5155:5541" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5177:5437" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5444:5497" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5559:5791" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5798:5843" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5889:6099" ph="/// Check if given path exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6161:6245" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6255:6402" ph="/// Test if a directory exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6458:6653" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6663:6805" ph="/// Test if a file exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6857:7111" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7121:7273" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7328:7711" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7388:7535" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7721:7873" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7927:8373" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7987:8169" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8383:8776" ph="/// Compares too paths case-sensitive or case-insensitvely and returns true if they are same ... " />
+            <marker date="1535371486000" expanded="true" signature="8868:9055" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8912:9009" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9065:9490" ph="/// Tests if file or folder exists in the list of directory items ... " />
+            <marker date="1535371486000" expanded="true" signature="9733:10312" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9909:10275" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10046:10261" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10117:10189" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10323:10522" ph="/// Gets parent path to file or directory ... " />
+            <marker date="1535371486000" expanded="true" signature="10593:10930" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10627:10770" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10940:11129" ph="/// Get file's or folder's name ... " />
+            <marker date="1535371486000" expanded="true" signature="11195:11512" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11229:11362" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11522:11729" ph="/// Get file's or folder's name without extension ... " />
+            <marker date="1535371486000" expanded="true" signature="11811:12272" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11845:12050" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12282:12483" ph="/// Get the extension of a file or a folder ... " />
+            <marker date="1535371486000" expanded="true" signature="12550:12911" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12584:12759" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12921:13058" ph="/// Get Drive letter ... " />
+            <marker date="1535371486000" expanded="true" signature="13112:13246" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="13256:13411" ph="/// Removes \ from the end of the path ... " />
+            <marker date="1535371486000" expanded="true" signature="13478:13619" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <marker date="1535370338000" expanded="true" signature="0:276" ph="/* File Name Normalizer ... */" />
+            <marker date="1535370338000" expanded="false" signature="284:414" ph="..." />
+            <marker date="1535370338000" expanded="false" signature="451:548" ph="/// A class for running programs as command line application ... " />
+            <marker date="1535370338000" expanded="true" signature="580:40892" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="1998:2441" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="2753:3139" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3150:3241" ph="/* not currently in use ... */" />
+            <marker date="1535370338000" expanded="true" signature="3574:3939" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3949:4123" ph="/// Reads options and paths from command line arguments, and process all accessible paths ... " />
+            <marker date="1535370338000" expanded="true" signature="4171:10674" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="5011:7572" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7801:10369" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7819:8263" ph="/* What happens here: ... */" />
+            <marker date="1535370338000" expanded="true" signature="8593:9789" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="8761:9638" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9071:9274" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9310:9439" ph="/* start form parent path but process only given source item ... */" />
+            <marker date="1535370338000" expanded="true" signature="9858:10119" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10166:10355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10684:11055" ph="/// Reads directory contents, processes files/directories and optionally recurses subdirectories ... " />
+            <marker date="1535370338000" expanded="true" signature="11216:22831" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11547:11710" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11782:20871" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12323:12453" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12505:12634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12754:12885" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="13002:20857" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14104:14681" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14146:14285" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14750:20839" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14792:14931" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15638:18712" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15709:17061" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15766:16042" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16096:16378" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16431:16717" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16765:17031" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17399:17673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17727:18007" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18060:18344" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18392:18656" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18761:19328" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19026:19302" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19374:19953" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19645:19927" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19998:20230" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20270:20817" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20525:20791" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21074:21223" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21579:22820" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21887:22657" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21943:22459" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22235:22437" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22951:23504" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23354:23401" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23514:24310" ph="/// Does all the stuff and produces a new unique path for a file/folder ... " />
+            <marker date="1535370338000" expanded="true" signature="24842:27891" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25207:25458" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25594:25678" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25749:25845" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26398:26492" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26608:27783" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26754:27769" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27103:27556" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27154:27355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27965:28880" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28424:28700" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28510:28617" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28890:29099" ph="/// Trim ... " />
+            <marker date="1535370338000" expanded="true" signature="29182:32001" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29736:29830" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29941:31205" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30055:30342" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30455:30740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="31274:31424" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="32158:32651" ph="/// Check if file or directory name needs normalization, and normalize if normalize ... " />
+            <marker date="1535370338000" expanded="true" signature="32748:33277" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33327:33582" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33371:33545" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33425:33531" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33592:33880" ph="/// Parses command line arguments ... " />
+            <marker date="1535370338000" expanded="true" signature="33942:38550" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34051:38498" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34320:34381" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34537:34673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34793:34929" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35183:35490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35605:35685" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35727:35795" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35908:35979" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36079:36169" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36252:36320" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36411:36487" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36581:36650" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36733:36803" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36929:36997" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37074:37490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37130:37348" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37572:37740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37820:38484" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37905:38215" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38619:40179" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38777:40141" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="39936:40127" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40189:40319" ph="/// Print Name in Hexadecimal. For Debuging. ... " />
+            <marker date="1535370338000" expanded="true" signature="40378:40634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40488:40570" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40644:40700" ph="/// Testing ... " />
+            <marker date="1535370338000" expanded="true" signature="40748:40886" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40804:40876" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="840">
+          <caret line="56" column="20" lean-forward="true" selection-start-line="56" selection-start-column="20" selection-end-line="56" selection-end-column="20" />
+          <folding>
+            <marker date="1535370203000" expanded="true" signature="70:20079" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2438:19963" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2584:4840" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2898:4229" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2955:3325" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3381:3758" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3825:4211" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4302:4808" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4881:7090" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5195:6472" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5251:5623" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5678:6000" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6066:6454" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6544:7058" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7175:9474" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7508:8854" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7568:7938" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7997:8374" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8444:8836" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8930:9442" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9518:11821" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9851:11200" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9910:10282" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10340:10719" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10788:11182" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11275:11789" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11917:12996" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12259:12629" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12686:12982" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13042:14116" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13384:13756" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13812:14102" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14183:16268" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14510:15665" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14562:14858" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14909:15209" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15271:15647" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15733:16236" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16304:18425" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16665:17822" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16716:17012" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17062:17364" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17425:17804" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17889:18393" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="18439:18735" ph="/* if (TooLongFilePaths &gt; 0) { ... */" />
+            <marker date="1535370203000" expanded="true" signature="18774:19001" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19039:19114" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19156:19409" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19481:19701" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19733:19919" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="20006:20073" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Properties/AssemblyInfo.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="22" column="44" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
+          <folding>
+            <marker date="1535367772000" expanded="true" signature="6:101" ph="..." />
+            <marker date="1535367772000" expanded="true" signature="103:290" ph="/* General Information about an assembly is controlled through the following ... */" />
+            <marker date="1535367772000" expanded="true" signature="618:828" ph="/* Setting ComVisible to false makes the types in this assembly not visible ... */" />
+            <marker date="1535367772000" expanded="true" signature="1003:1330" ph="/* Version information for an assembly consists of the following four values: ... */" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/oudot merkit.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/packages.config">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/OpCounter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2109">
+          <caret line="111" column="21" selection-start-line="111" selection-start-column="21" selection-end-line="111" selection-end-column="21" />
+          <folding>
+            <marker date="1535370203000" expanded="true" signature="70:20079" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2438:19963" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2584:4840" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2898:4229" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="2955:3325" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3381:3758" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="3825:4211" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4302:4808" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="4881:7090" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5195:6472" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5251:5623" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="5678:6000" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6066:6454" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="6544:7058" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7175:9474" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7508:8854" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7568:7938" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="7997:8374" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8444:8836" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="8930:9442" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9518:11821" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9851:11200" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="9910:10282" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10340:10719" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="10788:11182" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11275:11789" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="11917:12996" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12259:12629" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="12686:12982" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13042:14116" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13384:13756" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="13812:14102" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14183:16268" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14510:15665" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14562:14858" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="14909:15209" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15271:15647" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="15733:16236" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16304:18425" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16665:17822" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="16716:17012" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17062:17364" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17425:17804" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="17889:18393" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="18439:18735" ph="/* if (TooLongFilePaths &gt; 0) { ... */" />
+            <marker date="1535370203000" expanded="true" signature="18774:19001" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19039:19114" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19156:19409" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19481:19701" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="19733:19919" ph="{...}" />
+            <marker date="1535370203000" expanded="true" signature="20006:20073" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9006">
+          <caret line="505" selection-start-line="505" selection-end-line="505" />
+          <folding>
+            <marker date="1535370338000" expanded="true" signature="0:276" ph="/* File Name Normalizer ... */" />
+            <marker date="1535370338000" expanded="false" signature="284:414" ph="..." />
+            <marker date="1535370338000" expanded="false" signature="451:548" ph="/// A class for running programs as command line application ... " />
+            <marker date="1535370338000" expanded="true" signature="580:40892" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="1998:2441" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="2753:3139" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3150:3241" ph="/* not currently in use ... */" />
+            <marker date="1535370338000" expanded="true" signature="3574:3939" ph="{...}" />
+            <marker date="1535370338000" expanded="false" signature="3949:4123" ph="/// Reads options and paths from command line arguments, and process all accessible paths ... " />
+            <marker date="1535370338000" expanded="true" signature="4171:10674" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="5011:7572" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7801:10369" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="7819:8263" ph="/* What happens here: ... */" />
+            <marker date="1535370338000" expanded="true" signature="8593:9789" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="8761:9638" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9071:9274" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="9310:9439" ph="/* start form parent path but process only given source item ... */" />
+            <marker date="1535370338000" expanded="true" signature="9858:10119" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10166:10355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="10684:11055" ph="/// Reads directory contents, processes files/directories and optionally recurses subdirectories ... " />
+            <marker date="1535370338000" expanded="true" signature="11216:22831" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11547:11710" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="11782:20871" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12323:12453" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12505:12634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="12754:12885" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="13002:20857" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14104:14681" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14146:14285" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14750:20839" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="14792:14931" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15638:18712" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15709:17061" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="15766:16042" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16096:16378" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16431:16717" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="16765:17031" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17399:17673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="17727:18007" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18060:18344" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18392:18656" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="18761:19328" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19026:19302" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19374:19953" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19645:19927" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="19998:20230" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20270:20817" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="20525:20791" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21074:21223" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21579:22820" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21887:22657" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="21943:22459" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22235:22437" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="22951:23504" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23354:23401" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="23514:24310" ph="/// Does all the stuff and produces a new unique path for a file/folder ... " />
+            <marker date="1535370338000" expanded="true" signature="24842:27891" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25207:25458" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25594:25678" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="25749:25845" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26398:26492" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26608:27783" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="26754:27769" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27103:27556" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27154:27355" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="27965:28880" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28424:28700" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28510:28617" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="28890:29099" ph="/// Trim ... " />
+            <marker date="1535370338000" expanded="true" signature="29182:32001" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29736:29830" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="29941:31205" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30055:30342" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="30455:30740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="31274:31424" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="32158:32651" ph="/// Check if file or directory name needs normalization, and normalize if normalize ... " />
+            <marker date="1535370338000" expanded="true" signature="32748:33277" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33327:33582" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33371:33545" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33425:33531" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="33592:33880" ph="/// Parses command line arguments ... " />
+            <marker date="1535370338000" expanded="true" signature="33942:38550" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34051:38498" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34320:34381" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34537:34673" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="34793:34929" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35183:35490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35605:35685" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35727:35795" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="35908:35979" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36079:36169" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36252:36320" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36411:36487" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36581:36650" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36733:36803" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="36929:36997" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37074:37490" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37130:37348" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37572:37740" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37820:38484" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="37905:38215" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38619:40179" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="38777:40141" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="39936:40127" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40189:40319" ph="/// Print Name in Hexadecimal. For Debuging. ... " />
+            <marker date="1535370338000" expanded="true" signature="40378:40634" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40488:40570" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40644:40700" ph="/// Testing ... " />
+            <marker date="1535370338000" expanded="true" signature="40748:40886" ph="{...}" />
+            <marker date="1535370338000" expanded="true" signature="40804:40876" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/FileNameNormalizer/FileOp.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="721">
+          <caret line="213" column="16" selection-start-line="213" selection-start-column="16" selection-end-line="213" selection-end-column="16" />
+          <folding>
+            <marker date="1535371486000" expanded="true" signature="0:80" ph="/* Long Path Aware File Operations ... */" />
+            <marker date="1535371486000" expanded="false" signature="88:191" ph="..." />
+            <marker date="1535371486000" expanded="true" signature="222:13627" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="229:451" ph="/// A class for file operations. All operations are able to handle extended length ... " />
+            <marker date="1535371486000" expanded="true" signature="482:13625" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="597:833" ph="/// Get Files Array (path strings) ... " />
+            <marker date="1535371486000" expanded="true" signature="923:1989" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1040:1758" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1140:1424" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1765:1890" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="1999:2193" ph="/// Get SubDirectory Array ... " />
+            <marker date="1535371486000" expanded="true" signature="2285:3401" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2399:3156" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="2506:2818" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3163:3303" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="3411:3765" ph="/// Get direcotry contents with files or folder first ... " />
+            <marker date="1535371486000" expanded="true" signature="3925:4799" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4153:4277" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4397:4561" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="4809:5038" ph="/// Rename File or Directory ... " />
+            <marker date="1535371486000" expanded="true" signature="5121:5879" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5155:5541" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5177:5437" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5444:5497" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5559:5791" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5798:5843" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="5889:6099" ph="/// Check if given path exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6161:6245" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6255:6402" ph="/// Test if a directory exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6458:6653" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="6663:6805" ph="/// Test if a file exists ... " />
+            <marker date="1535371486000" expanded="true" signature="6857:7111" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7121:7273" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7328:7711" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7388:7535" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7721:7873" ph="/// Test if path is a symbolic link ... " />
+            <marker date="1535371486000" expanded="true" signature="7927:8373" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="7987:8169" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8383:8776" ph="/// Compares too paths case-sensitive or case-insensitvely and returns true if they are same ... " />
+            <marker date="1535371486000" expanded="true" signature="8868:9055" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="8912:9009" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9065:9490" ph="/// Tests if file or folder exists in the list of directory items ... " />
+            <marker date="1535371486000" expanded="true" signature="9733:10312" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="9909:10275" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10046:10261" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10117:10189" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10323:10522" ph="/// Gets parent path to file or directory ... " />
+            <marker date="1535371486000" expanded="true" signature="10593:10930" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10627:10770" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="10940:11129" ph="/// Get file's or folder's name ... " />
+            <marker date="1535371486000" expanded="true" signature="11195:11512" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11229:11362" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11522:11729" ph="/// Get file's or folder's name without extension ... " />
+            <marker date="1535371486000" expanded="true" signature="11811:12272" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="11845:12050" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12282:12483" ph="/// Get the extension of a file or a folder ... " />
+            <marker date="1535371486000" expanded="true" signature="12550:12911" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12584:12759" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="12921:13058" ph="/// Get Drive letter ... " />
+            <marker date="1535371486000" expanded="true" signature="13112:13246" ph="{...}" />
+            <marker date="1535371486000" expanded="true" signature="13256:13411" ph="/// Removes \ from the end of the path ... " />
+            <marker date="1535371486000" expanded="true" signature="13478:13619" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
